@@ -1,6 +1,6 @@
 ## AWS Amplify Next.js (Pages) Starter Template
 
-This repository provides a starter template for creating applications using Next.js (Pages) and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.
+This repository provides a starter template for creating applications using [Next.js (Pages)](https://docs.amplify.aws/nextjs/start/quickstart/nextjs-pages-router) and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.
 
 ## Overview
 
