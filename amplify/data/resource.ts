@@ -1,17 +1,103 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any user authenticated via an API key can "create", "read",
-"update", and "delete" any "Todo" records.
-=========================================================================*/
 const schema = a.schema({
-  Todo: a
+  User: a
     .model({
-      content: a.string(),
+      id: a.id(),
+      username: a.string().required(),
+      email: a.string().required(),
+      points: a.integer(),
+      level: a.integer(),
+      achievements: a.string().array(),
+      modules: a.hasMany("UserModuleProgress", "userId"),
+      leaderboardEntries: a.hasMany("LeaderboardEntry", "userId"),
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  Module: a
+    .model({
+      id: a.id(),
+      title: a.string().required(),
+      description: a.string(),
+      order: a.integer(),
+      difficulty: a.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]),
+      lessons: a.hasMany("Lesson", "moduleId"),
+      userProgress: a.hasMany("UserModuleProgress", "moduleId"),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  Lesson: a
+    .model({
+      id: a.id(),
+      title: a.string().required(),
+      content: a.string().required(),
+      order: a.integer(),
+      moduleId: a.id(),
+      module: a.belongsTo("Module", "moduleId"),
+      questions: a.hasMany("Question", "lessonId"),
+      media: a.hasMany("Media", "lessonId"),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  Question: a
+    .model({
+      id: a.id(),
+      lessonId: a.id(),
+      lesson: a.belongsTo("Lesson", "lessonId"),
+      questionText: a.string().required(),
+      options: a.string().array(),
+      correctAnswer: a.string().required(),
+      points: a.integer(),
+      difficulty: a.enum(["EASY", "MEDIUM", "HARD"]),
+      format: a.enum([
+        "MULTIPLE_CHOICE",
+        "DRAG_AND_DROP",
+        "SCENARIO_BASED",
+        "SHORT_ANSWER",
+        "FILL_IN_THE_BLANK",
+        "MATCHING",
+        "TRUE_FALSE",
+        "ORDERING",
+        "IMAGE_IDENTIFICATION",
+      ]),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  UserModuleProgress: a
+    .model({
+      id: a.id(),
+      userId: a.id(),
+      user: a.belongsTo("User", "userId"),
+      moduleId: a.id(),
+      module: a.belongsTo("Module", "moduleId"),
+      completedLessons: a.integer(),
+      totalLessons: a.integer(),
+      score: a.integer(),
+      lastAccessedAt: a.string(),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  LeaderboardEntry: a
+    .model({
+      id: a.id(),
+      userId: a.id(),
+      user: a.belongsTo("User", "userId"),
+      score: a.integer().required(),
+      rank: a.integer(),
+      period: a.enum(["DAILY", "WEEKLY", "MONTHLY", "ALL_TIME"]),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+
+  Media: a
+    .model({
+      id: a.id(),
+      lessonId: a.id(),
+      lesson: a.belongsTo("Lesson", "lessonId"),
+      type: a.enum(["IMAGE", "VIDEO", "AUDIO"]),
+      url: a.string().required(),
+      caption: a.string(),
+    })
+    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,42 +105,6 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    // defaultAuthorizationMode: "apiKey",
-    // // API Key is used for a.allow.public() rules
-    // apiKeyAuthorizationMode: {
-    //   expiresInDays: 30,
-    // },
-    // This tells the data client in your app (generateClient())
-    // to sign API requests with the user authentication token.
     defaultAuthorizationMode: "userPool",
   },
 });
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server 
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>
