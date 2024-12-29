@@ -1,4 +1,4 @@
-import { defineAuth } from '@aws-amplify/backend';
+import { defineAuth, secret } from "@aws-amplify/backend";
 
 /**
  * Define and configure your auth resource
@@ -7,5 +7,12 @@ import { defineAuth } from '@aws-amplify/backend';
 export const auth = defineAuth({
   loginWith: {
     email: true,
+  },
+  senders: {
+    email: {
+      // configure using the email registered and verified in Amazon SES
+      fromEmail: process.env.EMAIL_FROM ?? "",
+      fromName: "Cloud Quest",
+    },
   },
 });
