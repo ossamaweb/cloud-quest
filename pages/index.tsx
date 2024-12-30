@@ -9,15 +9,15 @@ export default function Dashboard() {
   const { user, signOut } = useAuthenticator();
 
   return (
-    <div>
-      <div className="hidden xs:block">TopBar Mobile</div>
-      <div className="flex">
-        <div className="bg-red-500 w-64 xs:hidden">Sidebar right</div>
-        <div className="bg-blue-600 flex-1">Main Content</div>
-        <div className="bg-green-600  w-64">SideBar left</div>
+    <div className="flex flex-col h-screen w-screen divide-x divide-y divide-border">
+      <div className="sm:hidden">TopBar Mobile</div>
+      <div className="flex flex-1 divide-x divide-y">
+        <div className="w-64 hidden sm:block">Sidebar right</div>
+        <div className="flex-1">Main Content</div>
+        <div className="w-64 hidden sm:block">SideBar left</div>
       </div>
 
-      <div className="hidden xs:block">Bottom Menu Mobile</div>
+      <div className="sm:hidden">Bottom Menu Mobile</div>
     </div>
   );
 }
