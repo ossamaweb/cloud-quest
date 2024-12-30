@@ -1,16 +1,20 @@
 "use client";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import IconCloud from "./ui/icon-cloud";
+import ModuleNode from "./ui/module-node";
 
 interface ModuleContainerProps {
+  index: number;
   className?: string;
 }
 
 export default function ModuleContainer({
+  index,
   className = "",
 }: ModuleContainerProps) {
   return (
-    <div className={cn("relative space-y-24", className)}>
+    <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">
         <div className="text-sm uppercase text-muted/70 font-semibold">
           Module 4
@@ -27,26 +31,19 @@ export default function ModuleContainer({
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        {/* Example content cards */}
-        <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">Card Title 1</h2>
-          <p className="text-muted-foreground">
-            This is a sample card content with placeholder text.
-          </p>
-        </div>
-        <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">Card Title 2</h2>
-          <p className="text-muted-foreground">
-            This is a sample card content with placeholder text.
-          </p>
-        </div>
-        <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">Card Title 3</h2>
-          <p className="text-muted-foreground">
-            This is a sample card content with placeholder text.
-          </p>
-        </div>
+      <div className="flex items-center flex-col gap-6">
+        {Array(6)
+          .fill(0)
+          .map((_, nodeIndex) => (
+            <ModuleNode
+              key={nodeIndex}
+              index={nodeIndex}
+              total={6}
+              inverse={index % 2 !== 0}
+              current={nodeIndex === 1}
+              inactive={index > 0}
+            />
+          ))}
       </div>
     </div>
   );

@@ -23,11 +23,11 @@ export default function SidebarRight({
   return (
     <div
       className={cn(
-        "w-80 hidden sm:block bg-background border-l border-muted p-4",
+        "w-80 relative hidden sm:block bg-background border-l border-muted p-4",
         className
       )}
     >
-      <div className="space-y-6">
+      <div className="sticky top-4 space-y-6">
         {children}
 
         <div className="p-3 border-border border-2 rounded-lg">
@@ -42,7 +42,7 @@ export default function SidebarRight({
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-muted-foreground">
-                      #{player.position}
+                      {player.position}
                     </span>
                     <span>{player.username}</span>
                   </div>

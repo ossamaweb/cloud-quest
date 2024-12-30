@@ -12,11 +12,10 @@ interface MainContentProps {
 export default function MainContent({ className = "" }: MainContentProps) {
   return (
     <main className={cn("flex-1 relative overflow-auto p-6", className)}>
-      <div className="space-y-24 my-24">
-        <ModuleContainer />
-        <ModuleContainer />
-        <ModuleContainer />
-        <ModuleContainer />
+      <div className="space-y-16 mb-16">
+        {[...Array(6)].map((_, index) => (
+          <ModuleContainer key={index} index={index} />
+        ))}
       </div>
       <div className="absolute top-2 right-2">
         <ThemeToggle />
