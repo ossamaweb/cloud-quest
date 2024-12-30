@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^6.5.5",
-    "@cloudscape-design/components": "^3.0.857",
-    "@cloudscape-design/global-styles": "^1.0.33",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "aws-amplify": "^6.6.6",
