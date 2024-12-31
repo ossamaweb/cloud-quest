@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import IconCloud from "./ui/icon-cloud";
 import ModuleNode from "./ui/module-node";
+import { useRouter } from "next/router";
 
 interface ModuleContainerProps {
   index: number;
@@ -13,6 +14,15 @@ export default function ModuleContainer({
   index,
   className = "",
 }: ModuleContainerProps) {
+  const router = useRouter();
+  const handleOnModuleNodeClick = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+      // Handle module node click
+      console.log("Module node clicked:", id);
+      router.push(`/lessons/${id}`);
+    },
+    []
+  );
   return (
     <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">
@@ -42,6 +52,7 @@ export default function ModuleContainer({
               inverse={index % 2 !== 0}
               current={nodeIndex === 5}
               inactive={index > 0}
+              onClick={handleOnModuleNodeClick}
             />
           ))}
       </div>

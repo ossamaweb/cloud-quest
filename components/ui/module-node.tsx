@@ -25,6 +25,7 @@ interface ModuleNodeProps {
   current?: boolean;
   inactive?: boolean;
   className?: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
 export default function ModuleNode({
@@ -34,6 +35,7 @@ export default function ModuleNode({
   inverse = false,
   current = false,
   inactive = true,
+  onClick,
 }: ModuleNodeProps) {
   return (
     <button
@@ -41,6 +43,7 @@ export default function ModuleNode({
       type="button"
       style={getModuleNodeTranslation(index, total, inverse)}
       className="relative text-left group flex items-center justify-center w-24 h-24"
+      onClick={(e) => (inactive ? null : onClick(e, `lesson-${index}`))}
     >
       <div className="absolute inset-0">
         <IconCloud
@@ -53,11 +56,12 @@ export default function ModuleNode({
         />
         <IconCloud
           className={cn(
-            "absolute text-primary transition-transform",
+            "absolute text-primary transition-all duration-100",
             !inactive && !current
               ? "text-primary"
               : "text-gray-300 dark:text-gray-700",
-            !inactive && "group-hover:translate-y-0.5"
+            !inactive &&
+              "group-hover:translate-y-1 group-hover:-translate-x-0.5"
           )}
         />
       </div>
@@ -65,7 +69,8 @@ export default function ModuleNode({
       <div
         className={cn(
           "relative mt-2",
-          !inactive && "group-hover:translate-y-0.5 transition-transform",
+          !inactive &&
+            "group-hover:translate-y-1 group-hover:-translate-x-0.5 transition-all duration-100",
           !inactive && !current
             ? "text-primary-foreground"
             : "text-gray-400 dark:text-gray-800"
