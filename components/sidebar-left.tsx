@@ -2,8 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import Button from "./ui/button";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { HouseIcon, UserIcon, SettingsIcon, LogOutIcon } from "lucide-react";
+import Button from "./ui/button";
 
 interface SidebarLeftProps {
   className?: string;
@@ -25,27 +26,40 @@ export default function SidebarLeft({ className = "" }: SidebarLeftProps) {
         {/* Add navigation items here */}
         <ul className="space-y-2">
           <li>
-            <Button active={true} className="w-full text-left py-3">
-              Learn
+            <Button
+              active={true}
+              className="w-full text-left py-3 px-4 space-x-4"
+            >
+              <HouseIcon />
+              <span>Learn</span>
             </Button>
           </li>
           <li>
-            <Button active={false} className="w-full text-left py-3">
-              Profile
+            <Button
+              active={false}
+              className="w-full text-left py-3 px-4 space-x-4"
+            >
+              <UserIcon />
+              <span>Profile</span>
             </Button>
           </li>
           <li>
-            <Button active={false} className="w-full text-left py-3">
-              Settings
+            <Button
+              active={false}
+              className="w-full text-left py-3 px-4 space-x-4"
+            >
+              <SettingsIcon />
+              <span>Settings</span>
             </Button>
           </li>
           <li>
             <Button
               onClick={() => signOut()}
               active={false}
-              className="w-full text-left py-3"
+              className="w-full text-left py-3 px-4 space-x-4"
             >
-              Logout
+              <LogOutIcon />
+              <span>Logout</span>
             </Button>
           </li>
         </ul>

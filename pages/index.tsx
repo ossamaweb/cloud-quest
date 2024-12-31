@@ -8,6 +8,7 @@ import MainContent from "@/components/main-content";
 import SidebarLeft from "@/components/sidebar-left";
 import BottomBar from "@/components/bottom-bar";
 import UserMenu from "@/components/user-menu";
+import ModuleContainer from "@/components/module-container";
 
 const client = generateClient<Schema>();
 
@@ -21,7 +22,15 @@ export default function Dashboard() {
       </TopBar>
       <div className="flex flex-1">
         <SidebarLeft />
-        <MainContent />
+        <MainContent>
+          <div className="space-y-16 mb-16">
+            {Array(6)
+              .fill(0)
+              .map((_, index) => (
+                <ModuleContainer key={index} index={index} />
+              ))}
+          </div>
+        </MainContent>
         <SidebarRight>
           <UserMenu />
         </SidebarRight>

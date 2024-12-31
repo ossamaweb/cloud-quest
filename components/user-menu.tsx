@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import * as React from "react";
+import { ZapIcon, StarIcon } from "lucide-react";
 import Button from "./ui/button";
 
 interface UserMenuProps {
@@ -14,13 +15,15 @@ export default function UserMenu({ className = "" }: UserMenuProps) {
         <Button className="text-primary font-bold">Co</Button>
       </li>
       <li>
-        <Button className="text-yellow-500 font-bold">
-          Str <span>1</span>
+        <Button className="text-amber-300 font-bold">
+          <ZapIcon fill="currentColor" />
+          <span>1</span>
         </Button>
       </li>
       <li>
         <Button className="text-blue-500 font-bold">
-          Xp <span>1500</span>
+          <StarIcon fill="currentColor" />
+          <span>1500</span>
         </Button>
       </li>
     </ul>

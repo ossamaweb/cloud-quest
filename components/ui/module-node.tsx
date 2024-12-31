@@ -37,6 +37,7 @@ export default function ModuleNode({
 }: ModuleNodeProps) {
   return (
     <button
+      id={current && !inactive ? "currentNode" : undefined}
       type="button"
       style={getModuleNodeTranslation(index, total, inverse)}
       className="relative text-left group flex items-center justify-center w-24 h-24"
@@ -45,34 +46,43 @@ export default function ModuleNode({
         <IconCloud
           className={cn(
             "absolute -bottom-1.5 -left-1",
-            !inactive
+            !inactive && !current
               ? "text-primary-darker"
               : "text-gray-400 dark:text-gray-800"
           )}
         />
         <IconCloud
           className={cn(
-            "absolute text-primary transition-all",
-            !inactive
-              ? "text-primary group-hover:top-0.5"
-              : "text-gray-300 dark:text-gray-700"
+            "absolute text-primary transition-transform",
+            !inactive && !current
+              ? "text-primary"
+              : "text-gray-300 dark:text-gray-700",
+            !inactive && "group-hover:translate-y-0.5"
           )}
         />
       </div>
+
       <div
         className={cn(
           "relative mt-2",
-          !inactive
+          !inactive && "group-hover:translate-y-0.5 transition-transform",
+          !inactive && !current
             ? "text-primary-foreground"
             : "text-gray-400 dark:text-gray-800"
         )}
       >
-        {!inactive ? (
+        {!inactive && !current ? (
           <CheckIcon strokeWidth={4} size="2rem" />
         ) : (
           <Star fill="currentColor" strokeWidth={3} size="2rem" />
         )}
       </div>
+
+      {current && !inactive && (
+        <div className="absolute -top-4 animate-bounce duration-[2000] p-2 rounded-sm uppercase font-bold text-primary bg-background border-border border-2">
+          Start
+        </div>
+      )}
     </button>
   );
 }

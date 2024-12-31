@@ -7,16 +7,17 @@ import ModuleContainer from "./module-container";
 
 interface MainContentProps {
   className?: string;
+  children?: React.ReactNode;
 }
 
-export default function MainContent({ className = "" }: MainContentProps) {
+export default function MainContent({
+  className = "",
+  children,
+}: MainContentProps) {
   return (
     <main className={cn("flex-1 relative overflow-auto p-6", className)}>
-      <div className="space-y-16 mb-16">
-        {[...Array(6)].map((_, index) => (
-          <ModuleContainer key={index} index={index} />
-        ))}
-      </div>
+      {children}
+
       <div className="absolute top-2 right-2">
         <ThemeToggle />
       </div>

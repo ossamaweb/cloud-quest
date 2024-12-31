@@ -40,7 +40,7 @@ export default function ModuleContainer({
               index={nodeIndex}
               total={6}
               inverse={index % 2 !== 0}
-              current={nodeIndex === 1}
+              current={nodeIndex === 5}
               inactive={index > 0}
             />
           ))}

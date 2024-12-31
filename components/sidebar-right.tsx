@@ -6,7 +6,7 @@ import Button from "./ui/button";
 const leaderboardData = [
   { position: 1, username: "CloudMaster", points: 2500 },
   { position: 2, username: "AWSPro", points: 2100 },
-  { position: 3, username: "ServerlessGuru", points: 1800 },
+  { position: 3, username: "ServerlessGuru ServerlessGuru", points: 1800 },
   { position: 4, username: "LambdaHero", points: 1500 },
   { position: 5, username: "S3Warrior", points: 1200 },
 ];
@@ -30,23 +30,31 @@ export default function SidebarRight({
       <div className="sticky top-4 space-y-6">
         {children}
 
-        <div className="p-3 border-border border-2 rounded-lg">
-          <h3 className="font-medium">Leaderboard</h3>
+        <div className="p-4 border-border border-2 rounded-lg">
+          <h3 className="font-bold text-lg">Leaderboard</h3>
 
           {leaderboardData.length > 0 ? (
-            <div className="mt-3 space-y-2">
-              {leaderboardData.map((player) => (
+            <div className="mt-4 space-y-4">
+              {leaderboardData.map(({ position, username, points }) => (
                 <div
-                  key={player.position}
-                  className="flex items-center justify-between text-sm"
+                  key={position}
+                  className={cn(
+                    "flex items-center justify-start gap-4 truncate"
+                  )}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">
-                      {player.position}
-                    </span>
-                    <span>{player.username}</span>
-                  </div>
-                  <span className="font-medium">{player.points}</span>
+                  <span
+                    className={cn(
+                      "inline-flex flex-shrink-0 justify-center items-center rounded-full w-8 h-8 font-bold",
+                      position === 1 && "bg-[#FFD700] text-[#ca8a04]",
+                      position === 2 && "bg-[#C0C0C0] text-[#4b5563]",
+                      position === 3 && "bg-[#CD7F32] text-[#8B4513]",
+                      position > 3 && "bg-muted font-normal"
+                    )}
+                  >
+                    <span>{position}</span>
+                  </span>
+                  <span className="flex-1 truncate">{username}</span>
+                  <span className="flex-shrink-0 font-semibold">{points}</span>
                 </div>
               ))}
             </div>
