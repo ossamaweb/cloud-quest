@@ -18,7 +18,10 @@ export default function ProgressBar({ value, className }: ProgressBarProps) {
       )}
     >
       <div
-        className="relative h-full bg-green-500 rounded-lg"
+        className={cn(
+          "relative h-full bg-green-500 rounded-lg",
+          "motion-safe:transition-all motion-safe:duration-500"
+        )}
         style={{ width: `${clampedValue}%` }}
       >
         <div className="absolute left-1 top-1 right-1 h-1 bg-white/20" />

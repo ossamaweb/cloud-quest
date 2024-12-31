@@ -84,7 +84,7 @@ export default function ModuleNode({
       </div>
 
       {current && !inactive && (
-        <div className="absolute -top-4 animate-bounce duration-[2000] p-2 rounded-sm uppercase font-bold text-primary bg-background border-border border-2">
+        <div className="absolute -top-4 motion-safe:animate-bounce duration-[2000] p-2 rounded-sm uppercase font-bold text-primary bg-background border-border border-2">
           Start
         </div>
       )}

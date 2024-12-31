@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
-interface ButtonProps {
+export interface ButtonProps {
   children: React.ReactNode;
   className?: string;
   active?: boolean;

@@ -1,18 +1,42 @@
 import LessonLoading from "@/components/lesson-loading";
 import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
+import ButtonGame from "@/components/ui/button-game";
 import ProgressBar from "@/components/ui/progress-bar";
-import { cn } from "@/lib/utils";
+import { cn, getQuestionEndMessage } from "@/lib/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { XIcon } from "lucide-react";
+import { CheckIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export default function Lesson() {
   const { user } = useAuthenticator();
   const router = useRouter();
-  const [stateUI, setStateUI] = useState({ answered: true, incorrect: false });
+  const [stateUI, setStateUI] = useState({
+    answered: true,
+    cheched: false,
+    incorrect: false,
+    progress: 0,
+  });
 
+  const handleOnCheck = useCallback(() => {
+    setStateUI((prev) => ({
+      ...prev,
+      cheched: true,
+      incorrect: Math.random() < 0.5,
+    }));
+  }, []);
+
+  const handleOnContinue = useCallback(() => {
+    setStateUI((prev) => ({
+      ...prev,
+      cheched: false,
+      incorrect: false,
+      progress: prev.progress + 10,
+    }));
+  }, []);
+
+  const questionIndex = 1;
   const loading = false;
   if (loading) {
     return (
@@ -34,7 +58,7 @@ export default function Lesson() {
                 </Button>
               </div>
 
-              <ProgressBar value={50} />
+              <ProgressBar value={stateUI.progress} />
             </div>
           </div>
         </div>
@@ -51,27 +75,70 @@ export default function Lesson() {
           </LessonQuestion>
         </div>
 
-        <div className="border-t-2 border-border sticky bottom-0 w-full bg-background">
+        <div className="sticky bottom-0 w-full bg-background border-t-2 border-border ">
           <div className="max-w-4xl mx-auto px-6 py-12">
             <div className="flex gap-4 justify-between items-center">
               <div>
-                <Button className="bg-transparent border-border border-b-4 text-muted-foreground w-40 inline-flex items-center justify-center hover:bg-border/40">
+                <ButtonGame className="bg-transparent border-border text-muted-foreground enabled:hover:bg-border/40">
                   Why?
-                </Button>
+                </ButtonGame>
               </div>
               <div>
-                <Button
+                <ButtonGame
                   disabled={!stateUI.answered}
+                  incorrect={stateUI.incorrect}
+                  onClick={handleOnCheck}
+                >
+                  Check
+                </ButtonGame>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "absolute inset-0 bg-background-darker",
+              stateUI.cheched
+                ? "pointer-events-auto animate-in motion-safe:fade-in duration-150"
+                : "pointer-events-none opacity-0"
+            )}
+          >
+            <div className="max-w-4xl mx-auto px-6 py-12">
+              <div className="flex gap-4 justify-between items-center">
+                <div
                   className={cn(
-                    "border-transparent border-b-4 text-background w-40 inline-flex items-center justify-center disabled:bg-muted disabled:border-b-muted disabled:text-muted-foreground/30",
-                    "active:translate-y-0.5 active:border-b-0 transition-all duration-100",
-                    stateUI.incorrect
-                      ? "bg-red-500 border-b-red-600 enabled:hover:bg-red-400"
-                      : "bg-green-500 border-b-green-600 enabled:hover:bg-green-400"
+                    "flex items-center gap-2",
+                    stateUI.incorrect ? "text-red-500" : "text-green-500"
                   )}
                 >
-                  {stateUI.answered ? "Continue" : "Check"}
-                </Button>
+                  <div
+                    className={cn(
+                      "w-10 h-10 bg-border flex items-center justify-center rounded-full",
+                      stateUI.cheched
+                        ? "animate-in motion-safe:fade-in motion-safe:zoom-in duration-300"
+                        : "opacity-0 scale-0"
+                    )}
+                  >
+                    {stateUI.incorrect ? (
+                      <XIcon strokeWidth={5} />
+                    ) : (
+                      <CheckIcon strokeWidth={5} />
+                    )}
+                  </div>
+
+                  <div className="font-medium text-lg">
+                    {getQuestionEndMessage(stateUI.incorrect, questionIndex)}
+                  </div>
+                </div>
+
+                <div>
+                  <ButtonGame
+                    incorrect={stateUI.incorrect}
+                    onClick={handleOnContinue}
+                  >
+                    Continue
+                  </ButtonGame>
+                </div>
               </div>
             </div>
           </div>
