@@ -5,7 +5,6 @@ import {
 
 export const ImageIdentification = ({
   data,
-  onAnswer,
 }: LessonQuestionProps<ImageIdentificationQuestion>) => {
   return (
     <div className="space-y-4">

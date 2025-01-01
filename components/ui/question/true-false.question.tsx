@@ -1,9 +1,6 @@
 import { LessonQuestionProps, TrueFalseQuestion } from "@/lib/interfaces";
 
-export const TrueFalse = ({
-  data,
-  onAnswer,
-}: LessonQuestionProps<TrueFalseQuestion>) => {
+export const TrueFalse = ({ data }: LessonQuestionProps<TrueFalseQuestion>) => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">{data.question}</h3>

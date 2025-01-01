@@ -1,9 +1,6 @@
 import { LessonQuestionProps, MatchingQuestion } from "@/lib/interfaces";
 
-export const Matching = ({
-  data,
-  onAnswer,
-}: LessonQuestionProps<MatchingQuestion>) => {
+export const Matching = ({ data }: LessonQuestionProps<MatchingQuestion>) => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">{data.question}</h3>

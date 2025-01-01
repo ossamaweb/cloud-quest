@@ -2,7 +2,6 @@ import { LessonQuestionProps, ScenarioBasedQuestion } from "@/lib/interfaces";
 
 export const ScenarioBased = ({
   data,
-  onAnswer,
 }: LessonQuestionProps<ScenarioBasedQuestion>) => {
   return (
     <div className="space-y-4">

@@ -6,7 +6,6 @@ import { useCallback, useState } from "react";
 
 export const MultipleChoice = ({
   data,
-  answered,
   status,
   checked,
   onAnswer,

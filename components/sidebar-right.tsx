@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import Button from "./ui/button";
 
 const leaderboardData = [
   { position: 1, username: "CloudMaster", points: 2500 },

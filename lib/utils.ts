@@ -1,7 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { MultipleChoiceQuestion, Question } from "./interfaces";
-import { QUESTION_TYPE } from "./enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,24 +29,24 @@ export function getQuestionEndMessage(
 }
 
 // Type guard example
-function isMultipleChoiceQuestion(
-  question: Question
-): question is MultipleChoiceQuestion {
-  return question.type === QUESTION_TYPE.MULTIPLE_CHOICE;
-}
+// function isMultipleChoiceQuestion(
+//   question: Question
+// ): question is MultipleChoiceQuestion {
+//   return question.type === QUESTION_TYPE.MULTIPLE_CHOICE;
+// }
 
-// Usage example
-function gradeQuestion(question: Question, userAnswer: any): number {
-  switch (question.type) {
-    case QUESTION_TYPE.MULTIPLE_CHOICE:
-      return userAnswer === question.correctOptionId ? question.points ?? 0 : 0;
-    case QUESTION_TYPE.TRUE_FALSE:
-      return userAnswer === question.correctAnswer ? question.points ?? 0 : 0;
-    // Add other cases as needed
-    default:
-      return 0;
-  }
-}
+// // Usage example
+// function gradeQuestion(question: Question, userAnswer: any): number {
+//   switch (question.type) {
+//     case QUESTION_TYPE.MULTIPLE_CHOICE:
+//       return userAnswer === question.correctOptionId ? question.points ?? 0 : 0;
+//     case QUESTION_TYPE.TRUE_FALSE:
+//       return userAnswer === question.correctAnswer ? question.points ?? 0 : 0;
+//     // Add other cases as needed
+//     default:
+//       return 0;
+//   }
+// }
 
 export function getModuleNodeTranslation(
   index = 0,

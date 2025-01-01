@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import IconCloud from "./ui/icon-cloud";
 import ModuleNode from "./ui/module-node";
 import { useRouter } from "next/router";
 
@@ -21,9 +20,11 @@ export default function ModuleContainer({
       // Handle module node click
       console.log("Module node clicked:", id);
       router.push(`/lessons/${id}`);
+      console.log("x");
     },
     [router]
   );
+
   return (
     <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">
