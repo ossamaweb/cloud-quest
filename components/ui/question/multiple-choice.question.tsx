@@ -18,7 +18,7 @@ export const MultipleChoice = ({
       setState({ selectedId: optionId });
       onAnswer(data.correctOptionId === optionId, data.points ?? 0, data);
     },
-    [data]
+    [data, onAnswer]
   );
 
   return (

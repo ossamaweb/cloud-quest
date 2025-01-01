@@ -91,9 +91,12 @@ export default function Lesson() {
         <div className="flex-1">
           <Tabs value={String(stateUI.questionIndex)}>
             {questionFixtures.map((item, index) => (
-              <TabsContent value={String(index)} className="overflow-hidden">
+              <TabsContent
+                key={item.id}
+                value={String(index)}
+                className="overflow-hidden"
+              >
                 <LessonQuestion
-                  key={item.id}
                   data={item}
                   answered={stateUI.answered}
                   checked={stateUI.checked}

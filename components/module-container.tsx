@@ -22,7 +22,7 @@ export default function ModuleContainer({
       console.log("Module node clicked:", id);
       router.push(`/lessons/${id}`);
     },
-    []
+    [router]
   );
   return (
     <div className={cn("relative space-y-16", className)}>

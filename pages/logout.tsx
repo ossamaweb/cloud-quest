@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect } from "react";
 
