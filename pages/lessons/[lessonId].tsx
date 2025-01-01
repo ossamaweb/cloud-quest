@@ -37,6 +37,7 @@ export default function Lesson() {
   }, []);
 
   const questionIndex = 1;
+  const hasExplanation = true;
   const loading = false;
   if (loading) {
     return (
@@ -77,12 +78,7 @@ export default function Lesson() {
 
         <div className="sticky bottom-0 w-full bg-background border-t-2 border-border ">
           <div className="max-w-4xl mx-auto px-6 py-12">
-            <div className="flex gap-4 justify-between items-center">
-              <div>
-                <ButtonGame className="bg-transparent border-border text-muted-foreground enabled:hover:bg-border/40">
-                  Why?
-                </ButtonGame>
-              </div>
+            <div className="flex h-12 gap-4 justify-end items-center">
               <div>
                 <ButtonGame
                   disabled={!stateUI.answered}
@@ -104,7 +100,7 @@ export default function Lesson() {
             )}
           >
             <div className="max-w-4xl mx-auto px-6 py-12">
-              <div className="flex gap-4 justify-between items-center">
+              <div className="flex h-12 gap-4 sm:justify-between justify-end items-center">
                 <div
                   className={cn(
                     "flex items-center gap-2",
@@ -113,7 +109,7 @@ export default function Lesson() {
                 >
                   <div
                     className={cn(
-                      "w-10 h-10 bg-border flex items-center justify-center rounded-full",
+                      "w-12 h-12 bg-border flex items-center justify-center rounded-full",
                       stateUI.cheched
                         ? "animate-in motion-safe:fade-in motion-safe:zoom-in duration-300"
                         : "opacity-0 scale-0"
@@ -126,18 +122,27 @@ export default function Lesson() {
                     )}
                   </div>
 
-                  <div className="font-medium text-lg">
+                  <div className="font-medium text-lg sm:block hidden">
                     {getQuestionEndMessage(stateUI.incorrect, questionIndex)}
                   </div>
                 </div>
 
-                <div>
-                  <ButtonGame
-                    incorrect={stateUI.incorrect}
-                    onClick={handleOnContinue}
-                  >
-                    Continue
-                  </ButtonGame>
+                <div className="flex justify-center items-center gap-4">
+                  {hasExplanation && (
+                    <div>
+                      <ButtonGame className="bg-transparent border-border text-muted-foreground enabled:hover:bg-border/40">
+                        Why?
+                      </ButtonGame>
+                    </div>
+                  )}
+                  <div>
+                    <ButtonGame
+                      incorrect={stateUI.incorrect}
+                      onClick={handleOnContinue}
+                    >
+                      Continue
+                    </ButtonGame>
+                  </div>
                 </div>
               </div>
             </div>
