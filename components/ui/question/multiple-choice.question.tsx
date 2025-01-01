@@ -1,25 +1,38 @@
-import { MultipleChoiceQuestion } from "@/lib/interfaces";
-import ButtonGame from "../button-game";
+"use client";
+
+import { LessonQuestionProps, MultipleChoiceQuestion } from "@/lib/interfaces";
 import ButtonQuestion from "../button-question";
+import { useCallback, useState } from "react";
 
-interface Props {
-  question: MultipleChoiceQuestion;
-  onAnswer: (optionId: string) => void;
-}
+export const MultipleChoice = ({
+  data,
+  answered,
+  status,
+  checked,
+  onAnswer,
+}: LessonQuestionProps<MultipleChoiceQuestion>) => {
+  const [{ selectedId }, setState] = useState({ selectedId: "" });
 
-export const MultipleChoice = ({ question, onAnswer }: Props) => {
+  const handleOnClick = useCallback(
+    (optionId: string) => {
+      setState({ selectedId: optionId });
+      onAnswer(data.correctOptionId === optionId, data.points ?? 0, data);
+    },
+    [data]
+  );
+
   return (
     <div className="space-y-4">
-      {question.options.map((option, index) => (
+      {data.options.map((option, index) => (
         <div key={option.id}>
           <ButtonQuestion
             text={option.text}
             label={String(index + 1)}
-            answered={index == 2}
-            checked={index == 2}
-            disabled={false}
-            status="incorrect"
-            onClick={() => onAnswer(option.id)}
+            selected={selectedId === option.id}
+            checked={checked}
+            disabled={checked}
+            status={checked && selectedId === option.id ? status : undefined}
+            onClick={() => handleOnClick(option.id)}
           />
         </div>
 

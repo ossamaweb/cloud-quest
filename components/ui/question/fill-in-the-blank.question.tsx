@@ -1,20 +1,19 @@
-import { FillInTheBlankQuestion } from "@/lib/interfaces";
+import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
 
-interface Props {
-  question: FillInTheBlankQuestion;
-  onAnswer: (answers: Record<string, string>) => void;
-}
-
-export const FillInTheBlank = ({ question, onAnswer }: Props) => {
+export const FillInTheBlank = ({
+  data,
+  onAnswer,
+}: LessonQuestionProps<FillInTheBlankQuestion>) => {
   const handleChange = (blankId: string, value: string) => {
-    onAnswer({ [blankId]: value });
+    //onAnswer({ [blankId]: value });
+    //onAnswer: (answers: Record<string, string>) => void;
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">{question.question}</h3>
+      <h3 className="text-lg font-medium">{data.question}</h3>
       <div>
-        {question.blanks.map((blank) => (
+        {data.blanks.map((blank) => (
           <input
             key={blank.id}
             type="text"

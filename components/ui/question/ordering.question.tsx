@@ -1,13 +1,11 @@
-import { OrderingQuestion } from "@/lib/interfaces";
+import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
 import { useState } from "react";
 
-interface Props {
-  question: OrderingQuestion;
-  onAnswer: (order: string[]) => void;
-}
-
-export const Ordering = ({ question, onAnswer }: Props) => {
-  const [items, setItems] = useState(question.items);
+export const Ordering = ({
+  data,
+  onAnswer,
+}: LessonQuestionProps<OrderingQuestion>) => {
+  const [items, setItems] = useState(data.items);
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -17,12 +15,13 @@ export const Ordering = ({ question, onAnswer }: Props) => {
     newItems.splice(result.destination.index, 0, reorderedItem);
 
     setItems(newItems);
-    onAnswer(newItems.map((item) => item.id));
+    //onAnswer(newItems.map((item) => item.id));
+    //onAnswer: (order: string[]) => void
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">{question.question}</h3>
+      <h3 className="text-lg font-medium">{data.question}</h3>
       <div className="space-y-2">
         {items.map((item, index) => (
           <div key={item.id} className="p-2 border rounded cursor-move">

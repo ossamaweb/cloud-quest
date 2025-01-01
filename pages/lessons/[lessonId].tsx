@@ -4,6 +4,7 @@ import Button from "@/components/ui/button";
 import ButtonGame from "@/components/ui/button-game";
 import ProgressBar from "@/components/ui/progress-bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LessonQuestionProps, Question } from "@/lib/interfaces";
 import { questionFixtures } from "@/lib/questions.fixtures";
 import { cn, getQuestionEndMessage } from "@/lib/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -14,19 +15,38 @@ import { useCallback, useState } from "react";
 export default function Lesson() {
   const { user } = useAuthenticator();
   const router = useRouter();
-  const [stateUI, setStateUI] = useState({
-    answered: true,
-    cheched: false,
-    incorrect: false,
+
+  const [stateUI, setStateUI] = useState<{
+    answered: boolean;
+    checked: boolean;
+    status: LessonQuestionProps<unknown>["status"];
+    progress: number;
+    questionIndex: number;
+  }>({
+    answered: false,
+    checked: false,
+    status: "unanswered",
     progress: 0,
     questionIndex: 0,
   });
+
   const totalQuestions = questionFixtures.length;
+
+  const handleOnAnswer = useCallback(
+    (correct: boolean, points: number, data: Question) => {
+      setStateUI((prev) => ({
+        ...prev,
+        answered: true,
+        status: correct ? "correct" : "incorrect",
+      }));
+    },
+    []
+  );
 
   const handleOnCheck = useCallback(() => {
     setStateUI((prev) => ({
       ...prev,
-      cheched: true,
+      checked: true,
       incorrect: Math.random() < 0.5,
     }));
   }, []);
@@ -34,7 +54,7 @@ export default function Lesson() {
   const handleOnContinue = useCallback(() => {
     setStateUI((prev) => ({
       ...prev,
-      cheched: false,
+      checked: false,
       incorrect: false,
       progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
       questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
@@ -75,6 +95,10 @@ export default function Lesson() {
                 <LessonQuestion
                   key={item.id}
                   data={item}
+                  answered={stateUI.answered}
+                  checked={stateUI.checked}
+                  status={stateUI.status}
+                  onAnswer={handleOnAnswer}
                   className={cn(
                     index === 0
                       ? ""
@@ -92,7 +116,6 @@ export default function Lesson() {
               <div>
                 <ButtonGame
                   disabled={!stateUI.answered}
-                  incorrect={stateUI.incorrect}
                   onClick={handleOnCheck}
                 >
                   Check
@@ -104,7 +127,7 @@ export default function Lesson() {
           <div
             className={cn(
               "absolute inset-0 bg-background-darker",
-              stateUI.cheched
+              stateUI.checked
                 ? "pointer-events-auto animate-in motion-safe:fade-in duration-150"
                 : "pointer-events-none opacity-0"
             )}
@@ -114,18 +137,21 @@ export default function Lesson() {
                 <div
                   className={cn(
                     "flex items-center gap-2",
-                    stateUI.incorrect ? "text-red-500" : "text-green-500"
+                    stateUI.status === "incorrect" &&
+                      "dark:text-red-500 text-red-600",
+                    stateUI.status === "correct" &&
+                      "dark:text-green-600 text-green-700"
                   )}
                 >
                   <div
                     className={cn(
                       "w-12 h-12 bg-border flex items-center justify-center rounded-full",
-                      stateUI.cheched
-                        ? "animate-in motion-safe:fade-in motion-safe:zoom-in duration-300"
+                      stateUI.checked
+                        ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-300"
                         : "opacity-0 scale-0"
                     )}
                   >
-                    {stateUI.incorrect ? (
+                    {stateUI.status === "incorrect" ? (
                       <XIcon strokeWidth={5} />
                     ) : (
                       <CheckIcon strokeWidth={5} />
@@ -134,7 +160,7 @@ export default function Lesson() {
 
                   <div className="font-medium text-lg sm:block hidden">
                     {getQuestionEndMessage(
-                      stateUI.incorrect,
+                      stateUI.status === "incorrect",
                       stateUI.questionIndex
                     )}
                   </div>
@@ -150,7 +176,7 @@ export default function Lesson() {
                   )}
                   <div>
                     <ButtonGame
-                      incorrect={stateUI.incorrect}
+                      status={stateUI.status}
                       onClick={handleOnContinue}
                     >
                       Continue

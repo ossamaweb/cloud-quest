@@ -1,27 +1,29 @@
-import { ImageIdentificationQuestion } from "@/lib/interfaces";
+import {
+  ImageIdentificationQuestion,
+  LessonQuestionProps,
+} from "@/lib/interfaces";
 
-interface Props {
-  question: ImageIdentificationQuestion;
-  onAnswer: (optionId: string) => void;
-}
-
-export const ImageIdentification = ({ question, onAnswer }: Props) => {
+export const ImageIdentification = ({
+  data,
+  onAnswer,
+}: LessonQuestionProps<ImageIdentificationQuestion>) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">{question.question}</h3>
+      <h3 className="text-lg font-medium">{data.question}</h3>
       <img
-        src={question.image.url}
-        alt={question.image.altText}
+        src={data.image.url}
+        alt={data.image.altText}
         className="max-w-full h-auto"
       />
       <div className="space-y-2">
-        {question.options.map((option) => (
+        {data.options.map((option) => (
           <label key={option.id} className="flex items-center space-x-2">
             <input
               type="radio"
-              name={question.id}
+              name={data.id}
               value={option.id}
-              onChange={() => onAnswer(option.id)}
+              //onChange={() => onAnswer(option.id)}
+              //onAnswer: (optionId: string) => void;
             />
             <span>{option.text}</span>
           </label>

@@ -120,3 +120,12 @@ export type Question =
   | TrueFalseQuestion
   | OrderingQuestion
   | ImageIdentificationQuestion;
+
+export interface LessonQuestionProps<T> {
+  data: T;
+  answered: boolean;
+  checked: boolean;
+  status: "unanswered" | "correct" | "incorrect";
+  onAnswer: (correct: boolean, points: number, data: Question) => void;
+  className?: string;
+}

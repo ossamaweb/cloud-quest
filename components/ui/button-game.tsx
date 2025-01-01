@@ -3,25 +3,26 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 import Button, { ButtonProps } from "./button";
+import { LessonQuestionProps } from "@/lib/interfaces";
 
 interface ButtonGameProps extends ButtonProps {
-  incorrect?: boolean;
+  status?: LessonQuestionProps<unknown>["status"];
 }
 export default function ButtonGame({
   children,
   className,
-  incorrect,
+  status,
   ...rest
 }: ButtonGameProps) {
   return (
     <Button
       {...rest}
       className={cn(
-        "border-transparent border-b-4 text-background w-40 inline-flex items-center justify-center disabled:bg-muted disabled:border-b-muted disabled:text-muted-foreground/30",
+        "border-transparent border-b-4 text-background w-40 inline-flex items-center justify-center disabled:bg-muted disabled:border-b-muted disabled:text-muted-foreground",
         "active:translate-y-0.5 active:border-b transition-all duration-100",
-        incorrect
+        status === "incorrect"
           ? "bg-red-500 border-b-red-600 enabled:hover:bg-red-400"
-          : "bg-green-500 border-b-green-600 enabled:hover:bg-green-400",
+          : "bg-green-600 border-b-green-700 enabled:hover:bg-green-500",
         className
       )}
     >
