@@ -1,22 +1,9 @@
-import { cn } from "@/lib/utils";
+"use client";
+
+import { cn, getModuleNodeTranslation } from "@/lib/utils";
 import * as React from "react";
 import { CheckIcon, Star } from "lucide-react";
 import IconCloud from "./icon-cloud";
-
-const getModuleNodeTranslation = (index = 0, numNodes = 6, inverse = false) => {
-  // Calculate rotation for arc formation
-  // Spread nodes across 180 degrees (-90 to +90)
-  const angleSpread = 180;
-  const angleStep = angleSpread / (numNodes - 1);
-  const rotation = -90 + index * angleStep;
-  // Calculate radius for positioning
-  const radius = 100; // Adjust this value to control arc size
-  const x = radius * Math.cos((rotation * Math.PI) / 180) * (inverse ? -1 : 1);
-
-  return {
-    transform: `translateX(${x}px)`,
-  } as React.CSSProperties;
-};
 
 interface ModuleNodeProps {
   index: number;

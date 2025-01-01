@@ -3,6 +3,8 @@ import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
 import ButtonGame from "@/components/ui/button-game";
 import ProgressBar from "@/components/ui/progress-bar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { questionFixtures } from "@/lib/questions.fixtures";
 import { cn, getQuestionEndMessage } from "@/lib/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CheckIcon, XIcon } from "lucide-react";
@@ -17,7 +19,9 @@ export default function Lesson() {
     cheched: false,
     incorrect: false,
     progress: 0,
+    questionIndex: 0,
   });
+  const totalQuestions = questionFixtures.length;
 
   const handleOnCheck = useCallback(() => {
     setStateUI((prev) => ({
@@ -32,11 +36,11 @@ export default function Lesson() {
       ...prev,
       cheched: false,
       incorrect: false,
-      progress: prev.progress + 10,
+      progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
+      questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
     }));
-  }, []);
+  }, [totalQuestions]);
 
-  const questionIndex = 1;
   const hasExplanation = true;
   const loading = false;
   if (loading) {
@@ -65,15 +69,21 @@ export default function Lesson() {
         </div>
 
         <div className="flex-1">
-          <LessonQuestion
-            title="Title of the game goes here"
-            description="Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
-            imageSrc="/screen.png"
-            imageAlt="Screenshot of the game"
-            imageCaption="Figure caption goes here"
-          >
-            <div>X</div>
-          </LessonQuestion>
+          <Tabs value={String(stateUI.questionIndex)}>
+            {questionFixtures.map((item, index) => (
+              <TabsContent value={String(index)} className="overflow-hidden">
+                <LessonQuestion
+                  key={item.id}
+                  data={item}
+                  className={cn(
+                    index === 0
+                      ? ""
+                      : "animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 duration-500"
+                  )}
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
 
         <div className="sticky bottom-0 w-full bg-background border-t-2 border-border ">
@@ -123,7 +133,10 @@ export default function Lesson() {
                   </div>
 
                   <div className="font-medium text-lg sm:block hidden">
-                    {getQuestionEndMessage(stateUI.incorrect, questionIndex)}
+                    {getQuestionEndMessage(
+                      stateUI.incorrect,
+                      stateUI.questionIndex
+                    )}
                   </div>
                 </div>
 
