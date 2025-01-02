@@ -49,7 +49,9 @@ const CategoryItem = ({
           incorrect && "bg-red-500/10 border-red-500"
         )}
       >
-        <div className="leading-2 text-sm font-bold uppercase">{text}</div>
+        <div className="leading-2 text-sm font-bold uppercase text-foreground/50">
+          {text}
+        </div>
 
         <div className="flex gap-2 mt-2">
           {droppedId && itemData && (
@@ -102,8 +104,8 @@ const DraggableItem = ({
       onDragStart={(e) => handleDragStart(e, id)}
       onDragEnd={handleDragEnd}
       className={cn(
-        "truncate w-auto border-2 border-b-4 border-border rounded-lg px-4 py-2 bg-background transition-colors",
-        droppedId && "invisible",
+        "truncate w-auto border-2 border-b-4 border-border rounded-lg px-4 py-2 bg-background transition-colors select-none",
+        droppedId && "bg-muted border-transparent text-muted",
         draggable &&
           "opacity-100 cursor-move hover:bg-border/40 focus:bg-border/40",
         incorrect && "bg-red-500/10 border-red-500",
