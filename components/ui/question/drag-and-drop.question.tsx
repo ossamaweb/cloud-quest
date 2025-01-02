@@ -45,7 +45,7 @@ const CategoryItem = ({
           "rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30 transition-all",
           draggingId && !droppedId && "border-blue-500/50",
           dragOverId === id && "border-blue-500 bg-blue-500/10",
-          droppedId && "bg-green-600/10 border-green-600",
+          droppedId && "bg-green-600/10 border-green-600 border-solid",
           incorrect && "bg-red-500/10 border-red-500"
         )}
       >

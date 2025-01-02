@@ -78,7 +78,7 @@ export default function Lesson() {
 
   return (
     <main>
-      <div className="relative h-screen flex flex-col overflow-x-hidden">
+      <div className="h-screen flex flex-col overflow-y-scroll overflow-x-hidden">
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
@@ -98,13 +98,18 @@ export default function Lesson() {
             <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
               <Tabs
                 value={String(stateUI.questionIndex)}
+                activationMode="manual"
                 className="w-full h-full"
               >
                 {questionFixtures.map((item, index) => (
                   <TabsContent
                     key={item.id}
                     value={String(index)}
-                    className="mt-0 w-full h-full"
+                    className={cn(
+                      "mt-0 w-full h-full",
+                      index > 0 &&
+                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-1000"
+                    )}
                   >
                     <LessonQuestion
                       data={item}
@@ -112,11 +117,6 @@ export default function Lesson() {
                       checked={stateUI.checked}
                       status={stateUI.status}
                       onAnswer={handleOnAnswer}
-                      className={cn(
-                        "w-full h-full",
-                        index > 0 &&
-                          "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
-                      )}
                     />
                   </TabsContent>
                 ))}

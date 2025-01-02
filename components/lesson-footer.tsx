@@ -27,11 +27,11 @@ export default function LessonFooter({
   handleOnContinue,
 }: LessonFooterProps) {
   return (
-    <div className="sticky w-full bottom-0">
+    <div className="w-full bg-background relative">
       <div
         className={cn(
           "bg-background border-t-2 border-border",
-          checked && "hidden pointer-events-none"
+          checked && "invisible pointer-events-none"
         )}
       >
         <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
@@ -51,7 +51,8 @@ export default function LessonFooter({
 
       <div
         className={cn(
-          "bg-background-darker border-t-2 border-border",
+          "absolute bottom-0 w-full border-t-2 border-transparent",
+          status === "incorrect" ? "bg-red-100" : "bg-green-100",
           !checked && "hidden"
         )}
       >
@@ -69,7 +70,7 @@ export default function LessonFooter({
             >
               <div
                 className={cn(
-                  "w-10 h-10 flex-shrink-0 bg-border flex items-center justify-center rounded-full",
+                  "w-10 h-10 flex-shrink-0 bg-background flex items-center justify-center rounded-full",
                   checked
                     ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
                     : "opacity-0 scale-0"

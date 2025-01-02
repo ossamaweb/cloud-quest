@@ -12,10 +12,11 @@ import { Ordering } from "./ui/question/ordering.question";
 import { ShortAnswer } from "./ui/question/short-answer.question";
 import { TrueFalse } from "./ui/question/true-false.question";
 import { FillInTheBlank } from "./ui/question/fill-in-the-blank.question";
+import { cn } from "@/lib/utils";
 
 export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   return (
-    <div className={props.className}>
+    <div className={cn("w-full h-full", props.className)}>
       <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
         <h2 className="font-bold sm:text-2xl text-xl text-foreground">
           <QuestionTitleRenderer type={props.data.type} />
