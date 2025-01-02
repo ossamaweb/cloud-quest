@@ -1,8 +1,7 @@
 "use client";
 
 import { QUESTION_TYPE } from "@/lib/enums";
-import { BaseQuestion, LessonQuestionProps, Question } from "@/lib/interfaces";
-import { cn } from "@/lib/utils";
+import { LessonQuestionProps, Question } from "@/lib/interfaces";
 import * as React from "react";
 import { MultipleChoice } from "./ui/question/multiple-choice.question";
 import { DragAndDrop } from "./ui/question/drag-and-drop.question";
@@ -16,13 +15,15 @@ import { FillInTheBlank } from "./ui/question/fill-in-the-blank.question";
 
 export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   return (
-    <div className={cn("max-w-2xl mx-auto px-6 pb-12", props.className)}>
-      <h2 className="font-bold text-2xl text-foreground">
-        {props.data.question}
-      </h2>
+    <div className={props.className}>
+      <div className="flex flex-col justify-between gap-8 w-full h-full">
+        <h2 className="font-bold text-2xl text-foreground">
+          <QuestionTitleRenderer type={props.data.type} />
+        </h2>
 
-      <div className="mt-8">
-        <QuestionRenderer {...props} />
+        <div className="flex-1 flex flex-col items-stretch justify-center">
+          <QuestionOptionsRenderer {...props} />
+        </div>
       </div>
 
       {/* <p className="text-base text-foreground mt-4">{description}</p> */}
@@ -41,10 +42,10 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   );
 }
 
-export const QuestionRenderer = ({
+function QuestionOptionsRenderer({
   data,
   ...rest
-}: LessonQuestionProps<Question>) => {
+}: LessonQuestionProps<Question>): React.JSX.Element {
   switch (data.type) {
     case QUESTION_TYPE.MULTIPLE_CHOICE:
       return <MultipleChoice data={data} {...rest} />;
@@ -67,4 +68,33 @@ export const QuestionRenderer = ({
     default:
       return <div>Unsupported question type</div>;
   }
-};
+}
+
+function QuestionTitleRenderer({
+  type,
+}: {
+  type: QUESTION_TYPE;
+}): React.ReactNode {
+  switch (type) {
+    case QUESTION_TYPE.MULTIPLE_CHOICE:
+      return "Select the correct option";
+    case QUESTION_TYPE.DRAG_AND_DROP:
+      return "Drag and drop to correct positions";
+    case QUESTION_TYPE.SCENARIO_BASED:
+      return "Solve the following scenario";
+    case QUESTION_TYPE.SHORT_ANSWER:
+      return "Provide a short answer";
+    case QUESTION_TYPE.FILL_IN_THE_BLANK:
+      return "Fill in the blank";
+    case QUESTION_TYPE.MATCHING:
+      return "Select the matching pairs";
+    case QUESTION_TYPE.TRUE_FALSE:
+      return "True or false";
+    case QUESTION_TYPE.ORDERING:
+      return "Order items correctly";
+    case QUESTION_TYPE.IMAGE_IDENTIFICATION:
+      return "Identify the image";
+    default:
+      return "Answer the following question";
+  }
+}

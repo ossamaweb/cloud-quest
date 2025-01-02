@@ -1,5 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  LessonQuestionProps,
+  MultipleChoiceQuestion,
+  Question,
+} from "./interfaces";
+import { QUESTION_TYPE } from "./enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,25 +34,82 @@ export function getQuestionEndMessage(
   return ANSWER_MSG_CORRECT[questionIndex % ANSWER_MSG_CORRECT.length];
 }
 
-// Type guard example
-// function isMultipleChoiceQuestion(
-//   question: Question
-// ): question is MultipleChoiceQuestion {
-//   return question.type === QUESTION_TYPE.MULTIPLE_CHOICE;
-// }
+const QUESTION_GRADING: Record<
+  QUESTION_TYPE,
+  (
+    question: Question,
+    userAnswer: unknown
+  ) => { correct: boolean; points: number }
+> = {
+  [QUESTION_TYPE.MULTIPLE_CHOICE]: (question, userAnswer) => {
+    const mcQuestion = question as MultipleChoiceQuestion;
+    const correct = userAnswer === mcQuestion.correctOptionId;
+    const points = mcQuestion.points ?? 0;
+    return { correct, points };
+  },
+  [QUESTION_TYPE.DRAG_AND_DROP]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.SCENARIO_BASED]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.SHORT_ANSWER]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.FILL_IN_THE_BLANK]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.MATCHING]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.TRUE_FALSE]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.ORDERING]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+  [QUESTION_TYPE.IMAGE_IDENTIFICATION]: function (
+    question: Question,
+    userAnswer: unknown
+  ): { correct: boolean; points: number } {
+    throw new Error("Function not implemented.");
+  },
+};
 
-// // Usage example
-// function gradeQuestion(question: Question, userAnswer: any): number {
-//   switch (question.type) {
-//     case QUESTION_TYPE.MULTIPLE_CHOICE:
-//       return userAnswer === question.correctOptionId ? question.points ?? 0 : 0;
-//     case QUESTION_TYPE.TRUE_FALSE:
-//       return userAnswer === question.correctAnswer ? question.points ?? 0 : 0;
-//     // Add other cases as needed
-//     default:
-//       return 0;
-//   }
-// }
+export function gradeQuestion(
+  data: Question,
+  userAnswer: unknown,
+  cb: LessonQuestionProps<unknown>["onAnswer"]
+) {
+  const questionGrading = QUESTION_GRADING[data.type];
+  if (!questionGrading) {
+    throw new Error("Function not implemented.");
+  }
+
+  const { correct, points } = questionGrading(data, userAnswer);
+  cb(correct, points, data);
+}
 
 export function getModuleNodeTranslation(
   index = 0,

@@ -16,6 +16,7 @@ export const FillInTheBlank = ({
         {data.blanks.map((blank) => (
           <input
             key={blank.id}
+            title={blank.id}
             type="text"
             className="mx-2 p-1 border-b-2 border-gray-300 focus:border-blue-500 outline-none"
             onChange={(e) => handleChange(blank.id, e.target.value)}

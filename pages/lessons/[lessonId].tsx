@@ -75,10 +75,10 @@ export default function Lesson() {
     <main>
       <div className="h-screen flex flex-col justify-between">
         <div>
-          <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto px-6 sm:py-8 py-4">
             <div className="flex justify-between items-center sm:gap-4 gap-2">
               <div>
-                <Button className="hover:bg-transparent -ml-3 px-2 text-border hover:text-foreground/50">
+                <Button className="hover:bg-transparent -ml-3 px-2 py-1 text-border hover:text-foreground/50">
                   <XIcon />
                 </Button>
               </div>
@@ -88,33 +88,38 @@ export default function Lesson() {
           </div>
         </div>
 
-        <div className="flex-1">
-          <Tabs value={String(stateUI.questionIndex)}>
-            {questionFixtures.map((item, index) => (
-              <TabsContent
-                key={item.id}
-                value={String(index)}
-                className="overflow-hidden"
-              >
-                <LessonQuestion
-                  data={item}
-                  answered={stateUI.answered}
-                  checked={stateUI.checked}
-                  status={stateUI.status}
-                  onAnswer={handleOnAnswer}
-                  className={cn(
-                    index === 0
-                      ? ""
-                      : "animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 duration-500"
-                  )}
-                />
-              </TabsContent>
-            ))}
-          </Tabs>
+        <div className="flex-1 overflow-x-hidden">
+          <div className="max-w-2xl mx-auto h-full px-6 sm:pb-12 pb-6">
+            <Tabs
+              value={String(stateUI.questionIndex)}
+              className="w-full h-full"
+            >
+              {questionFixtures.map((item, index) => (
+                <TabsContent
+                  key={item.id}
+                  value={String(index)}
+                  className="mt-0 w-full h-full"
+                >
+                  <LessonQuestion
+                    data={item}
+                    answered={stateUI.answered}
+                    checked={stateUI.checked}
+                    status={stateUI.status}
+                    onAnswer={handleOnAnswer}
+                    className={cn(
+                      "w-full h-full",
+                      index > 0 &&
+                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
+                    )}
+                  />
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
         </div>
 
         <div className="sticky bottom-0 w-full bg-background border-t-2 border-border ">
-          <div className="max-w-4xl mx-auto px-6 py-12">
+          <div className="max-w-4xl mx-auto px-6 sm:py-12 py-6">
             <div className="flex h-12 gap-4 justify-end items-center">
               <div>
                 <ButtonGame
@@ -135,7 +140,7 @@ export default function Lesson() {
                 : "pointer-events-none opacity-0"
             )}
           >
-            <div className="max-w-4xl mx-auto px-6 py-12">
+            <div className="max-w-4xl mx-auto px-6 sm:py-12 py-6">
               <div className="flex h-12 gap-4 sm:justify-between justify-end items-center">
                 <div
                   className={cn(
