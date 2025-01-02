@@ -38,7 +38,7 @@ const CategoryItem = ({
       onDragOver={(e) => handleDragOver(e, id)}
       onDragLeave={handleDragLeave}
       onDrop={(e) => handleDrop(e, id)}
-      className="flex-1"
+      className="flex-1 select-none"
     >
       <div
         className={cn(

@@ -39,7 +39,7 @@ export default function ButtonQuestion({
           ? "bg-blue-500/10 border-blue-500 dark:text-blue-500 text-blue-600"
           : "enabled:hover:bg-border/40 enabled:focus:bg-border/40",
         status === "incorrect" &&
-          "bg-red-500/10 border-red-500 dark:text-red-600 text-red-700",
+          "bg-red-500/10 border-red-500 dark:text-red-500 text-red-700",
         status === "correct" &&
           "bg-green-600/10 border-green-600 dark:text-green-500 text-green-700",
         className

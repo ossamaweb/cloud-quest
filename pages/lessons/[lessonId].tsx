@@ -2,14 +2,14 @@ import LessonFooter from "@/components/lesson-footer";
 import LessonLoading from "@/components/lesson-loading";
 import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
-import ButtonGame from "@/components/ui/button-game";
+
 import ProgressBar from "@/components/ui/progress-bar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LessonQuestionProps, Question } from "@/lib/interfaces";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { LessonQuestionProps } from "@/lib/interfaces";
 import { questionFixtures } from "@/lib/questions.fixtures";
-import { cn, getQuestionEndMessage } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { CheckIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 

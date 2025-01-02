@@ -52,7 +52,9 @@ export default function LessonFooter({
       <div
         className={cn(
           "absolute bottom-0 w-full border-t-2 border-transparent",
-          status === "incorrect" ? "bg-red-100" : "bg-green-100",
+          status === "incorrect"
+            ? "bg-red-100 dark:bg-background-darker"
+            : "bg-green-100 dark:bg-background-darker",
           !checked && "hidden"
         )}
       >
@@ -63,14 +65,14 @@ export default function LessonFooter({
                 "flex items-center justify-start gap-2",
                 "animate-in motion-safe:fade-in duration-150",
                 status === "incorrect"
-                  ? "dark:text-red-500 text-red-600"
-                  : "dark:text-green-600 text-green-700",
+                  ? "dark:text-red-500 text-red-700"
+                  : "dark:text-green-500 text-green-700",
                 checked && "animate-in motion-safe:fade-in-50 duration-150"
               )}
             >
               <div
                 className={cn(
-                  "w-10 h-10 flex-shrink-0 bg-background flex items-center justify-center rounded-full",
+                  "w-10 h-10 flex-shrink-0 bg-background dark:bg-muted flex items-center justify-center rounded-full",
                   checked
                     ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
                     : "opacity-0 scale-0"
