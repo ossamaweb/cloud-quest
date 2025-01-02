@@ -48,7 +48,7 @@ export default function ButtonQuestion({
       {!!label && (
         <span
           className={cn(
-            "px-3 py-1.5 box-content border-2 border-border text-foreground/30 rounded-sm leading-2 text-sm font-bold",
+            "sm:inline-block hidden px-3 py-1.5 box-content border-2 border-border text-foreground/30 rounded-sm leading-2 text-sm font-bold",
             selected && "border-blue-500 dark:text-blue-500 text-blue-600",
             status === "incorrect" &&
               "border-red-500 dark:text-red-600 text-red-700",

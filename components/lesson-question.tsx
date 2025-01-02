@@ -16,13 +16,18 @@ import { FillInTheBlank } from "./ui/question/fill-in-the-blank.question";
 export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   return (
     <div className={props.className}>
-      <div className="flex flex-col justify-between gap-8 w-full h-full">
-        <h2 className="font-bold text-2xl text-foreground">
+      <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
+        <h2 className="font-bold sm:text-2xl text-xl text-foreground">
           <QuestionTitleRenderer type={props.data.type} />
         </h2>
 
         <div className="flex-1 flex flex-col items-stretch justify-center">
-          <QuestionOptionsRenderer {...props} />
+          <div className="sm:space-y-8 space-y-4">
+            <h3 className="sm:text-lg text-base font-medium">
+              {props.data.question}
+            </h3>
+            <QuestionOptionsRenderer {...props} />
+          </div>
         </div>
       </div>
 

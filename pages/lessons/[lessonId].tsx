@@ -1,3 +1,4 @@
+import LessonFooter from "@/components/lesson-footer";
 import LessonLoading from "@/components/lesson-loading";
 import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
@@ -22,12 +23,14 @@ export default function Lesson() {
     status: LessonQuestionProps<unknown>["status"];
     progress: number;
     questionIndex: number;
+    questionExplanation?: string;
   }>({
     answered: false,
     checked: false,
     status: "unanswered",
     progress: 0,
     questionIndex: 0,
+    questionExplanation: undefined,
   });
 
   const totalQuestions = questionFixtures.length;
@@ -39,6 +42,7 @@ export default function Lesson() {
         answered: true,
         checked: autoCheck,
         status: correct ? "correct" : "incorrect",
+        questionExplanation: data.explanation,
       }));
     },
     []
@@ -53,11 +57,12 @@ export default function Lesson() {
 
   const handleOnContinue = useCallback(() => {
     setStateUI((prev) => ({
-      ...prev,
+      status: "unanswered",
       checked: false,
-
+      answered: true, // debug
       progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
       questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
+      questionExplanation: undefined,
     }));
   }, [totalQuestions]);
 
@@ -73,128 +78,61 @@ export default function Lesson() {
 
   return (
     <main>
-      <div className="h-screen flex flex-col justify-between">
-        <div>
-          <div className="max-w-6xl mx-auto px-6 sm:py-8 py-4">
-            <div className="flex justify-between items-center sm:gap-4 gap-2">
-              <div>
-                <Button className="hover:bg-transparent -ml-3 px-2 py-1 text-border hover:text-foreground/50">
-                  <XIcon />
-                </Button>
-              </div>
+      <div className="relative h-screen flex flex-col overflow-x-hidden">
+        <div className="flex-1 flex flex-col justify-between">
+          <div>
+            <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
+              <div className="flex justify-between items-center sm:gap-4 gap-2">
+                <div>
+                  <Button className="hover:bg-transparent -ml-3 px-2 py-1 text-border hover:text-foreground/50">
+                    <XIcon />
+                  </Button>
+                </div>
 
-              <ProgressBar value={stateUI.progress} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-x-hidden">
-          <div className="max-w-2xl mx-auto h-full px-6 sm:pb-12 pb-6">
-            <Tabs
-              value={String(stateUI.questionIndex)}
-              className="w-full h-full"
-            >
-              {questionFixtures.map((item, index) => (
-                <TabsContent
-                  key={item.id}
-                  value={String(index)}
-                  className="mt-0 w-full h-full"
-                >
-                  <LessonQuestion
-                    data={item}
-                    answered={stateUI.answered}
-                    checked={stateUI.checked}
-                    status={stateUI.status}
-                    onAnswer={handleOnAnswer}
-                    className={cn(
-                      "w-full h-full",
-                      index > 0 &&
-                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
-                    )}
-                  />
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
-        </div>
-
-        <div className="sticky bottom-0 w-full bg-background border-t-2 border-border ">
-          <div className="max-w-4xl mx-auto px-6 sm:py-12 py-6">
-            <div className="flex h-12 gap-4 justify-end items-center">
-              <div>
-                <ButtonGame
-                  disabled={!stateUI.answered}
-                  onClick={handleOnCheck}
-                >
-                  Check
-                </ButtonGame>
+                <ProgressBar value={stateUI.progress} />
               </div>
             </div>
           </div>
 
-          <div
-            className={cn(
-              "absolute inset-0 bg-background-darker",
-              stateUI.checked
-                ? "pointer-events-auto animate-in motion-safe:fade-in duration-150"
-                : "pointer-events-none opacity-0"
-            )}
-          >
-            <div className="max-w-4xl mx-auto px-6 sm:py-12 py-6">
-              <div className="flex h-12 gap-4 sm:justify-between justify-end items-center">
-                <div
-                  className={cn(
-                    "flex items-center gap-2",
-                    stateUI.status === "incorrect" &&
-                      "dark:text-red-500 text-red-600",
-                    stateUI.status === "correct" &&
-                      "dark:text-green-600 text-green-700"
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "w-12 h-12 bg-border flex items-center justify-center rounded-full",
-                      stateUI.checked
-                        ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
-                        : "opacity-0 scale-0"
-                    )}
+          <div className="flex-1">
+            <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
+              <Tabs
+                value={String(stateUI.questionIndex)}
+                className="w-full h-full"
+              >
+                {questionFixtures.map((item, index) => (
+                  <TabsContent
+                    key={item.id}
+                    value={String(index)}
+                    className="mt-0 w-full h-full"
                   >
-                    {stateUI.status === "incorrect" ? (
-                      <XIcon strokeWidth={5} />
-                    ) : (
-                      <CheckIcon strokeWidth={5} />
-                    )}
-                  </div>
-
-                  <div className="font-medium text-lg sm:block hidden">
-                    {getQuestionEndMessage(
-                      stateUI.status === "incorrect",
-                      stateUI.questionIndex
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-center items-center gap-4">
-                  {hasExplanation && (
-                    <div>
-                      <ButtonGame className="bg-transparent border-border text-muted-foreground enabled:hover:bg-border/40">
-                        Why?
-                      </ButtonGame>
-                    </div>
-                  )}
-                  <div>
-                    <ButtonGame
+                    <LessonQuestion
+                      data={item}
+                      answered={stateUI.answered}
+                      checked={stateUI.checked}
                       status={stateUI.status}
-                      onClick={handleOnContinue}
-                    >
-                      Continue
-                    </ButtonGame>
-                  </div>
-                </div>
-              </div>
+                      onAnswer={handleOnAnswer}
+                      className={cn(
+                        "w-full h-full",
+                        index > 0 &&
+                          "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
+                      )}
+                    />
+                  </TabsContent>
+                ))}
+              </Tabs>
             </div>
           </div>
         </div>
+        <LessonFooter
+          answered={stateUI.answered}
+          checked={stateUI.checked}
+          status={stateUI.status}
+          questionIndex={stateUI.questionIndex}
+          questionExplanation={stateUI.questionExplanation}
+          handleOnCheck={handleOnCheck}
+          handleOnContinue={handleOnContinue}
+        />
       </div>
     </main>
   );

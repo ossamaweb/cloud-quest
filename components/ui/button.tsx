@@ -29,7 +29,7 @@ export default function Button({
         active
           ? "border-primary/30 bg-primary/10 text-primary"
           : "enabled:hover:bg-accent",
-        "disabled:cursor-not-allowed",
+        "disabled:cursor-not-allowed ",
         className
       )}
     >

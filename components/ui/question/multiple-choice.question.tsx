@@ -22,23 +22,20 @@ export const MultipleChoice = ({
   );
 
   return (
-    <div className="space-y-8">
-      <h3 className="text-lg font-medium">{data.question}</h3>
-      <div className="space-y-2">
-        {data.options.map((option, index) => (
-          <div key={option.id}>
-            <ButtonQuestion
-              text={option.text}
-              label={String(index + 1)}
-              selected={selectedId === option.id}
-              checked={checked}
-              disabled={checked}
-              status={checked && selectedId === option.id ? status : undefined}
-              onClick={() => handleOnClick(option.id)}
-            />
-          </div>
-        ))}
-      </div>
+    <div className="space-y-2">
+      {data.options.map((option, index) => (
+        <div key={option.id}>
+          <ButtonQuestion
+            text={option.text}
+            label={String(index + 1)}
+            selected={selectedId === option.id}
+            checked={checked}
+            disabled={checked}
+            status={checked && selectedId === option.id ? status : undefined}
+            onClick={() => handleOnClick(option.id)}
+          />
+        </div>
+      ))}
     </div>
   );
 };

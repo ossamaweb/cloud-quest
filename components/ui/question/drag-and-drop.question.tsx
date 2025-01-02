@@ -42,7 +42,7 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "rounded-lg px-2 py-1 h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30 transition-all",
+          "rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30 transition-all",
           draggingId && !droppedId && "border-blue-500/50",
           dragOverId === id && "border-blue-500 bg-blue-500/10",
           droppedId && "bg-green-600/10 border-green-600",
@@ -102,7 +102,7 @@ const DraggableItem = ({
       onDragStart={(e) => handleDragStart(e, id)}
       onDragEnd={handleDragEnd}
       className={cn(
-        "w-auto border-2 border-b-4 border-border rounded-lg px-4 py-2 bg-background transition-colors",
+        "truncate w-auto border-2 border-b-4 border-border rounded-lg px-4 py-2 bg-background transition-colors",
         droppedId && "invisible",
         draggable &&
           "opacity-100 cursor-move hover:bg-border/40 focus:bg-border/40",
@@ -265,8 +265,8 @@ export const DragAndDrop = ({
   }, [data.categories, data.items]);
 
   return (
-    <div className="flex flex-col justify-around gap-8 h-full">
-      <div className="gap-4 flex items-center justify-between flex-wrap">
+    <div className="flex flex-col justify-around sm:gap-16 gap-8">
+      <div className="gap-4 grid grid-cols-2 sm:grid-cols-4">
         {categories.map((category) => (
           <CategoryItem
             key={category.id}
