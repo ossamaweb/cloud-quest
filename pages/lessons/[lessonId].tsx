@@ -32,11 +32,12 @@ export default function Lesson() {
 
   const totalQuestions = questionFixtures.length;
 
-  const handleOnAnswer = useCallback(
-    (correct: boolean, points: number, data: Question) => {
+  const handleOnAnswer = useCallback<LessonQuestionProps<unknown>["onAnswer"]>(
+    (correct, points, autoCheck, data) => {
       setStateUI((prev) => ({
         ...prev,
         answered: true,
+        checked: autoCheck,
         status: correct ? "correct" : "incorrect",
       }));
     },
@@ -47,7 +48,6 @@ export default function Lesson() {
     setStateUI((prev) => ({
       ...prev,
       checked: true,
-      incorrect: Math.random() < 0.5,
     }));
   }, []);
 
@@ -55,7 +55,7 @@ export default function Lesson() {
     setStateUI((prev) => ({
       ...prev,
       checked: false,
-      incorrect: false,
+
       progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
       questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
     }));
@@ -155,7 +155,7 @@ export default function Lesson() {
                     className={cn(
                       "w-12 h-12 bg-border flex items-center justify-center rounded-full",
                       stateUI.checked
-                        ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-300"
+                        ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
                         : "opacity-0 scale-0"
                     )}
                   >

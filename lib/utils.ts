@@ -1,9 +1,17 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import {
+  DragAndDropQuestion,
+  FillInTheBlankQuestion,
+  ImageIdentificationQuestion,
   LessonQuestionProps,
+  MatchingQuestion,
   MultipleChoiceQuestion,
+  OrderingQuestion,
   Question,
+  ScenarioBasedQuestion,
+  ShortAnswerQuestion,
+  TrueFalseQuestion,
 } from "./interfaces";
 import { QUESTION_TYPE } from "./enums";
 
@@ -39,61 +47,100 @@ const QUESTION_GRADING: Record<
   (
     question: Question,
     userAnswer: unknown
-  ) => { correct: boolean; points: number }
+  ) => { correct: boolean; points: number; autoCheck: boolean }
 > = {
   [QUESTION_TYPE.MULTIPLE_CHOICE]: (question, userAnswer) => {
     const mcQuestion = question as MultipleChoiceQuestion;
-    const correct = userAnswer === mcQuestion.correctOptionId;
+    const mcAnswer = userAnswer as string;
+    const correct = mcAnswer === mcQuestion.correctOptionId;
     const points = mcQuestion.points ?? 0;
-    return { correct, points };
+    return { correct, points, autoCheck: false };
   },
-  [QUESTION_TYPE.DRAG_AND_DROP]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
+
+  [QUESTION_TYPE.DRAG_AND_DROP]: (question, userAnswer) => {
+    const ddQuestion = question as DragAndDropQuestion;
+    const ddAnswer = userAnswer as Record<string, string>;
+
+    const correct = Object.entries(ddAnswer).every(
+      ([key, value]) => ddQuestion.correctPairings[key] === value
+    );
+    return {
+      correct,
+      points: correct ? ddQuestion.points ?? 0 : 0,
+      autoCheck: true,
+    };
+  },
+
+  [QUESTION_TYPE.SCENARIO_BASED]: (question, userAnswer) => {
     throw new Error("Function not implemented.");
   },
-  [QUESTION_TYPE.SCENARIO_BASED]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
-    throw new Error("Function not implemented.");
+
+  [QUESTION_TYPE.SHORT_ANSWER]: (question, userAnswer) => {
+    const saQuestion = question as ShortAnswerQuestion;
+    const userText = (userAnswer as string).toLowerCase().trim();
+    const correct =
+      saQuestion.acceptableAnswers
+        ?.map((answer) => answer.toLowerCase().trim())
+        .includes(userText) ?? false;
+    return {
+      correct,
+      points: correct ? saQuestion.points ?? 0 : 0,
+      autoCheck: false,
+    };
   },
-  [QUESTION_TYPE.SHORT_ANSWER]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
+
+  [QUESTION_TYPE.FILL_IN_THE_BLANK]: (question, userAnswer) => {
     throw new Error("Function not implemented.");
+    // const fibQuestion = question as FillInTheBlankQuestion;
+    // const userAnswers = userAnswer as string[];
+    // const correct = userAnswers.every(
+    //   (answer, index) =>
+    //     answer.toLowerCase().trim() ===
+    //     fibQuestion.correctAnswers[index].toLowerCase().trim()
+    // );
+    // return { correct, points: correct ? fibQuestion.points ?? 0 : 0 };
   },
-  [QUESTION_TYPE.FILL_IN_THE_BLANK]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
+
+  [QUESTION_TYPE.MATCHING]: (question, userAnswer) => {
     throw new Error("Function not implemented.");
+    // const mQuestion = question as MatchingQuestion;
+    // const userPairs = userAnswer as Array<[string, string]>;
+    // const correct = userPairs.every(
+    //   ([left, right]) => mQuestion.correctPairs[left] === right
+    // );
+    // return { correct, points: correct ? mQuestion.points ?? 0 : 0 };
   },
-  [QUESTION_TYPE.MATCHING]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
-    throw new Error("Function not implemented.");
+
+  [QUESTION_TYPE.TRUE_FALSE]: (question, userAnswer) => {
+    const tfQuestion = question as TrueFalseQuestion;
+    const correct = userAnswer === tfQuestion.correctAnswer;
+    return {
+      correct,
+      points: correct ? tfQuestion.points ?? 0 : 0,
+      autoCheck: false,
+    };
   },
-  [QUESTION_TYPE.TRUE_FALSE]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
-    throw new Error("Function not implemented.");
+
+  [QUESTION_TYPE.ORDERING]: (question, userAnswer) => {
+    const oQuestion = question as OrderingQuestion;
+    const userOrder = userAnswer as string[];
+    const correct =
+      JSON.stringify(userOrder) === JSON.stringify(oQuestion.correctOrder);
+    return {
+      correct,
+      points: correct ? oQuestion.points ?? 0 : 0,
+      autoCheck: false,
+    };
   },
-  [QUESTION_TYPE.ORDERING]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
+
+  [QUESTION_TYPE.IMAGE_IDENTIFICATION]: (question, userAnswer) => {
     throw new Error("Function not implemented.");
-  },
-  [QUESTION_TYPE.IMAGE_IDENTIFICATION]: function (
-    question: Question,
-    userAnswer: unknown
-  ): { correct: boolean; points: number } {
-    throw new Error("Function not implemented.");
+    // const imgQuestion = question as ImageIdentificationQuestion;
+    // const userIdentification = (userAnswer as string).toLowerCase().trim();
+    // const correct = imgQuestion.correctOptionId
+    //   .map((id) => id.toLowerCase().trim())
+    //   .includes(userIdentification);
+    // return { correct, points: correct ? imgQuestion.points ?? 0 : 0 };
   },
 };
 
@@ -107,8 +154,8 @@ export function gradeQuestion(
     throw new Error("Function not implemented.");
   }
 
-  const { correct, points } = questionGrading(data, userAnswer);
-  cb(correct, points, data);
+  const { correct, points, autoCheck } = questionGrading(data, userAnswer);
+  cb(correct, points, autoCheck, data);
 }
 
 export function getModuleNodeTranslation(

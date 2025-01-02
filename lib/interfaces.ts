@@ -4,7 +4,7 @@ import { QUESTION_TYPE } from "./enums";
 export type ID = string;
 
 // Base interfaces
-interface Option {
+export interface QuestionOption {
   id: ID;
   text: string;
   imageUrl?: string;
@@ -21,14 +21,14 @@ export interface BaseQuestion {
 // Specific question type interfaces
 export interface MultipleChoiceQuestion extends BaseQuestion {
   type: QUESTION_TYPE.MULTIPLE_CHOICE;
-  options: Option[];
+  options: QuestionOption[];
   correctOptionId: ID;
 }
 
 export interface DragAndDropQuestion extends BaseQuestion {
   type: QUESTION_TYPE.DRAG_AND_DROP;
-  categories: Option[];
-  items: Option[];
+  categories: QuestionOption[];
+  items: QuestionOption[];
   correctPairings: Record<ID, ID>; // itemId -> categoryId
 }
 
@@ -83,8 +83,8 @@ export interface FillInTheBlankQuestion extends BaseQuestion {
 
 export interface MatchingQuestion extends BaseQuestion {
   type: QUESTION_TYPE.MATCHING;
-  terms: Option[];
-  definitions: Option[];
+  terms: QuestionOption[];
+  definitions: QuestionOption[];
   correctPairings: Record<ID, ID>; // termId -> definitionId
 }
 
@@ -95,7 +95,7 @@ export interface TrueFalseQuestion extends BaseQuestion {
 
 export interface OrderingQuestion extends BaseQuestion {
   type: QUESTION_TYPE.ORDERING;
-  items: Option[];
+  items: QuestionOption[];
   correctOrder: ID[]; // Array of item IDs in correct order
 }
 
@@ -105,7 +105,7 @@ export interface ImageIdentificationQuestion extends BaseQuestion {
     url: string;
     altText: string;
   };
-  options: Option[];
+  options: QuestionOption[];
   correctOptionId: ID;
 }
 
@@ -126,6 +126,11 @@ export interface LessonQuestionProps<T> {
   answered: boolean;
   checked: boolean;
   status: "unanswered" | "correct" | "incorrect";
-  onAnswer: (correct: boolean, points: number, data: Question) => void;
+  onAnswer: (
+    correct: boolean,
+    points: number,
+    autoCheck: boolean,
+    data: Question
+  ) => void;
   className?: string;
 }

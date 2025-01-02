@@ -36,12 +36,12 @@ export default function ButtonQuestion({
         "enabled:active:translate-y-0.5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)] transition-all duration-100",
         "focus:outline-offset-2",
         selected
-          ? "bg-blue-100/10 border-blue-500 dark:text-blue-500 text-blue-600"
+          ? "bg-blue-500/10 border-blue-500 dark:text-blue-500 text-blue-600"
           : "enabled:hover:bg-border/40 enabled:focus:bg-border/40",
         status === "incorrect" &&
-          "bg-red-100/10 border-red-500 dark:text-red-600 text-red-700",
+          "bg-red-500/10 border-red-500 dark:text-red-600 text-red-700",
         status === "correct" &&
-          "bg-green-100/10 border-green-600 dark:text-green-500 text-green-700",
+          "bg-green-600/10 border-green-600 dark:text-green-500 text-green-700",
         className
       )}
     >
