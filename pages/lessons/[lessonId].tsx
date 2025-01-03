@@ -74,7 +74,6 @@ export default function Lesson() {
     }));
   }, [totalQuestions]);
 
-  const hasExplanation = true;
   const loading = false;
   if (loading) {
     return (
@@ -86,9 +85,9 @@ export default function Lesson() {
 
   return (
     <main>
-      <div className="h-screen flex flex-col overflow-y-scroll overflow-x-hidden">
+      <div className="full-height flex flex-col overflow-y-scroll overflow-x-hidden">
         <div className="flex-1 flex flex-col justify-between">
-          <div>
+          <div className="flex-shrink-0">
             <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
               <div className="flex justify-between items-center sm:gap-4 gap-2">
                 <div>

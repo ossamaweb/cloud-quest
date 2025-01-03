@@ -81,11 +81,12 @@ export const FillInTheBlank = ({
         onChange={(e) => handleChange(e, blank.id)}
         className={cn(
           "py-1 bg-transparent border-b-2 border-border focus:border-blue-500 outline-none transition-colors",
-          checked
-            ? correct
-              ? "border-green-600 dark:text-green-500 text-green-700"
-              : "border-red-500 dark:text-red-500 text-red-700"
-            : ""
+          checked &&
+            !correct &&
+            "border-red-500 dark:text-red-500 text-red-700",
+          checked &&
+            correct &&
+            "border-green-600 dark:text-green-500 text-green-700"
         )}
         style={{
           minWidth: "6ch",

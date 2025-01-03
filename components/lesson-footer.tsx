@@ -39,7 +39,7 @@ export default function LessonFooter({
             <div className="sm:w-auto w-full">
               <ButtonGame
                 className="w-full sm:w-40"
-                disabled={!answered}
+                disabled={!answered || checked}
                 onClick={handleOnCheck}
               >
                 Check

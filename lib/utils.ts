@@ -126,13 +126,17 @@ const QUESTION_GRADING: Record<
   },
 
   [QUESTION_TYPE.MATCHING]: (question, userAnswer) => {
-    throw new Error("Function not implemented.");
-    // const mQuestion = question as MatchingQuestion;
-    // const userPairs = userAnswer as Array<[string, string]>;
-    // const correct = userPairs.every(
-    //   ([left, right]) => mQuestion.correctPairs[left] === right
-    // );
-    // return { correct, points: correct ? mQuestion.points ?? 0 : 0 };
+    const mQuestion = question as MatchingQuestion;
+    const mAnswer = userAnswer as Record<string, string>;
+
+    const correct = Object.entries(mAnswer).every(
+      ([key, value]) => mQuestion.correctPairings[key] === value
+    );
+    return {
+      correct,
+      points: correct ? mQuestion.points ?? 0 : 0,
+      autoCheck: true,
+    };
   },
 
   [QUESTION_TYPE.TRUE_FALSE]: (question, userAnswer) => {

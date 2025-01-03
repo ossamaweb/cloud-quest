@@ -2,6 +2,32 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // Matching Question
+  {
+    id: "match-001",
+    type: QUESTION_TYPE.MATCHING,
+    question: "Match each AWS service with its primary use case:",
+    terms: [
+      { id: "term1", text: "Amazon EC2" },
+      { id: "term2", text: "Amazon S3" },
+      { id: "term3", text: "Amazon RDS" },
+      { id: "term4", text: "Amazon Route 53" },
+    ],
+    definitions: [
+      { id: "def1", text: "Virtual servers in the cloud" },
+      { id: "def2", text: "Object storage service" },
+      { id: "def3", text: "Managed relational database service" },
+      { id: "def4", text: "DNS web service" },
+    ],
+    correctPairings: {
+      term1: "def1",
+      term2: "def2",
+      term3: "def3",
+      term4: "def4",
+    },
+    points: 20,
+  },
+
   // Fill in the Blank Question
   {
     id: "fb-001",
@@ -73,32 +99,6 @@ export const questionFixtures: Question[] = [
       item2: "cat2",
       item3: "cat3",
       item4: "cat4",
-    },
-    points: 20,
-  },
-
-  // Matching Question
-  {
-    id: "match-001",
-    type: QUESTION_TYPE.MATCHING,
-    question: "Match each AWS service with its primary use case:",
-    terms: [
-      { id: "term1", text: "Amazon EC2" },
-      { id: "term2", text: "Amazon S3" },
-      { id: "term3", text: "Amazon RDS" },
-      { id: "term4", text: "Amazon Route 53" },
-    ],
-    definitions: [
-      { id: "def1", text: "Virtual servers in the cloud" },
-      { id: "def2", text: "Object storage service" },
-      { id: "def3", text: "Managed relational database service" },
-      { id: "def4", text: "DNS web service" },
-    ],
-    correctPairings: {
-      term1: "def1",
-      term2: "def2",
-      term3: "def3",
-      term4: "def4",
     },
     points: 20,
   },

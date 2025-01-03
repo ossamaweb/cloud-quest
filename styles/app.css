@@ -8,11 +8,11 @@
   :root {
     --background: 0 0% 100%;
     --background-darker: 0 0% 97%;
-    --foreground: 20 14.3% 4.1%;
+    --foreground: 233.18 13.71% 7.56;
     --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
+    --card-foreground: 233.18 13.71% 7.56;
     --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
+    --popover-foreground: 233.18 13.71% 7.56;
     --primary: 24.6 95% 53.1%;
     --primary-foreground: 60 9.1% 97.8%;
     --primary-darker: 24.6 95% 43.1%;
@@ -36,12 +36,12 @@
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --background-darker: 20 14.3% 1.1%;
+    --background: 233.18 13.71% 7.56;
+    --background-darker: 233.18 13.71% 4.56;
     --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
+    --card: 233.18 13.71% 7.56;
     --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
+    --popover: 233.18 13.71% 7.56;
     --popover-foreground: 60 9.1% 97.8%;
     --primary: 20.5 90.2% 48.2%;
     --primary-foreground: 60 9.1% 97.8%;
@@ -74,6 +74,15 @@
   body {
     @apply bg-background text-foreground;
   }
+
 }
 
 @layer components {}
+
+
+.full-height {
+  height: -webkit-fill-available;
+  height: 100vh; /* Fallback */
+  min-height: -webkit-fill-available;
+  min-height: 100vh;
+}
