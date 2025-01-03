@@ -9,16 +9,16 @@ export const MultipleChoice = ({
   data,
   status,
   checked,
-  onAnswer,
+  onGrade,
 }: LessonQuestionProps<MultipleChoiceQuestion>) => {
   const [{ selectedId }, setState] = useState({ selectedId: "" });
 
   const handleOnClick = useCallback(
     (optionId: string) => {
       setState({ selectedId: optionId });
-      gradeQuestion(data, optionId, onAnswer);
+      gradeQuestion(data, optionId, onGrade);
     },
-    [data, onAnswer]
+    [data, onGrade]
   );
 
   return (

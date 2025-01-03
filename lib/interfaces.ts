@@ -73,7 +73,6 @@ export interface ShortAnswerQuestion extends BaseQuestion {
 
 export interface FillInTheBlankQuestion extends BaseQuestion {
   type: QUESTION_TYPE.FILL_IN_THE_BLANK;
-  questionText: string;
   blanks: {
     id: ID;
     correctAnswer: string;
@@ -126,11 +125,12 @@ export interface LessonQuestionProps<T> {
   answered: boolean;
   checked: boolean;
   status: "unanswered" | "correct" | "incorrect";
-  onAnswer: (
+  onGrade: (
     correct: boolean,
     points: number,
     autoCheck: boolean,
     data: Question
   ) => void;
+  onAnswer: (answered: boolean) => void;
   className?: string;
 }

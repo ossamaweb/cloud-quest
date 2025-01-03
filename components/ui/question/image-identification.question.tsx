@@ -21,8 +21,8 @@ export const ImageIdentification = ({
               type="radio"
               name={data.id}
               value={option.id}
-              //onChange={() => onAnswer(option.id)}
-              //onAnswer: (optionId: string) => void;
+              //onChange={() => onGrade(option.id)}
+              //onGrade: (optionId: string) => void;
             />
             <span>{option.text}</span>
           </label>

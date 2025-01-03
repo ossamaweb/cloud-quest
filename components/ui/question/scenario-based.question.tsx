@@ -11,8 +11,8 @@ export const ScenarioBased = ({
       <textarea
         className="w-full p-2 border-2 border-border bg-muted rounded-lg"
         rows={6}
-        // onChange={(e) => onAnswer(e.target.value)}
-        // onAnswer: (answer: string) => void;
+        // onChange={(e) => onGrade(e.target.value)}
+        // onGrade: (answer: string) => void;
         placeholder="Enter your answer here..."
       />
     </div>

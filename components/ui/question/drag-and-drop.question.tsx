@@ -128,7 +128,7 @@ interface DragAndDropQuestionState {
 export const DragAndDrop = ({
   data,
   checked,
-  onAnswer,
+  onGrade,
 }: LessonQuestionProps<DragAndDropQuestion>) => {
   const [
     { pairings, incorrect, draggingId, dragOverId, categoryItem },
@@ -232,12 +232,12 @@ export const DragAndDrop = ({
       Object.keys(pairings).length === Object.keys(data.correctPairings).length
     ) {
       const timeout = setTimeout(() => {
-        gradeQuestion(data, pairings, onAnswer);
+        gradeQuestion(data, pairings, onGrade);
       }, 300);
 
       return () => clearTimeout(timeout);
     }
-  }, [data, onAnswer, pairings]);
+  }, [data, onGrade, pairings]);
 
   useEffect(() => {
     if (incorrect.categoryId) {
@@ -287,7 +287,7 @@ export const DragAndDrop = ({
         ))}
       </div>
 
-      <div className="flex items-end gap-4 flex-wrap">
+      <div className="flex justify-center items-end gap-4 flex-wrap">
         {items.map((item) => (
           <DraggableItem
             key={item.id}

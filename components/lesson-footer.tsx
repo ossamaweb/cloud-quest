@@ -53,8 +53,8 @@ export default function LessonFooter({
         className={cn(
           "absolute bottom-0 w-full border-t-2 border-transparent",
           status === "incorrect"
-            ? "bg-red-100 dark:bg-background-darker"
-            : "bg-green-100 dark:bg-background-darker",
+            ? "bg-red-100 dark:bg-border/50"
+            : "bg-green-100 dark:bg-border/50",
           !checked && "hidden"
         )}
       >
@@ -72,7 +72,7 @@ export default function LessonFooter({
             >
               <div
                 className={cn(
-                  "w-10 h-10 flex-shrink-0 bg-background dark:bg-muted flex items-center justify-center rounded-full",
+                  "w-10 h-10 flex-shrink-0 bg-background  flex items-center justify-center rounded-full",
                   checked
                     ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
                     : "opacity-0 scale-0"

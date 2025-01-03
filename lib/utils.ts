@@ -42,6 +42,20 @@ export function getQuestionEndMessage(
   return ANSWER_MSG_CORRECT[questionIndex % ANSWER_MSG_CORRECT.length];
 }
 
+export function validateBlankAnswer(
+  userAnswer: string | undefined,
+  correctAnswer: string,
+  acceptableAnswers?: string[]
+): boolean {
+  const userValue = userAnswer?.trim().toLowerCase() ?? "";
+  const correctAnswers = [correctAnswer, ...(acceptableAnswers ?? [])];
+  const blankCorrect =
+    correctAnswers.map((ac) => ac.toLowerCase().trim()).includes(userValue) ??
+    false;
+
+  return blankCorrect;
+}
+
 const QUESTION_GRADING: Record<
   QUESTION_TYPE,
   (
@@ -78,27 +92,37 @@ const QUESTION_GRADING: Record<
   [QUESTION_TYPE.SHORT_ANSWER]: (question, userAnswer) => {
     const saQuestion = question as ShortAnswerQuestion;
     const userText = (userAnswer as string).toLowerCase().trim();
+    const correctAnswers = [
+      saQuestion.correctAnswer,
+      ...(saQuestion.acceptableAnswers ?? []),
+    ];
     const correct =
-      saQuestion.acceptableAnswers
-        ?.map((answer) => answer.toLowerCase().trim())
+      correctAnswers
+        .map((answer) => answer.toLowerCase().trim())
         .includes(userText) ?? false;
     return {
       correct,
       points: correct ? saQuestion.points ?? 0 : 0,
-      autoCheck: false,
+      autoCheck: true,
     };
   },
 
   [QUESTION_TYPE.FILL_IN_THE_BLANK]: (question, userAnswer) => {
-    throw new Error("Function not implemented.");
-    // const fibQuestion = question as FillInTheBlankQuestion;
-    // const userAnswers = userAnswer as string[];
-    // const correct = userAnswers.every(
-    //   (answer, index) =>
-    //     answer.toLowerCase().trim() ===
-    //     fibQuestion.correctAnswers[index].toLowerCase().trim()
-    // );
-    // return { correct, points: correct ? fibQuestion.points ?? 0 : 0 };
+    // throw new Error("Function not implemented.");
+    const fibQuestion = question as FillInTheBlankQuestion;
+    const fibAnswer = userAnswer as Record<string, string>;
+
+    // Check if all blanks are filled and correct
+    const correct = fibQuestion.blanks.every(
+      ({ id, correctAnswer, acceptableAnswers }) =>
+        validateBlankAnswer(fibAnswer[id], correctAnswer, acceptableAnswers)
+    );
+
+    return {
+      correct,
+      points: correct ? fibQuestion.points ?? 0 : 0,
+      autoCheck: true,
+    };
   },
 
   [QUESTION_TYPE.MATCHING]: (question, userAnswer) => {
@@ -147,7 +171,7 @@ const QUESTION_GRADING: Record<
 export function gradeQuestion(
   data: Question,
   userAnswer: unknown,
-  cb: LessonQuestionProps<unknown>["onAnswer"]
+  cb: LessonQuestionProps<unknown>["onGrade"]
 ) {
   const questionGrading = QUESTION_GRADING[data.type];
   if (!questionGrading) {

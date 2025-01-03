@@ -20,7 +20,6 @@ export default function ModuleContainer({
       // Handle module node click
       console.log("Module node clicked:", id);
       router.push(`/lessons/${id}`);
-      console.log("x");
     },
     [router]
   );

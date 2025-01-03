@@ -19,14 +19,12 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
     <div className={cn("w-full h-full", props.className)}>
       <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
         <h2 className="font-bold sm:text-2xl text-xl text-foreground">
-          <QuestionTitleRenderer type={props.data.type} />
+          <QuestionHeaderRenderer type={props.data.type} />
         </h2>
 
         <div className="flex-1 flex flex-col items-stretch justify-center">
           <div className="sm:space-y-8 space-y-4">
-            <h3 className="sm:text-lg text-base font-medium">
-              {props.data.question}
-            </h3>
+            <QuestionTitleRenderer {...props} />
             <QuestionOptionsRenderer {...props} />
           </div>
         </div>
@@ -48,10 +46,48 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   );
 }
 
+function QuestionHeaderRenderer({
+  type,
+}: {
+  type: QUESTION_TYPE;
+}): React.ReactNode {
+  switch (type) {
+    case QUESTION_TYPE.MULTIPLE_CHOICE:
+      return "Select the correct option";
+    case QUESTION_TYPE.DRAG_AND_DROP:
+      return "Drag and drop to correct positions";
+    case QUESTION_TYPE.SCENARIO_BASED:
+      return "Solve the following scenario";
+    case QUESTION_TYPE.SHORT_ANSWER:
+      return "Write a short answer";
+    case QUESTION_TYPE.FILL_IN_THE_BLANK:
+      return "Fill in the blank";
+    case QUESTION_TYPE.MATCHING:
+      return "Select the matching pairs";
+    case QUESTION_TYPE.TRUE_FALSE:
+      return "True or false";
+    case QUESTION_TYPE.ORDERING:
+      return "Order items correctly";
+    case QUESTION_TYPE.IMAGE_IDENTIFICATION:
+      return "Identify the image";
+    default:
+      return "Answer the following question";
+  }
+}
+
+function QuestionTitleRenderer({
+  data,
+}: LessonQuestionProps<Question>): React.ReactNode {
+  if (data.type === QUESTION_TYPE.FILL_IN_THE_BLANK) {
+    return null;
+  }
+  return <h3 className="sm:text-lg text-base font-medium">{data.question}</h3>;
+}
+
 function QuestionOptionsRenderer({
   data,
   ...rest
-}: LessonQuestionProps<Question>): React.JSX.Element {
+}: LessonQuestionProps<Question>): React.ReactNode {
   switch (data.type) {
     case QUESTION_TYPE.MULTIPLE_CHOICE:
       return <MultipleChoice data={data} {...rest} />;
@@ -73,34 +109,5 @@ function QuestionOptionsRenderer({
       return <ImageIdentification data={data} {...rest} />;
     default:
       return <div>Unsupported question type</div>;
-  }
-}
-
-function QuestionTitleRenderer({
-  type,
-}: {
-  type: QUESTION_TYPE;
-}): React.ReactNode {
-  switch (type) {
-    case QUESTION_TYPE.MULTIPLE_CHOICE:
-      return "Select the correct option";
-    case QUESTION_TYPE.DRAG_AND_DROP:
-      return "Drag and drop to correct positions";
-    case QUESTION_TYPE.SCENARIO_BASED:
-      return "Solve the following scenario";
-    case QUESTION_TYPE.SHORT_ANSWER:
-      return "Provide a short answer";
-    case QUESTION_TYPE.FILL_IN_THE_BLANK:
-      return "Fill in the blank";
-    case QUESTION_TYPE.MATCHING:
-      return "Select the matching pairs";
-    case QUESTION_TYPE.TRUE_FALSE:
-      return "True or false";
-    case QUESTION_TYPE.ORDERING:
-      return "Order items correctly";
-    case QUESTION_TYPE.IMAGE_IDENTIFICATION:
-      return "Identify the image";
-    default:
-      return "Answer the following question";
   }
 }

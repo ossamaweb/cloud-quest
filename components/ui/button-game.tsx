@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useCallback } from "react";
+import React from "react";
 import Button, { ButtonProps } from "./button";
 import { LessonQuestionProps } from "@/lib/interfaces";
 
@@ -15,23 +15,10 @@ export default function ButtonGame({
   onClick,
   ...rest
 }: ButtonGameProps) {
-  const handleOnClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (onClick) {
-        const timer = setTimeout(() => {
-          onClick(event);
-        }, 100); // double the css duration
-
-        return () => clearTimeout(timer);
-      }
-    },
-    [onClick]
-  );
-
   return (
     <Button
       {...rest}
-      onClick={handleOnClick}
+      onClick={onClick}
       className={cn(
         "border-transparent border-b-4 text-background w-40 py-2 inline-flex items-center justify-center disabled:bg-muted disabled:border-b-muted disabled:text-muted-foreground",
         "active:translate-y-0.5 active:border-b-2 active:pb-[calc(0.5rem+2px)] transition-all duration-100",

@@ -35,8 +35,9 @@ export default function Lesson() {
 
   const totalQuestions = questionFixtures.length;
 
-  const handleOnAnswer = useCallback<LessonQuestionProps<unknown>["onAnswer"]>(
+  const handleOnGrade = useCallback<LessonQuestionProps<unknown>["onGrade"]>(
     (correct, points, autoCheck, data) => {
+      console.log({ correct, points, autoCheck, data });
       setStateUI((prev) => ({
         ...prev,
         answered: true,
@@ -47,6 +48,13 @@ export default function Lesson() {
     },
     []
   );
+
+  const handleOnAnswer = useCallback((answered: boolean) => {
+    setStateUI((prev) => ({
+      ...prev,
+      answered,
+    }));
+  }, []);
 
   const handleOnCheck = useCallback(() => {
     setStateUI((prev) => ({
@@ -59,7 +67,7 @@ export default function Lesson() {
     setStateUI((prev) => ({
       status: "unanswered",
       checked: false,
-      answered: true, // debug
+      answered: false, // debug
       progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
       questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
       questionExplanation: undefined,
@@ -108,7 +116,7 @@ export default function Lesson() {
                     className={cn(
                       "mt-0 w-full h-full",
                       index > 0 &&
-                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-1000"
+                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
                     )}
                   >
                     <LessonQuestion
@@ -116,6 +124,7 @@ export default function Lesson() {
                       answered={stateUI.answered}
                       checked={stateUI.checked}
                       status={stateUI.status}
+                      onGrade={handleOnGrade}
                       onAnswer={handleOnAnswer}
                     />
                   </TabsContent>

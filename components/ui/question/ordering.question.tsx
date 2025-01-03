@@ -12,8 +12,8 @@ export const Ordering = ({ data }: LessonQuestionProps<OrderingQuestion>) => {
   //   newItems.splice(result.destination.index, 0, reorderedItem);
 
   //   setItems(newItems);
-  //   //onAnswer(newItems.map((item) => item.id));
-  //   //onAnswer: (order: string[]) => void
+  //   //onGrade(newItems.map((item) => item.id));
+  //   //onGrade: (order: string[]) => void
   // };
 
   return (

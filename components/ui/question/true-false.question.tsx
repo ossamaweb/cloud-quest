@@ -10,8 +10,8 @@ export const TrueFalse = ({ data }: LessonQuestionProps<TrueFalseQuestion>) => {
             type="radio"
             name={data.id}
             value="true"
-            // onChange={() => onAnswer(true)}
-            // onAnswer: (answer: boolean) => void;
+            // onChange={() => onGrade(true)}
+            // onGrade: (answer: boolean) => void;
           />
           <span className="ml-2">True</span>
         </label>
@@ -20,8 +20,8 @@ export const TrueFalse = ({ data }: LessonQuestionProps<TrueFalseQuestion>) => {
             type="radio"
             name={data.id}
             value="false"
-            // onChange={() => onAnswer(false)}
-            // onAnswer: (answer: boolean) => void;
+            // onChange={() => onGrade(false)}
+            // onGrade: (answer: boolean) => void;
           />
           <span className="ml-2">False</span>
         </label>
