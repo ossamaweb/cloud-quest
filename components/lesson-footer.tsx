@@ -52,10 +52,10 @@ export default function LessonFooter({
       <div
         className={cn(
           "absolute bottom-0 w-full border-t-2 border-transparent",
+          (!checked || status === "unanswered") && "hidden",
           status === "incorrect"
             ? "bg-red-100 dark:bg-border/50"
-            : "bg-green-100 dark:bg-border/50",
-          !checked && "hidden"
+            : "bg-green-100 dark:bg-border/50"
         )}
       >
         <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
@@ -63,19 +63,16 @@ export default function LessonFooter({
             <div
               className={cn(
                 "flex items-center justify-start gap-2",
-                "animate-in motion-safe:fade-in duration-150",
-                status === "incorrect"
-                  ? "dark:text-red-500 text-red-700"
-                  : "dark:text-green-500 text-green-700",
-                checked && "animate-in motion-safe:fade-in-50 duration-150"
+                "motion-safe:animate-in motion-safe:fade-in motion-safe:duration-150",
+                status === "incorrect" && "dark:text-red-500 text-red-700",
+                status === "correct" && "dark:text-green-500 text-green-700",
+                "motion-safe:animate-in motion-safe:slide-in-from-bottom-full motion-safe:duration-150"
               )}
             >
               <div
                 className={cn(
-                  "w-10 h-10 flex-shrink-0 bg-background  flex items-center justify-center rounded-full",
-                  checked
-                    ? "animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 duration-500"
-                    : "opacity-0 scale-0"
+                  "w-10 h-10 flex-shrink-0 bg-background flex items-center justify-center rounded-full",
+                  "motion-safe:animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 motion-safe:duration-500"
                 )}
               >
                 {status === "incorrect" ? (
@@ -87,7 +84,7 @@ export default function LessonFooter({
 
               <div className="text-lg">
                 <div className="font-bold">
-                  {getQuestionEndMessage(status === "incorrect", questionIndex)}
+                  {getQuestionEndMessage(status, questionIndex)}
                 </div>
                 {!!questionExplanation && (
                   <div className="text-sm text-pretty">

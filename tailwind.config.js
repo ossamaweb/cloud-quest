@@ -57,7 +57,15 @@ module.exports = {
 					'4': 'hsl(var(--chart-4))',
 					'5': 'hsl(var(--chart-5))'
 				}
-			}
+			},
+			// Add custom easing functions
+			transitionTimingFunction: {
+				'elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)', // A bouncy elastic effect
+				'elastic-1': 'cubic-bezier(0.37, 0, 0.63, 1)', // A smoother elastic effect
+				'elastic-2': 'cubic-bezier(0.11, 0, 0.5, 0)', // A quick start, slow end elastic
+				'elastic-3': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)', // A slow start, quick end elastic
+				'elastic-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)', // A natural bouncy out effect
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

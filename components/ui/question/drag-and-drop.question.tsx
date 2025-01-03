@@ -42,10 +42,11 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30 transition-all",
-          draggingId && !droppedId && "border-blue-500/50",
-          dragOverId === id && "border-blue-500 bg-blue-500/10",
-          droppedId && "bg-green-600/10 border-green-600 border-solid",
+          "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30",
+          draggingId && !droppedId && "border-blue-500/20 bg-blue-500/10",
+          dragOverId === id && !droppedId && "scale-105",
+          droppedId &&
+            "bg-green-600/10 border-green-600 border-solid delay-200",
           incorrect && "bg-red-500/10 border-red-500"
         )}
       >
@@ -65,8 +66,9 @@ const CategoryItem = ({
               handleDragStart={() => null}
               handleDragEnd={() => null}
               className={cn(
-                "animate-in fade-in-0 zoom-in-0 duration-150",
-                checked && "bg-green-600/10 border-green-600 cursor-default"
+                "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150",
+                checked &&
+                  "bg-green-600/10 border-green-600 dark:text-green-500 text-green-700 cursor-default"
               )}
             />
           )}
@@ -97,22 +99,39 @@ const DraggableItem = ({
   handleDragStart,
   handleDragEnd,
 }: DraggableItemProps) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const onDragStart = useCallback(
+    (e: React.DragEvent) => {
+      handleDragStart(e, id);
+      // Use setTimeout to prevent immediate hiding which could interfere with drag initialization
+      setTimeout(() => setIsDragging(true), 0);
+    },
+    [handleDragStart, id]
+  );
+
+  const onDragEnd = useCallback(() => {
+    setIsDragging(false);
+    handleDragEnd();
+  }, [handleDragEnd]);
+
   return (
-    <div
-      key={id}
-      draggable={draggable}
-      onDragStart={(e) => handleDragStart(e, id)}
-      onDragEnd={handleDragEnd}
-      className={cn(
-        "truncate w-auto border-2 border-b-4 border-border rounded-lg px-4 py-2 bg-background transition-colors select-none",
-        droppedId && "bg-muted border-transparent text-muted",
-        draggable &&
-          "opacity-100 cursor-move hover:bg-border/40 focus:bg-border/40",
-        incorrect && "bg-red-500/10 border-red-500",
-        className
-      )}
-    >
-      {text}
+    <div className="bg-muted rounded-lg">
+      <div
+        draggable={draggable}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        className={cn(
+          "truncate  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
+          isDragging ? "opacity-0" : "bg-background",
+          draggable && "cursor-move",
+          incorrect && "bg-red-500/10 border-red-500",
+          droppedId && "bg-muted border-transparent text-muted",
+          className
+        )}
+      >
+        {text}
+      </div>
     </div>
   );
 };
@@ -140,15 +159,6 @@ export const DragAndDrop = ({
     dragOverId: null,
     categoryItem: {},
   });
-
-  const handleDragStart = useCallback((e: React.DragEvent, itemId: string) => {
-    e.dataTransfer.setData("text/plain", itemId);
-    setState((prev) => ({
-      ...prev,
-      incorrect: { categoryId: "", itemId: "" },
-      draggingId: itemId,
-    }));
-  }, []);
 
   const handleDragOver = useCallback(
     (e: React.DragEvent, categoryId: string) => {
@@ -218,6 +228,16 @@ export const DragAndDrop = ({
     },
     [categoryItem, data]
   );
+
+  const handleDragStart = useCallback((e: React.DragEvent, itemId: string) => {
+    e.dataTransfer.setData("text/plain", itemId);
+
+    setState((prev) => ({
+      ...prev,
+      incorrect: { categoryId: "", itemId: "" },
+      draggingId: itemId,
+    }));
+  }, []);
 
   const handleDragEnd = useCallback(() => {
     setState((prev) => ({

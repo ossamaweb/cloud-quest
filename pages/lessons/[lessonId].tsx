@@ -25,7 +25,7 @@ export default function Lesson() {
     questionIndex: number;
     questionExplanation?: string;
   }>({
-    answered: false,
+    answered: false, // debug
     checked: false,
     status: "unanswered",
     progress: 0,
@@ -38,15 +38,19 @@ export default function Lesson() {
   const handleOnGrade = useCallback<LessonQuestionProps<unknown>["onGrade"]>(
     (correct, points, autoCheck, data) => {
       console.log({ correct, points, autoCheck, data });
+
       setStateUI((prev) => ({
         ...prev,
         answered: true,
         checked: autoCheck,
         status: correct ? "correct" : "incorrect",
         questionExplanation: data.explanation,
+        progress: autoCheck
+          ? (100 * (prev.questionIndex + 1)) / totalQuestions
+          : prev.progress,
       }));
     },
-    []
+    [totalQuestions]
   );
 
   const handleOnAnswer = useCallback((answered: boolean) => {
@@ -59,16 +63,17 @@ export default function Lesson() {
   const handleOnCheck = useCallback(() => {
     setStateUI((prev) => ({
       ...prev,
+      progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
       checked: true,
     }));
-  }, []);
+  }, [totalQuestions]);
 
   const handleOnContinue = useCallback(() => {
     setStateUI((prev) => ({
       status: "unanswered",
-      checked: false,
+      checked: false, // debug
       answered: false, // debug
-      progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
+      progress: prev.progress,
       questionIndex: Math.min(prev.questionIndex + 1, totalQuestions),
       questionExplanation: undefined,
     }));
@@ -115,7 +120,7 @@ export default function Lesson() {
                     className={cn(
                       "mt-0 w-full h-full",
                       index > 0 &&
-                        "animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 duration-500"
+                        "motion-safe:animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
                     )}
                   >
                     <LessonQuestion

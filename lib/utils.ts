@@ -33,13 +33,16 @@ const ANSWER_MSG_CORRECT = [
 ];
 
 export function getQuestionEndMessage(
-  incorrect: boolean,
+  status: LessonQuestionProps<unknown>["status"],
   questionIndex: number
 ): string {
-  if (incorrect) {
+  if (status === "incorrect") {
     return ANSWER_MSG_UNCORRECT[questionIndex % ANSWER_MSG_UNCORRECT.length];
   }
-  return ANSWER_MSG_CORRECT[questionIndex % ANSWER_MSG_CORRECT.length];
+  if (status === "correct") {
+    return ANSWER_MSG_CORRECT[questionIndex % ANSWER_MSG_CORRECT.length];
+  }
+  return "";
 }
 
 export function validateBlankAnswer(
