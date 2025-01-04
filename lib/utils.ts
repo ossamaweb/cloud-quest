@@ -59,6 +59,15 @@ export function validateBlankAnswer(
   return blankCorrect;
 }
 
+export function validateMatchAnswer(
+  userAnswer: Record<string, string>,
+  correctPairings: Record<string, string>
+): boolean {
+  return Object.entries(userAnswer).every(
+    ([key, value]) => correctPairings[key] === value
+  );
+}
+
 const QUESTION_GRADING: Record<
   QUESTION_TYPE,
   (
@@ -132,9 +141,8 @@ const QUESTION_GRADING: Record<
     const mQuestion = question as MatchingQuestion;
     const mAnswer = userAnswer as Record<string, string>;
 
-    const correct = Object.entries(mAnswer).every(
-      ([key, value]) => mQuestion.correctPairings[key] === value
-    );
+    const correct = validateMatchAnswer(mAnswer, mQuestion.correctPairings);
+
     return {
       correct,
       points: correct ? mQuestion.points ?? 0 : 0,
