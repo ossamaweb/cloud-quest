@@ -96,7 +96,7 @@ export default function Lesson() {
             <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
               <div className="flex justify-between items-center sm:gap-4 gap-2">
                 <div>
-                  <Button className="hover:bg-transparent -ml-3 px-2 py-1 text-border hover:text-foreground/50">
+                  <Button className="hover:bg-transparent -ml-3 px-2 py-1 dark:text-zinc-700 text-zinc-500 hover:text-foreground/50">
                     <XIcon />
                   </Button>
                 </div>

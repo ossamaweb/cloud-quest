@@ -2,6 +2,17 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // True False Question
+  {
+    id: "tf-001",
+    type: QUESTION_TYPE.TRUE_FALSE,
+    question: "Amazon S3 can be used to host static websites.",
+    correctAnswer: true,
+    explanation:
+      "S3 provides static website hosting capabilities with custom domain support.",
+    points: 5,
+  },
+
   // Short Answer Question
   {
     id: "sa-001",
@@ -31,17 +42,6 @@ export const questionFixtures: Question[] = [
       },
     ],
     points: 10,
-  },
-
-  // True False Question
-  {
-    id: "tf-001",
-    type: QUESTION_TYPE.TRUE_FALSE,
-    question: "Amazon S3 can be used to host static websites.",
-    correctAnswer: true,
-    explanation:
-      "S3 provides static website hosting capabilities with custom domain support.",
-    points: 5,
   },
 
   // Matching Question

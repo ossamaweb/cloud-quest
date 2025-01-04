@@ -33,7 +33,7 @@ export const TrueFalse = ({
           onClick={() => handleOnClick("1")}
           className="w-40 h-40 flex gap-2 flex-col justify-center"
         >
-          <CheckIcon className="w-16 h-16 flex-shrink-0 -order-1" />
+          <CheckIcon className="w-16 h-16 flex-shrink-0 -order-1 transition-all duration-150" />
         </ButtonQuestion>
       </div>
 
@@ -46,7 +46,7 @@ export const TrueFalse = ({
           onClick={() => handleOnClick("0")}
           className="w-40 h-40 flex gap-2 flex-col justify-center"
         >
-          <XIcon className="w-16 h-16 flex-shrink-0 -order-1" />
+          <XIcon className="w-16 h-16 flex-shrink-0 -order-1 transition-all duration-150" />
         </ButtonQuestion>
       </div>
     </div>

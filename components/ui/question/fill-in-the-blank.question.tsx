@@ -107,6 +107,9 @@ export const FillInTheBlank = ({
       <span
         key={blank.id}
         ref={index === 0 ? spanRef : undefined}
+        role="textbox"
+        aria-label="Fill in the blank"
+        aria-multiline="false"
         tabIndex={!checked ? 0 : -1}
         contentEditable={!checked}
         suppressContentEditableWarning={true}

@@ -14,11 +14,13 @@ interface ButtonQuestionProps {
   passive?: boolean;
   muted?: boolean;
   tabIndex?: number;
+
   children?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 export default function ButtonQuestion({
   className,
+  tabIndex,
   text,
   label,
   selected,
@@ -26,7 +28,7 @@ export default function ButtonQuestion({
   disabled,
   passive,
   muted,
-  tabIndex,
+
   children,
   onClick,
 }: ButtonQuestionProps) {
@@ -45,12 +47,15 @@ export default function ButtonQuestion({
           "bg-blue-500/20 border-blue-300 dark:text-blue-300 text-blue-600",
         !passive &&
           !selected &&
-          "enabled:hover:bg-border/40 enabled:focus:bg-border/40",
+          "enabled:hover:bg-border/30 enabled:focus:bg-border/30",
         status === "incorrect" &&
           "bg-red-500/20 border-red-300 dark:text-red-300 text-red-700",
         status === "correct" &&
           "bg-green-500/20 border-green-300 dark:text-green-300 text-green-700",
+        selected && !status && "[&>svg]:text-blue-500",
+        !selected && !status && "[&>svg]:text-blue-300",
         muted && "text-foreground/20",
+
         className
       )}
     >
@@ -71,7 +76,9 @@ export default function ButtonQuestion({
         </span>
       )}
       {!!text && (
-        <span className="flex-1 text-center line-clamp-2">{text}</span>
+        <span className="transition-all duration-150 flex-1 text-center line-clamp-2">
+          {text}
+        </span>
       )}
       {children}
     </button>
