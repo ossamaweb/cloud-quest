@@ -2,6 +2,37 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // Short Answer Question
+  {
+    id: "sa-001",
+    type: QUESTION_TYPE.SHORT_ANSWER,
+    question: "What does the acronym EBS stand for in AWS?",
+    correctAnswer: "Elastic Block Store",
+    acceptableAnswers: ["Elastic Block Storage", "Amazon Elastic Block Store"],
+    caseSensitive: false,
+    points: 5,
+  },
+  // Fill in the Blank Question
+  {
+    id: "fb-001",
+    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
+    question:
+      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
+    blanks: [
+      {
+        id: "blank1",
+        correctAnswer: "S3",
+        acceptableAnswers: ["Simple Storage Service", "S3"],
+      },
+      {
+        id: "blank2",
+        correctAnswer: "EBS",
+        acceptableAnswers: ["Elastic Block Store", "EBS"],
+      },
+    ],
+    points: 10,
+  },
+
   // True False Question
   {
     id: "tf-001",
@@ -63,38 +94,6 @@ export const questionFixtures: Question[] = [
       item4: "cat4",
     },
     points: 20,
-  },
-
-  // Fill in the Blank Question
-  {
-    id: "fb-001",
-    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
-    question:
-      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
-    blanks: [
-      {
-        id: "blank1",
-        correctAnswer: "S3",
-        acceptableAnswers: ["Simple Storage Service", "S3"],
-      },
-      {
-        id: "blank2",
-        correctAnswer: "EBS",
-        acceptableAnswers: ["Elastic Block Store", "EBS"],
-      },
-    ],
-    points: 10,
-  },
-
-  // Short Answer Question
-  {
-    id: "sa-001",
-    type: QUESTION_TYPE.SHORT_ANSWER,
-    question: "What does the acronym EBS stand for in AWS?",
-    correctAnswer: "Elastic Block Store",
-    acceptableAnswers: ["Elastic Block Storage", "Amazon Elastic Block Store"],
-    caseSensitive: false,
-    points: 5,
   },
 
   // Multiple Choice Question

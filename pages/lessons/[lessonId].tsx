@@ -119,7 +119,7 @@ export default function Lesson() {
                     value={String(index)}
                     tabIndex={-1}
                     className={cn(
-                      "mt-0 w-full h-full focus-visible:ring-0",
+                      "mt-0 w-full h-full focus-visible:ring-0 focus:ring-0",
                       index > 0 &&
                         "motion-safe:animate-in motion-safe:fade-in-25 motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
                     )}
