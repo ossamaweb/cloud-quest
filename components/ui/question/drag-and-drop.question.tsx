@@ -16,7 +16,7 @@ interface CategoryItemProps {
   draggingId: string | null;
   dragOverId: string | null;
   incorrect: boolean;
-  checked: boolean;
+  correct: boolean;
   itemData?: QuestionOption | undefined;
 }
 
@@ -30,7 +30,7 @@ const CategoryItem = ({
   draggingId,
   dragOverId,
   incorrect,
-  checked,
+  correct,
   itemData,
 }: CategoryItemProps) => {
   return (
@@ -42,17 +42,15 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30",
+          "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
           draggingId && !droppedId && "bg-blue-500/20 border-blue-300",
           dragOverId === id && !droppedId && "scale-105",
-          droppedId && "border-solid bg-green-500/20 border-green-300",
-          droppedId && "bg-green-500/20 border-green-300",
-          incorrect && "bg-red-500/20 border-red-300"
+          correct && "border-solid bg-green-500/20 border-green-300",
+          incorrect && "bg-red-500/20 border-red-300",
+          droppedId && !correct && "border-solid opacity-50"
         )}
       >
-        <div className="leading-2 text-sm font-bold uppercase text-foreground/50">
-          {text}
-        </div>
+        <div className="leading-2 text-sm font-bold uppercase">{text}</div>
 
         <div className="flex gap-2 mt-2">
           {droppedId && itemData && (
@@ -61,14 +59,13 @@ const CategoryItem = ({
               id={itemData.id}
               text={itemData.text}
               draggable={false}
-              incorrect={false}
+              incorrect={incorrect}
+              correct={correct}
               droppedId=""
               handleDragStart={() => null}
               handleDragEnd={() => null}
               className={cn(
-                "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150",
-                droppedId && "bg-green-500/20 border-green-300",
-                incorrect && "bg-red-500/20 border-red-300"
+                "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150"
               )}
             />
           )}
@@ -84,6 +81,7 @@ interface DraggableItemProps {
   draggable: boolean;
   droppedId: string;
   incorrect: boolean;
+  correct: boolean;
   className?: string;
   handleDragStart: (e: React.DragEvent, itemId: string) => void;
   handleDragEnd: () => void;
@@ -94,6 +92,7 @@ const DraggableItem = ({
   text,
   droppedId,
   incorrect,
+  correct,
   draggable,
   className,
   handleDragStart,
@@ -125,6 +124,7 @@ const DraggableItem = ({
           "truncate  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
+          correct && "bg-green-500/20 border-green-300",
           incorrect && "bg-red-500/20 border-red-300",
           droppedId && "bg-muted border-transparent text-muted",
           className
@@ -139,6 +139,7 @@ const DraggableItem = ({
 interface DragAndDropQuestionState {
   pairings: Record<string, string>;
   incorrect: { categoryId: string; itemId: string };
+  correct: { categoryId: string; itemId: string };
   draggingId: string | null;
   dragOverId: string | null;
   categoryItem: Record<string, string>;
@@ -150,11 +151,12 @@ export const DragAndDrop = ({
   onGrade,
 }: LessonQuestionProps<DragAndDropQuestion>) => {
   const [
-    { pairings, incorrect, draggingId, dragOverId, categoryItem },
+    { pairings, incorrect, correct, draggingId, dragOverId, categoryItem },
     setState,
   ] = useState<DragAndDropQuestionState>({
     pairings: {},
     incorrect: { categoryId: "", itemId: "" },
+    correct: { categoryId: "", itemId: "" },
     draggingId: null,
     dragOverId: null,
     categoryItem: {},
@@ -210,6 +212,7 @@ export const DragAndDrop = ({
         setState((prev) => ({
           pairings: { ...prev.pairings, [itemId]: categoryId },
           incorrect: { categoryId: "", itemId: "" },
+          correct: { categoryId, itemId },
           draggingId: null,
           dragOverId: null,
           categoryItem: {
@@ -223,8 +226,18 @@ export const DragAndDrop = ({
           ...prev,
           dragOverId: null,
           incorrect: { categoryId, itemId },
+          correct: { categoryId: "", itemId: "" },
         }));
       }
+
+      setTimeout(() => {
+        setState((prev) => ({
+          ...prev,
+          dragOverId: null,
+          incorrect: { categoryId: "", itemId: "" },
+          correct: { categoryId: "", itemId: "" },
+        }));
+      }, 300);
     },
     [categoryItem, data]
   );
@@ -235,6 +248,7 @@ export const DragAndDrop = ({
     setState((prev) => ({
       ...prev,
       incorrect: { categoryId: "", itemId: "" },
+      correct: { categoryId: "", itemId: "" },
       draggingId: itemId,
     }));
   }, []);
@@ -258,23 +272,6 @@ export const DragAndDrop = ({
       return () => clearTimeout(timeout);
     }
   }, [data, onGrade, pairings]);
-
-  useEffect(() => {
-    if (incorrect.categoryId) {
-      const handleClick = () => {
-        setState((prev) => ({
-          ...prev,
-          incorrect: { categoryId: "", itemId: "" },
-        }));
-      };
-
-      document.addEventListener("mousedown", handleClick);
-
-      return () => {
-        document.removeEventListener("mousedown", handleClick);
-      };
-    }
-  }, [incorrect.categoryId]);
 
   const { itemsLookup, categories, items } = useMemo(() => {
     return {
@@ -300,8 +297,8 @@ export const DragAndDrop = ({
             droppedId={categoryItem[category.id]}
             draggingId={draggingId}
             dragOverId={dragOverId}
-            checked={checked}
             incorrect={incorrect.categoryId === category.id}
+            correct={correct.categoryId === category.id}
             itemData={itemsLookup[categoryItem[category.id]]}
           />
         ))}
@@ -316,6 +313,7 @@ export const DragAndDrop = ({
             draggable={!pairings[item.id]}
             droppedId={pairings[item.id]}
             incorrect={incorrect.itemId === item.id}
+            correct={correct.itemId === item.id}
             handleDragStart={handleDragStart}
             handleDragEnd={handleDragEnd}
           />
