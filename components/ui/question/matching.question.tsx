@@ -8,6 +8,7 @@ interface MatchingQuestionState {
   pairings: Record<string, string>;
   statuses: Record<string, LessonQuestionProps<MatchingQuestion>["status"]>;
   correctIds: Record<string, boolean>;
+  answeredSize: number;
 }
 
 export const Matching = ({
@@ -18,18 +19,19 @@ export const Matching = ({
 }: LessonQuestionProps<MatchingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const [{ selectedPair, pairings, statuses, correctIds }, setState] =
-    useState<MatchingQuestionState>({
-      selectedPair: [null, null],
-      pairings: {},
-      statuses: {},
-      correctIds: {},
-    });
+  const [
+    { selectedPair, pairings, statuses, correctIds, answeredSize },
+    setState,
+  ] = useState<MatchingQuestionState>({
+    selectedPair: [null, null],
+    pairings: {},
+    statuses: {},
+    correctIds: {},
+    answeredSize: 0,
+  });
 
   const handleOnClick = useCallback(
     (selectedPair: MatchingQuestionState["selectedPair"]) => {
-      // Clear any existing timeout
-
       const [term, definition] = selectedPair;
 
       // Case 1: Only definition is selected
@@ -61,6 +63,10 @@ export const Matching = ({
       setState((prev) => ({
         ...prev,
         selectedPair: [null, null],
+        pairings: {
+          ...prev.pairings,
+          ...(correct ? newPairing : {}),
+        },
         statuses: {
           ...prev.statuses,
           [term]: correct ? "correct" : "incorrect",
@@ -72,10 +78,6 @@ export const Matching = ({
       timeoutRef.current = setTimeout(() => {
         setState((prev) => ({
           ...prev,
-          pairings: {
-            ...prev.pairings,
-            ...(correct ? newPairing : {}),
-          },
           correctIds: {
             ...prev.correctIds,
             ...(correct ? { [term]: true, [definition]: true } : {}),
@@ -85,6 +87,7 @@ export const Matching = ({
             [term]: "unanswered",
             [definition]: "unanswered",
           },
+          answeredSize: prev.answeredSize + 1,
         }));
       }, 300);
     },
@@ -100,12 +103,10 @@ export const Matching = ({
   }, []);
 
   useEffect(() => {
-    if (
-      Object.keys(pairings).length === Object.keys(data.correctPairings).length
-    ) {
+    if (answeredSize === Object.keys(data.correctPairings).length) {
       gradeQuestion(data, pairings, onGrade);
     }
-  }, [data, onGrade, pairings]);
+  }, [data, onGrade, pairings, answeredSize]);
 
   const { definitions, terms } = useMemo(() => {
     return {

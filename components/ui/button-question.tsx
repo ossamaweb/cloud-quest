@@ -55,7 +55,6 @@ export default function ButtonQuestion({
         selected && !status && "[&>svg]:text-blue-500",
         !selected && !status && "[&>svg]:text-blue-300",
         muted && "text-foreground/20",
-
         className
       )}
     >
@@ -76,9 +75,7 @@ export default function ButtonQuestion({
         </span>
       )}
       {!!text && (
-        <span className="transition-all duration-150 flex-1 text-center line-clamp-2">
-          {text}
-        </span>
+        <span className="flex-1 text-center line-clamp-2">{text}</span>
       )}
       {children}
     </button>

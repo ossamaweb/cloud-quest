@@ -67,7 +67,7 @@ function QuestionHeaderRenderer({
     case QUESTION_TYPE.TRUE_FALSE:
       return "True or false";
     case QUESTION_TYPE.ORDERING:
-      return "Order items correctly";
+      return "Select in order";
     case QUESTION_TYPE.IMAGE_IDENTIFICATION:
       return "Identify the image";
     default:

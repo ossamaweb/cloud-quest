@@ -1,31 +1,120 @@
 import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ButtonQuestion from "../button-question";
+import { gradeQuestion, validateOrderingAnswer } from "@/lib/utils";
 
-export const Ordering = ({ data }: LessonQuestionProps<OrderingQuestion>) => {
-  const [items] = useState(data.items);
+interface OrderingQuestionState {
+  selectedId: string | null;
+  userOrder: string[];
+  statuses: Record<string, LessonQuestionProps<OrderingQuestion>["status"]>;
+  correctIds: Record<string, boolean>;
+  answeredSize: number;
+}
+export const Ordering = ({
+  data,
+  checked,
+  onGrade,
+}: LessonQuestionProps<OrderingQuestion>) => {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  const [
+    { selectedId, userOrder, statuses, correctIds, answeredSize },
+    setState,
+  ] = useState<OrderingQuestionState>({
+    selectedId: null,
+    userOrder: [],
+    statuses: {},
+    correctIds: {},
+    answeredSize: 0,
+  });
 
-  // const handleDragEnd = (result: any) => {
-  //   if (!result.destination) return;
+  const handleOnClick = useCallback(
+    (selectedId: string, userOrder: string[]) => {
+      if (userOrder.includes(selectedId)) {
+        return;
+      }
 
-  //   const newItems = Array.from(items);
-  //   const [reorderedItem] = newItems.splice(result.source.index, 1);
-  //   newItems.splice(result.destination.index, 0, reorderedItem);
+      // Get the current position in the ordering sequence based on how many items user has already ordered
+      const orderPosition = userOrder.length;
 
-  //   setItems(newItems);
-  //   //onGrade(newItems.map((item) => item.id));
-  //   //onGrade: (order: string[]) => void
-  // };
+      // Create a temporary answer array by copying the correct order array and replacing the item at current position
+      // with the newly selected item. This allows us to validate each selection as it's made.
+      const tempUserAnswer = data.correctOrder.map((originalId, index) =>
+        index === orderPosition ? selectedId : originalId
+      );
+
+      // Check if the current selection is correct by comparing the temporary answer against the correct order
+      const correct = validateOrderingAnswer(tempUserAnswer, data.correctOrder);
+
+      // Update initial status immediately
+      setState((prev) => ({
+        ...prev,
+        selectedId: null,
+        userOrder: correct
+          ? [...new Set([...prev.userOrder, selectedId])]
+          : prev.userOrder,
+        statuses: {
+          ...prev.statuses,
+          [selectedId]: correct ? "correct" : "incorrect",
+        },
+      }));
+
+      // Update final state after animation
+      timeoutRef.current = setTimeout(() => {
+        setState((prev) => ({
+          ...prev,
+          correctIds: {
+            ...prev.correctIds,
+            ...(correct ? { [selectedId]: true } : {}),
+          },
+          statuses: {
+            ...prev.statuses,
+            [selectedId]: "unanswered",
+          },
+          answeredSize: prev.answeredSize + 1,
+        }));
+      }, 300);
+    },
+    [data.correctOrder]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (answeredSize === data.correctOrder.length) {
+      gradeQuestion(data, userOrder, onGrade);
+    }
+  }, [data, onGrade, userOrder, answeredSize]);
+
+  const { items } = useMemo(() => {
+    return {
+      items: [...data.items].sort(() => Math.random() - 0.5),
+    };
+  }, [data.items]);
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">{data.question}</h3>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <div key={item.id} className="p-2 border rounded cursor-move">
-            {item.text}
-          </div>
-        ))}
-      </div>
+    <div className="space-y-2">
+      {items.map((item, index) => (
+        <div key={item.id}>
+          <ButtonQuestion
+            tabIndex={-1}
+            className="leading-5 h-16"
+            text={item.text}
+            label={String(index + 1)}
+            passive={true}
+            selected={selectedId === item.id}
+            disabled={checked || selectedId === item.id || correctIds[item.id]}
+            muted={correctIds[item.id]}
+            status={statuses[item.id]}
+            onClick={() => handleOnClick(item.id, userOrder)}
+          />
+        </div>
+      ))}
     </div>
   );
 };

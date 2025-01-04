@@ -143,6 +143,7 @@ interface DragAndDropQuestionState {
   draggingId: string | null;
   dragOverId: string | null;
   categoryItem: Record<string, string>;
+  answeredSize: number;
 }
 
 export const DragAndDrop = ({
@@ -160,6 +161,7 @@ export const DragAndDrop = ({
     draggingId: null,
     dragOverId: null,
     categoryItem: {},
+    answeredSize: 0,
   });
 
   const handleDragOver = useCallback(
@@ -210,6 +212,7 @@ export const DragAndDrop = ({
       ) {
         // correct
         setState((prev) => ({
+          answeredSize: prev.answeredSize,
           pairings: { ...prev.pairings, [itemId]: categoryId },
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId, itemId },
@@ -236,6 +239,7 @@ export const DragAndDrop = ({
           dragOverId: null,
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId: "", itemId: "" },
+          answeredSize: prev.answeredSize + 1,
         }));
       }, 300);
     },

@@ -2,6 +2,21 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // Ordering Question
+  {
+    id: "ord-001",
+    type: QUESTION_TYPE.ORDERING,
+    question: "Order the following steps to launch an EC2 instance:",
+    items: [
+      { id: "step1", text: "Choose an Amazon Machine Image (AMI)" },
+      { id: "step2", text: "Choose an Instance Type" },
+      { id: "step3", text: "Configure Security Groups" },
+      { id: "step4", text: "Launch the Instance" },
+    ],
+    correctOrder: ["step1", "step2", "step3", "step4"],
+    points: 15,
+  },
+
   // True False Question
   {
     id: "tf-001",
@@ -111,21 +126,6 @@ export const questionFixtures: Question[] = [
     explanation:
       "AWS Lambda is a serverless computing service that runs code in response to events.",
     points: 10,
-  },
-
-  // Ordering Question
-  {
-    id: "ord-001",
-    type: QUESTION_TYPE.ORDERING,
-    question: "Order the following steps to launch an EC2 instance:",
-    items: [
-      { id: "step1", text: "Choose an Amazon Machine Image (AMI)" },
-      { id: "step2", text: "Choose an Instance Type" },
-      { id: "step3", text: "Configure Security Groups" },
-      { id: "step4", text: "Launch the Instance" },
-    ],
-    correctOrder: ["step1", "step2", "step3", "step4"],
-    points: 15,
   },
 
   // Image Identification Question

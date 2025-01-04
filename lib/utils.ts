@@ -68,6 +68,16 @@ export function validateMatchAnswer(
   );
 }
 
+export function validateOrderingAnswer(
+  userAnswer: string[],
+  correctOrder: string[]
+): boolean {
+  return (
+    userAnswer.length === correctOrder.length &&
+    userAnswer.every((item, index) => item === correctOrder[index])
+  );
+}
+
 const QUESTION_GRADING: Record<
   QUESTION_TYPE,
   (
@@ -163,12 +173,12 @@ const QUESTION_GRADING: Record<
   [QUESTION_TYPE.ORDERING]: (question, userAnswer) => {
     const oQuestion = question as OrderingQuestion;
     const userOrder = userAnswer as string[];
-    const correct =
-      JSON.stringify(userOrder) === JSON.stringify(oQuestion.correctOrder);
+    const correct = validateOrderingAnswer(userOrder, oQuestion.correctOrder);
+
     return {
       correct,
       points: correct ? oQuestion.points ?? 0 : 0,
-      autoCheck: false,
+      autoCheck: true,
     };
   },
 
@@ -187,13 +197,14 @@ export function gradeQuestion(
   data: Question,
   userAnswer: unknown,
   cb: LessonQuestionProps<unknown>["onGrade"]
-) {
+): void {
   const questionGrading = QUESTION_GRADING[data.type];
   if (!questionGrading) {
     throw new Error("Function not implemented.");
   }
 
   const { correct, points, autoCheck } = questionGrading(data, userAnswer);
+
   cb(correct, points, autoCheck, data);
 }
 
