@@ -5,10 +5,9 @@ import { cn } from "@/lib/utils";
 import * as React from "react";
 
 interface ButtonQuestionProps {
-  text: string;
+  text?: string;
   label?: string;
   selected?: boolean;
-
   status?: LessonQuestionProps<unknown>["status"];
   className?: string;
   disabled?: boolean;
@@ -38,7 +37,7 @@ export default function ButtonQuestion({
       disabled={disabled}
       tabIndex={tabIndex}
       className={cn(
-        "transition-all duration-150",
+        "transition-all duration-150 select-none",
         "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-sm bg-background px-4 py-3 text-foreground font-medium enabled:cursor-pointer",
         "enabled:active:translate-y-0.5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)]",
         "focus:outline-offset-2",
@@ -71,8 +70,10 @@ export default function ButtonQuestion({
           {label}
         </span>
       )}
-
-      <span className="flex-1 text-center line-clamp-2">{text}</span>
+      {!!text && (
+        <span className="flex-1 text-center line-clamp-2">{text}</span>
+      )}
+      {children}
     </button>
   );
 }

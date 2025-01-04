@@ -1,30 +1,50 @@
-import { LessonQuestionProps, TrueFalseQuestion } from "@/lib/interfaces";
+"use client";
 
-export const TrueFalse = ({ data }: LessonQuestionProps<TrueFalseQuestion>) => {
+import { LessonQuestionProps, TrueFalseQuestion } from "@/lib/interfaces";
+import ButtonQuestion from "../button-question";
+import { useCallback, useState } from "react";
+import { gradeQuestion } from "@/lib/utils";
+import { CheckIcon, XIcon } from "lucide-react";
+
+export const TrueFalse = ({
+  data,
+  status,
+  checked,
+  onGrade,
+}: LessonQuestionProps<TrueFalseQuestion>) => {
+  const [{ selectedId }, setState] = useState({ selectedId: "" });
+
+  const handleOnClick = useCallback(
+    (selectedId: string) => {
+      setState({ selectedId });
+      gradeQuestion(data, selectedId === "1", onGrade);
+    },
+    [data, onGrade]
+  );
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">{data.question}</h3>
-      <div className="space-x-4">
-        <label className="inline-flex items-center">
-          <input
-            type="radio"
-            name={data.id}
-            value="true"
-            // onChange={() => onGrade(true)}
-            // onGrade: (answer: boolean) => void;
-          />
-          <span className="ml-2">True</span>
-        </label>
-        <label className="inline-flex items-center">
-          <input
-            type="radio"
-            name={data.id}
-            value="false"
-            // onChange={() => onGrade(false)}
-            // onGrade: (answer: boolean) => void;
-          />
-          <span className="ml-2">False</span>
-        </label>
+    <div className="flex items-center justify-center sm:pt-0 pt-4 gap-8">
+      <div>
+        <ButtonQuestion
+          className="w-32 h-32 justify-center"
+          selected={selectedId === "1"}
+          disabled={checked}
+          status={checked && selectedId === "1" ? status : undefined}
+          onClick={() => handleOnClick("1")}
+        >
+          <CheckIcon className="w-16 h-16" />
+        </ButtonQuestion>
+      </div>
+      <div>
+        <ButtonQuestion
+          className="w-32 h-32 justify-center"
+          selected={selectedId === "0"}
+          disabled={checked}
+          status={checked && selectedId === "0" ? status : undefined}
+          onClick={() => handleOnClick("0")}
+        >
+          <XIcon className="w-16 h-16" />
+        </ButtonQuestion>
       </div>
     </div>
   );
