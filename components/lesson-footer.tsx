@@ -55,8 +55,8 @@ export default function LessonFooter({
             "absolute bottom-0 w-full border-t-2 border-transparent",
             // (!checked || status === "unanswered") && "hidden",
             status === "incorrect"
-              ? "bg-red-200 dark:bg-border/50"
-              : "bg-green-200 dark:bg-border/50"
+              ? "bg-red-200 dark:bg-zinc-900"
+              : "bg-green-200 dark:bg-zinc-900"
           )}
         >
           <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">

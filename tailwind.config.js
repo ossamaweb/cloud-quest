@@ -66,6 +66,9 @@ module.exports = {
 				'elastic-3': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)', // A slow start, quick end elastic
 				'elastic-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)', // A natural bouncy out effect
 			},
+			transitionProperty: {
+				'width': 'width',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

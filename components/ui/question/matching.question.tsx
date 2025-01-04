@@ -115,13 +115,13 @@ export const Matching = ({
   }, [data.definitions, data.terms]);
 
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid grid-cols-2 sm:gap-8 gap-4">
       <div className="space-y-2">
         {terms.map((term, index) => (
           <div key={term.id}>
             <ButtonQuestion
               tabIndex={-1}
-              className="leading-5"
+              className="leading-5 h-16"
               passive={true}
               text={term.text}
               label={String(index + 1)}
@@ -141,7 +141,7 @@ export const Matching = ({
           <div key={def.id}>
             <ButtonQuestion
               tabIndex={-1}
-              className="leading-"
+              className="leading-5 h-16"
               text={def.text}
               passive={true}
               label={String(terms.length + index + 1)}

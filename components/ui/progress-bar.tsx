@@ -22,7 +22,7 @@ export default function ProgressBar({ value, className }: ProgressBarProps) {
       <div
         className={cn(
           "relative h-full w-full bg-green-600 rounded-lg",
-          "motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-elastic-2"
+          "motion-safe:transition-width motion-safe:delay-300 motion-safe:duration-300 motion-safe:ease-elastic-2"
         )}
         style={{ width: `${clampedValue}%` }}
       >

@@ -2,6 +2,17 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // True False Question
+  {
+    id: "tf-001",
+    type: QUESTION_TYPE.TRUE_FALSE,
+    question: "Amazon S3 can be used to host static websites.",
+    correctAnswer: true,
+    explanation:
+      "S3 provides static website hosting capabilities with custom domain support.",
+    points: 5,
+  },
+
   // Matching Question
   {
     id: "match-001",
@@ -24,6 +35,32 @@ export const questionFixtures: Question[] = [
       term2: "def2",
       term3: "def3",
       term4: "def4",
+    },
+    points: 20,
+  },
+
+  // Drag and Drop Question
+  {
+    id: "dd-001",
+    type: QUESTION_TYPE.DRAG_AND_DROP,
+    question: "Drag each AWS service to its corresponding category.",
+    categories: [
+      { id: "cat1", text: "Compute" },
+      { id: "cat2", text: "Storage" },
+      { id: "cat3", text: "Database" },
+      { id: "cat4", text: "Networking" },
+    ],
+    items: [
+      { id: "item1", text: "EC2" },
+      { id: "item2", text: "S3" },
+      { id: "item3", text: "RDS" },
+      { id: "item4", text: "CloudFront" },
+    ],
+    correctPairings: {
+      item1: "cat1",
+      item2: "cat2",
+      item3: "cat3",
+      item4: "cat4",
     },
     points: 20,
   },
@@ -75,43 +112,6 @@ export const questionFixtures: Question[] = [
     explanation:
       "AWS Lambda is a serverless computing service that runs code in response to events.",
     points: 10,
-  },
-
-  // Drag and Drop Question
-  {
-    id: "dd-001",
-    type: QUESTION_TYPE.DRAG_AND_DROP,
-    question: "Drag each AWS service to its corresponding category.",
-    categories: [
-      { id: "cat1", text: "Compute" },
-      { id: "cat2", text: "Storage" },
-      { id: "cat3", text: "Database" },
-      { id: "cat4", text: "Networking" },
-    ],
-    items: [
-      { id: "item1", text: "EC2" },
-      { id: "item2", text: "S3" },
-      { id: "item3", text: "RDS" },
-      { id: "item4", text: "CloudFront" },
-    ],
-    correctPairings: {
-      item1: "cat1",
-      item2: "cat2",
-      item3: "cat3",
-      item4: "cat4",
-    },
-    points: 20,
-  },
-
-  // True False Question
-  {
-    id: "tf-001",
-    type: QUESTION_TYPE.TRUE_FALSE,
-    question: "Amazon S3 can be used to host static websites.",
-    correctAnswer: true,
-    explanation:
-      "S3 provides static website hosting capabilities with custom domain support.",
-    points: 5,
   },
 
   // Ordering Question
