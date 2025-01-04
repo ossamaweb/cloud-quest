@@ -13,8 +13,7 @@ export const ShortAnswer = ({
   const [value, setValue] = useState("");
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setValue(newValue);
+    setValue(e.target.value);
   }, []);
 
   useEffect(() => {
@@ -26,6 +25,14 @@ export const ShortAnswer = ({
     return () => clearTimeout(debounceTimeout);
   }, [onAnswer, value]);
 
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      gradeQuestion(data, value, onGrade);
+    },
+    [data, value, onGrade]
+  );
+
   useEffect(() => {
     if (!checked) return;
 
@@ -33,15 +40,23 @@ export const ShortAnswer = ({
   }, [checked, data, onGrade, value]);
 
   return (
-    <div className="space-y-2">
+    <form
+      id={data.id}
+      name={data.id}
+      onSubmit={handleSubmit}
+      className="space-y-2"
+    >
       <input
         type="text"
         value={value}
+        autoFocus={true}
+        autoComplete="off"
         disabled={checked}
         onChange={handleChange}
         className="w-full p-2 bg-input border-2 border-border rounded-sm outline-none placeholder:text-foreground/20"
         placeholder="Type your answer"
       />
-    </div>
+      <input type="submit" hidden={true} />
+    </form>
   );
 };
