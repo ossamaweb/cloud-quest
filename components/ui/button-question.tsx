@@ -8,10 +8,13 @@ interface ButtonQuestionProps {
   text: string;
   label?: string;
   selected?: boolean;
-  checked?: boolean;
+
   status?: LessonQuestionProps<unknown>["status"];
   className?: string;
   disabled?: boolean;
+  passive?: boolean;
+  muted?: boolean;
+  tabIndex?: number;
   children?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -20,9 +23,11 @@ export default function ButtonQuestion({
   text,
   label,
   selected,
-  checked,
   status,
   disabled,
+  passive,
+  muted,
+  tabIndex,
   children,
   onClick,
 }: ButtonQuestionProps) {
@@ -31,36 +36,43 @@ export default function ButtonQuestion({
       type="button"
       onClick={onClick}
       disabled={disabled}
+      tabIndex={tabIndex}
       className={cn(
-        "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-md bg-background px-4 py-3 enabled:cursor-pointer transition-all duration-150",
-        "enabled:active:translate-y-0.5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)] transition-all duration-100",
+        "transition-all duration-150",
+        "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-sm bg-background px-4 py-3 text-foreground font-medium enabled:cursor-pointer",
+        "enabled:active:translate-y-0.5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)]",
         "focus:outline-offset-2",
-        selected
-          ? "bg-blue-500/10 border-blue-500 dark:text-blue-500 text-blue-600"
-          : "enabled:hover:bg-border/40 enabled:focus:bg-border/40",
+        selected &&
+          "bg-blue-500/20 border-blue-300 dark:text-blue-300 text-blue-600",
+        !passive &&
+          !selected &&
+          "enabled:hover:bg-border/40 enabled:focus:bg-border/40",
         status === "incorrect" &&
-          "bg-red-500/10 border-red-500 dark:text-red-500 text-red-700",
+          "bg-red-500/20 border-red-300 dark:text-red-300 text-red-700",
         status === "correct" &&
-          "bg-green-600/10 border-green-600 dark:text-green-500 text-green-700",
+          "bg-green-500/20 border-green-300 dark:text-green-300 text-green-700",
+        muted && "text-foreground/20",
         className
       )}
     >
       {!!label && (
         <span
           className={cn(
-            "sm:inline-block hidden px-3 py-1.5 box-content border-2 border-border text-foreground/30 rounded-sm leading-2 text-sm font-bold",
-            selected && "border-blue-500 dark:text-blue-500 text-blue-600",
+            "transition-all duration-150",
+            "sm:inline-block hidden px-3 py-1.5 box-content border-2 rounded-sm leading-2 text-sm font-bold border-border text-foreground/30",
+            selected && "border-blue-300 dark:text-blue-400 text-blue-500",
             status === "incorrect" &&
-              "border-red-500 dark:text-red-600 text-red-700",
+              "border-red-300 dark:text-red-400 text-red-500",
             status === "correct" &&
-              "border-green-600 dark:text-green-500 text-green-700"
+              "border-green-300 dark:text-green-400 text-green-500",
+            muted && "text-foreground/15 border-border/80"
           )}
         >
           {label}
         </span>
       )}
 
-      <span className="flex-1 text-center">{text}</span>
+      <span className="flex-1 text-center line-clamp-2">{text}</span>
     </button>
   );
 }

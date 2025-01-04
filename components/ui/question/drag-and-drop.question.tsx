@@ -43,11 +43,11 @@ const CategoryItem = ({
       <div
         className={cn(
           "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/70 bg-muted/30",
-          draggingId && !droppedId && "border-blue-500/20 bg-blue-500/10",
+          draggingId && !droppedId && "bg-blue-500/20 border-blue-300",
           dragOverId === id && !droppedId && "scale-105",
-          droppedId &&
-            "bg-green-600/10 border-green-600 border-solid delay-200",
-          incorrect && "bg-red-500/10 border-red-500"
+          droppedId && "border-solid bg-green-500/20 border-green-300",
+          droppedId && "bg-green-500/20 border-green-300",
+          incorrect && "bg-red-500/20 border-red-300"
         )}
       >
         <div className="leading-2 text-sm font-bold uppercase text-foreground/50">
@@ -67,8 +67,8 @@ const CategoryItem = ({
               handleDragEnd={() => null}
               className={cn(
                 "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150",
-                checked &&
-                  "bg-green-600/10 border-green-600 dark:text-green-500 text-green-700 cursor-default"
+                droppedId && "bg-green-500/20 border-green-300",
+                incorrect && "bg-red-500/20 border-red-300"
               )}
             />
           )}
@@ -125,7 +125,7 @@ const DraggableItem = ({
           "truncate  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
-          incorrect && "bg-red-500/10 border-red-500",
+          incorrect && "bg-red-500/20 border-red-300",
           droppedId && "bg-muted border-transparent text-muted",
           className
         )}

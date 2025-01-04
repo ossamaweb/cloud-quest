@@ -29,7 +29,6 @@ export const MultipleChoice = ({
             text={option.text}
             label={String(index + 1)}
             selected={selectedId === option.id}
-            checked={checked}
             disabled={checked}
             status={checked && selectedId === option.id ? status : undefined}
             onClick={() => handleOnClick(option.id)}

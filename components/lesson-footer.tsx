@@ -31,7 +31,7 @@ export default function LessonFooter({
       <div
         className={cn(
           "bg-background border-t-2 border-border",
-          checked && "invisible pointer-events-none"
+          checked && "pointer-events-none"
         )}
       >
         <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
@@ -49,62 +49,64 @@ export default function LessonFooter({
         </div>
       </div>
 
-      <div
-        className={cn(
-          "absolute bottom-0 w-full border-t-2 border-transparent",
-          (!checked || status === "unanswered") && "hidden",
-          status === "incorrect"
-            ? "bg-red-100 dark:bg-border/50"
-            : "bg-green-100 dark:bg-border/50"
-        )}
-      >
-        <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
-          <div className="flex sm:flex-row flex-col sm:gap-8 gap-4 justify-between sm:items-center items-start">
-            <div
-              className={cn(
-                "flex items-center justify-start gap-2",
-                "motion-safe:animate-in motion-safe:fade-in motion-safe:duration-150",
-                status === "incorrect" && "dark:text-red-500 text-red-700",
-                status === "correct" && "dark:text-green-500 text-green-700",
-                "motion-safe:animate-in motion-safe:slide-in-from-bottom-full motion-safe:duration-150"
-              )}
-            >
+      {checked && status !== "unanswered" && (
+        <div
+          className={cn(
+            "absolute bottom-0 w-full border-t-2 border-transparent",
+            // (!checked || status === "unanswered") && "hidden",
+            status === "incorrect"
+              ? "bg-red-200 dark:bg-border/50"
+              : "bg-green-200 dark:bg-border/50"
+          )}
+        >
+          <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
+            <div className="flex sm:flex-row flex-col sm:gap-8 gap-4 justify-between sm:items-center items-start">
               <div
                 className={cn(
-                  "w-10 h-10 flex-shrink-0 bg-background flex items-center justify-center rounded-full",
-                  "motion-safe:animate-in motion-safe:fade-in-50 motion-safe:zoom-in-50 motion-safe:duration-500"
+                  "flex items-center justify-start gap-2",
+                  status === "incorrect" && "dark:text-red-500 text-red-700",
+                  status === "correct" && "dark:text-green-500 text-green-700"
                 )}
               >
-                {status === "incorrect" ? (
-                  <XIcon strokeWidth={5} />
-                ) : (
-                  <CheckIcon strokeWidth={5} />
-                )}
-              </div>
-
-              <div className="text-lg">
-                <div className="font-bold">
-                  {getQuestionEndMessage(status, questionIndex)}
-                </div>
-                {!!questionExplanation && (
-                  <div className="text-sm text-pretty">
-                    {questionExplanation}
+                <div className="flex-shrink-0 w-10 h-10">
+                  <div
+                    className={cn(
+                      "w-10 h-10 bg-background flex items-center justify-center rounded-full",
+                      "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in motion-safe:duration-500"
+                    )}
+                  >
+                    {status === "incorrect" ? (
+                      <XIcon strokeWidth={5} />
+                    ) : (
+                      <CheckIcon strokeWidth={5} />
+                    )}
                   </div>
-                )}
+                </div>
+
+                <div className="text-lg">
+                  <div className="font-bold">
+                    {getQuestionEndMessage(status, questionIndex)}
+                  </div>
+                  {!!questionExplanation && (
+                    <div className="text-sm text-pretty">
+                      {questionExplanation}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="sm:w-auto w-full">
-              <ButtonGame
-                className="w-full sm:w-40"
-                status={status}
-                onClick={handleOnContinue}
-              >
-                Continue
-              </ButtonGame>
+              <div className="sm:w-auto w-full">
+                <ButtonGame
+                  className="w-full sm:w-40"
+                  status={status}
+                  onClick={handleOnContinue}
+                >
+                  Continue
+                </ButtonGame>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
