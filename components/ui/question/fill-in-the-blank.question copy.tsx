@@ -18,6 +18,13 @@ export const FillInTheBlank = ({
     Object.fromEntries(data.blanks.map((blank) => [blank.id, ""]))
   );
 
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, blankId: string) => {
+      setValue((prev) => ({ ...prev, [blankId]: e.target.value }));
+    },
+    []
+  );
+
   React.useEffect(() => {
     const debounceTimeout = setTimeout(() => {
       const hasValue = Object.values(value).every((v) => v.trim().length > 0);
@@ -37,18 +44,6 @@ export const FillInTheBlank = ({
     [data, value, onGrade, answered]
   );
 
-  const handleOnInput = React.useCallback(
-    (e: React.FormEvent<HTMLSpanElement>, blankId: string) => {
-      const content = (e.target as HTMLSpanElement).textContent || "";
-
-      setValue((prev) => ({
-        ...prev,
-        [blankId]: content.replace(/\u200B/g, ""),
-      }));
-    },
-    []
-  );
-
   React.useEffect(() => {
     if (!checked) return;
     gradeQuestion(data, value, onGrade);
@@ -58,12 +53,10 @@ export const FillInTheBlank = ({
     (event: React.MouseEvent<HTMLFormElement>) => {
       if (
         event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement ||
-        (event.target as HTMLElement).isContentEditable
+        event.target instanceof HTMLTextAreaElement
       ) {
         return;
       }
-
       if (autoFocusRef.current) {
         autoFocusRef.current.focus();
       }
@@ -106,33 +99,36 @@ export const FillInTheBlank = ({
       : false;
 
     return (
-      <span
-        key={blank.id}
-        title={blank.id}
-        role="textbox"
-        ref={index === 0 ? autoFocusRef : null}
-        aria-multiline="false"
-        tabIndex={!checked ? 0 : -1}
-        contentEditable={!checked}
-        suppressContentEditableWarning={true}
-        onInput={(e) => handleOnInput(e, blank.id)}
-        // onKeyDown={handleOnKeyDown}
-        className={cn(
-          "border-b-2 border-border bg-transparent outline-none",
-          !checked && "focus:border-blue-500",
-          checked &&
-            !correct &&
-            "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
-          checked &&
-            correct &&
-            "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
-          value[blank.id].length > 12 ? "inline pb-[2.6px]" : "inline-block",
-          "transition-colors duration-150 ease-in-out"
-        )}
-        style={{ minWidth: `${blank.correctAnswer.length + 2}ch` }}
-      >
-        {/* Zero-width space character as a workaround for some browser */}
-        {"\u200B"}
+      <span className="relative" key={blank.id}>
+        <span
+          className="bg-red-600 inline-block min-w-12 invisible pointer-events-none outline-none"
+          aria-hidden="true"
+          tabIndex={-1}
+          contentEditable={true}
+          suppressContentEditableWarning={true}
+        >
+          {value[blank.id] || "blank"}
+        </span>
+        <input
+          type="text"
+          key={blank.id}
+          ref={index === 0 ? autoFocusRef : null}
+          title={blank.id}
+          value={value[blank.id]}
+          disabled={checked}
+          autoComplete="off"
+          onChange={(e) => handleChange(e, blank.id)}
+          className={cn(
+            "absolute inset-0 -bottom-0.5 border-b-2 border-border focus:border-blue-500 bg-transparent outline-none",
+            checked &&
+              !correct &&
+              "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
+            checked &&
+              correct &&
+              "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+            "transition-colors duration-150 ease-in-out"
+          )}
+        />
       </span>
     );
   };
@@ -143,9 +139,9 @@ export const FillInTheBlank = ({
       name={data.id}
       onSubmit={handleSubmit}
       onClick={handleOnFormClick}
-      className="bg-input  border-border border-2 rounded-sm py-2 px-4 min-h-40 cursor-default"
+      className="bg-input border-border border-2 rounded-sm py-2 px-4 min-h-40"
     >
-      <div className="inline">
+      <div>
         {parts.map((part) =>
           part.type === "text" ? part.value : renderInput(part.index)
         )}
