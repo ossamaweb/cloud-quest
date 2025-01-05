@@ -24,7 +24,7 @@ export const MultipleChoice = ({
 
   return (
     <KeyboardProvider>
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 gap-4">
         {data.options.map((option, index) => (
           <div key={option.id}>
             <ButtonQuestion

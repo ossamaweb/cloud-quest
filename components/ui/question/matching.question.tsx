@@ -123,7 +123,7 @@ export const Matching = ({
   return (
     <KeyboardProvider>
       <div className="grid grid-cols-2 sm:gap-8 gap-4">
-        <div className="space-y-2">
+        <div className="space-y-4">
           {terms.map((term, index) => (
             <div key={term.id}>
               <ButtonQuestion
@@ -143,7 +143,7 @@ export const Matching = ({
             </div>
           ))}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-4">
           {definitions.map((def, index) => (
             <div key={def.id}>
               <ButtonQuestion

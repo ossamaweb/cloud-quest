@@ -80,8 +80,8 @@ module.exports = {
 				}
 			},
 			animation: {
-				"answer-scale-in": "answer-scale-in 0.15s",
-				"answer-scale-in-2": "answer-scale-in-2 0.15s"
+				"answer-scale-in": "answer-scale-in 0.3s ease-in-out",
+				"answer-scale-in-2": "answer-scale-in-2 0.3s ease-in-out"
 			}
 		}
 	},

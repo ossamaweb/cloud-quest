@@ -104,7 +104,7 @@ export const Ordering = ({
 
   return (
     <KeyboardProvider>
-      <div className="space-y-2">
+      <div className="space-y-4">
         {items.map((item, index) => (
           <div key={item.id}>
             <ButtonQuestion

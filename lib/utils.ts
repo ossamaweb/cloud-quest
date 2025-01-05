@@ -19,7 +19,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const AUTO_CHECK_DURATION = 500;
+export const AUTO_CHECK_DURATION = 400;
 
 const ANSWER_MSG_UNCORRECT = [
   "That's not quite right!",

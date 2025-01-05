@@ -56,6 +56,7 @@ export default function LessonFooter({
           <div
             className={cn(
               "absolute bottom-0 w-full border-t-2 border-transparent",
+              "motion-safe:animate-in motion-safe:fade-in motion-safe:duration-150",
               // (!checked || status === "unanswered") && "hidden",
               status === "incorrect"
                 ? "bg-red-200 dark:bg-zinc-900"
@@ -75,7 +76,7 @@ export default function LessonFooter({
                     <div
                       className={cn(
                         "w-10 h-10 bg-background flex items-center justify-center rounded-full",
-                        "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in motion-safe:duration-500"
+                        "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in motion-safe:duration-300 motion-safe:ease-in-out"
                       )}
                     >
                       {status === "incorrect" ? (

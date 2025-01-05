@@ -131,7 +131,7 @@ const DraggableItem = ({
             "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
           incorrect &&
             "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
-          droppedId && "bg-muted border-transparent text-muted",
+          droppedId && "opacity-0",
           className
         )}
       >

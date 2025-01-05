@@ -119,13 +119,14 @@ export const FillInTheBlank = ({
           autoComplete="off"
           onChange={(e) => handleChange(e, blank.id)}
           className={cn(
-            "absolute inset-0 -bottom-0.5 border-b-2 border-border focus:border-blue-500 bg-transparent outline-none transition-colors",
+            "absolute inset-0 -bottom-0.5 border-b-2 border-border focus:border-blue-500 bg-transparent outline-none",
             checked &&
               !correct &&
-              "border-red-500 dark:text-red-500 text-red-700",
+              "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
             checked &&
               correct &&
-              "border-green-500 dark:text-green-500 text-green-700"
+              "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+            "transition-colors duration-150 ease-in-out"
           )}
         />
       </span>
