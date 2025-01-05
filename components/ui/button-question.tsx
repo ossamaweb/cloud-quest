@@ -40,7 +40,7 @@ export default function ButtonQuestion({
       tabIndex={tabIndex}
       className={cn(
         "transition-all duration-150 select-none",
-        "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-sm bg-background px-4 py-3 text-foreground font-medium enabled:cursor-pointer",
+        "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-sm bg-background px-4 py-3 text-foreground enabled:cursor-pointer",
         "enabled:active:translate-y-0.5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)]",
         "focus:outline-offset-2",
         selected &&

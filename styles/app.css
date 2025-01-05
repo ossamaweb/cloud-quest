@@ -78,11 +78,3 @@
 }
 
 @layer components {}
-
-
-.full-height {
-  height: -webkit-fill-available;
-  height: 100vh; /* Fallback */
-  min-height: -webkit-fill-available;
-  min-height: 100vh;
-}
