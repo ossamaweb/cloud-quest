@@ -59,7 +59,7 @@ function QuestionHeaderRenderer({
     case QUESTION_TYPE.SCENARIO_BASED:
       return "Solve the following scenario";
     case QUESTION_TYPE.SHORT_ANSWER:
-      return "Write a short answer";
+      return "Type your answer";
     case QUESTION_TYPE.FILL_IN_THE_BLANK:
       return "Fill in the blank";
     case QUESTION_TYPE.MATCHING:
