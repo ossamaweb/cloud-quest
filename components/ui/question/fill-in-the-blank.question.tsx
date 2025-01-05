@@ -61,7 +61,7 @@ export const FillInTheBlank = ({
         autoFocusRef.current.focus();
       }
     },
-    []
+    [autoFocusRef]
   );
 
   const parts = React.useMemo(() => {
