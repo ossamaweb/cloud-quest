@@ -1,8 +1,9 @@
+"use client";
+
 import LessonFooter from "@/components/lesson-footer";
 import LessonLoading from "@/components/lesson-loading";
 import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
-
 import ProgressBar from "@/components/ui/progress-bar";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LessonQuestionProps } from "@/lib/interfaces";
@@ -11,13 +12,13 @@ import { cn } from "@/lib/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { XIcon } from "lucide-react";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import * as React from "react";
 
 export default function Lesson() {
   const { user } = useAuthenticator();
   const router = useRouter();
 
-  const [stateUI, setStateUI] = useState<{
+  const [stateUI, setStateUI] = React.useState<{
     answered: boolean;
     checked: boolean;
     status: LessonQuestionProps<unknown>["status"];
@@ -35,7 +36,9 @@ export default function Lesson() {
 
   const totalQuestions = questionFixtures.length;
 
-  const handleOnGrade = useCallback<LessonQuestionProps<unknown>["onGrade"]>(
+  const handleOnGrade = React.useCallback<
+    LessonQuestionProps<unknown>["onGrade"]
+  >(
     (correct, points, autoCheck, data) => {
       console.log({ correct, points, autoCheck, data });
 
@@ -53,14 +56,14 @@ export default function Lesson() {
     [totalQuestions]
   );
 
-  const handleOnAnswer = useCallback((answered: boolean) => {
+  const handleOnAnswer = React.useCallback((answered: boolean) => {
     setStateUI((prev) => ({
       ...prev,
       answered,
     }));
   }, []);
 
-  const handleOnCheck = useCallback(() => {
+  const handleOnCheck = React.useCallback(() => {
     setStateUI((prev) => ({
       ...prev,
       progress: (100 * (prev.questionIndex + 1)) / totalQuestions,
@@ -68,7 +71,7 @@ export default function Lesson() {
     }));
   }, [totalQuestions]);
 
-  const handleOnContinue = useCallback(() => {
+  const handleOnContinue = React.useCallback(() => {
     setStateUI((prev) => ({
       status: "unanswered",
       checked: false, // debug
@@ -138,6 +141,7 @@ export default function Lesson() {
             </div>
           </div>
         </div>
+
         <LessonFooter
           answered={stateUI.answered}
           checked={stateUI.checked}

@@ -4,17 +4,36 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import Button, { ButtonProps } from "./button";
 import { LessonQuestionProps } from "@/lib/interfaces";
+import { useKeyboard } from "@/hooks/use-keyboard";
 
 interface ButtonGameProps extends ButtonProps {
+  keyboardShortcut?: string;
   status?: LessonQuestionProps<unknown>["status"];
+  onClick?: () => void;
 }
 export default function ButtonGame({
   children,
   className,
   status,
+  keyboardShortcut,
   onClick,
   ...rest
 }: ButtonGameProps) {
+  const { registerShortcut, unregisterShortcut } = useKeyboard();
+
+  React.useEffect(() => {
+    if (keyboardShortcut && !rest.disabled && onClick) {
+      registerShortcut(keyboardShortcut, onClick);
+      return () => unregisterShortcut(keyboardShortcut);
+    }
+  }, [
+    keyboardShortcut,
+    rest.disabled,
+    onClick,
+    registerShortcut,
+    unregisterShortcut,
+  ]);
+
   return (
     <Button
       {...rest}

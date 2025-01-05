@@ -2,6 +2,7 @@ import { LessonQuestionProps, MatchingQuestion } from "@/lib/interfaces";
 import ButtonQuestion from "../button-question";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { gradeQuestion, validateMatchAnswer } from "@/lib/utils";
+import { KeyboardProvider } from "@/hooks/use-keyboard";
 
 interface MatchingQuestionState {
   selectedPair: [string | null, string | null];
@@ -116,45 +117,47 @@ export const Matching = ({
   }, [data.definitions, data.terms]);
 
   return (
-    <div className="grid grid-cols-2 sm:gap-8 gap-4">
-      <div className="space-y-2">
-        {terms.map((term, index) => (
-          <div key={term.id}>
-            <ButtonQuestion
-              tabIndex={-1}
-              className="leading-5 h-16"
-              passive={true}
-              text={term.text}
-              label={String(index + 1)}
-              selected={selectedPair[0] === term.id}
-              disabled={
-                checked || selectedPair[0] === term.id || correctIds[term.id]
-              }
-              muted={correctIds[term.id]}
-              status={statuses[term.id]}
-              onClick={() => handleOnClick([term.id, selectedPair[1]])}
-            />
-          </div>
-        ))}
+    <KeyboardProvider>
+      <div className="grid grid-cols-2 sm:gap-8 gap-4">
+        <div className="space-y-2">
+          {terms.map((term, index) => (
+            <div key={term.id}>
+              <ButtonQuestion
+                tabIndex={-1}
+                className="leading-5 h-16"
+                passive={true}
+                text={term.text}
+                keyboardShortcut={String(index + 1)}
+                selected={selectedPair[0] === term.id}
+                disabled={
+                  checked || selectedPair[0] === term.id || correctIds[term.id]
+                }
+                muted={correctIds[term.id]}
+                status={statuses[term.id]}
+                onClick={() => handleOnClick([term.id, selectedPair[1]])}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="space-y-2">
+          {definitions.map((def, index) => (
+            <div key={def.id}>
+              <ButtonQuestion
+                tabIndex={-1}
+                className="leading-5 h-16"
+                text={def.text}
+                passive={true}
+                keyboardShortcut={String(terms.length + index + 1)}
+                selected={selectedPair[1] === def.id}
+                disabled={checked || correctIds[def.id]}
+                muted={correctIds[def.id]}
+                status={statuses[def.id]}
+                onClick={() => handleOnClick([selectedPair[0], def.id])}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="space-y-2">
-        {definitions.map((def, index) => (
-          <div key={def.id}>
-            <ButtonQuestion
-              tabIndex={-1}
-              className="leading-5 h-16"
-              text={def.text}
-              passive={true}
-              label={String(terms.length + index + 1)}
-              selected={selectedPair[1] === def.id}
-              disabled={checked || correctIds[def.id]}
-              muted={correctIds[def.id]}
-              status={statuses[def.id]}
-              onClick={() => handleOnClick([selectedPair[0], def.id])}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
+    </KeyboardProvider>
   );
 };

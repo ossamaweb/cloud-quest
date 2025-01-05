@@ -4,6 +4,7 @@ import { LessonQuestionProps, MultipleChoiceQuestion } from "@/lib/interfaces";
 import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
 import { gradeQuestion } from "@/lib/utils";
+import { KeyboardProvider } from "@/hooks/use-keyboard";
 
 export const MultipleChoice = ({
   data,
@@ -22,19 +23,21 @@ export const MultipleChoice = ({
   );
 
   return (
-    <div className="space-y-2">
-      {data.options.map((option, index) => (
-        <div key={option.id}>
-          <ButtonQuestion
-            text={option.text}
-            label={String(index + 1)}
-            selected={selectedId === option.id}
-            disabled={checked}
-            status={checked && selectedId === option.id ? status : undefined}
-            onClick={() => handleOnClick(option.id)}
-          />
-        </div>
-      ))}
-    </div>
+    <KeyboardProvider>
+      <div className="space-y-2">
+        {data.options.map((option, index) => (
+          <div key={option.id}>
+            <ButtonQuestion
+              text={option.text}
+              keyboardShortcut={String(index + 1)}
+              selected={selectedId === option.id}
+              disabled={checked}
+              status={checked && selectedId === option.id ? status : undefined}
+              onClick={() => handleOnClick(option.id)}
+            />
+          </div>
+        ))}
+      </div>
+    </KeyboardProvider>
   );
 };

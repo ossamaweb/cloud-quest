@@ -1,12 +1,13 @@
 "use client";
 
+import { useKeyboard } from "@/hooks/use-keyboard";
 import { LessonQuestionProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
 interface ButtonQuestionProps {
   text?: string;
-  label?: string;
+  keyboardShortcut?: string;
   selected?: boolean;
   status?: LessonQuestionProps<unknown>["status"];
   className?: string;
@@ -14,24 +15,31 @@ interface ButtonQuestionProps {
   passive?: boolean;
   muted?: boolean;
   tabIndex?: number;
-
   children?: React.ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: () => void;
 }
 export default function ButtonQuestion({
   className,
   tabIndex,
   text,
-  label,
+  keyboardShortcut,
   selected,
   status,
   disabled,
   passive,
   muted,
-
   children,
   onClick,
 }: ButtonQuestionProps) {
+  const { registerShortcut, unregisterShortcut } = useKeyboard();
+
+  React.useEffect(() => {
+    if (keyboardShortcut && onClick) {
+      registerShortcut(keyboardShortcut, onClick);
+      return () => unregisterShortcut(keyboardShortcut);
+    }
+  }, [keyboardShortcut, onClick, registerShortcut, unregisterShortcut]);
+
   return (
     <button
       type="button"
@@ -58,7 +66,7 @@ export default function ButtonQuestion({
         className
       )}
     >
-      {!!label && (
+      {!!keyboardShortcut && (
         <span
           className={cn(
             "transition-all duration-150",
@@ -71,7 +79,7 @@ export default function ButtonQuestion({
             muted && "text-foreground/15 border-border/80"
           )}
         >
-          {label}
+          {keyboardShortcut}
         </span>
       )}
       {!!text && (

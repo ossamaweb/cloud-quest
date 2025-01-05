@@ -2,6 +2,7 @@ import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ButtonQuestion from "../button-question";
 import { gradeQuestion, validateOrderingAnswer } from "@/lib/utils";
+import { KeyboardProvider } from "@/hooks/use-keyboard";
 
 interface OrderingQuestionState {
   selectedId: string | null;
@@ -98,23 +99,27 @@ export const Ordering = ({
   }, [data.items]);
 
   return (
-    <div className="space-y-2">
-      {items.map((item, index) => (
-        <div key={item.id}>
-          <ButtonQuestion
-            tabIndex={-1}
-            className="leading-5 h-16"
-            text={item.text}
-            label={String(index + 1)}
-            passive={true}
-            selected={selectedId === item.id}
-            disabled={checked || selectedId === item.id || correctIds[item.id]}
-            muted={correctIds[item.id]}
-            status={statuses[item.id]}
-            onClick={() => handleOnClick(item.id, userOrder)}
-          />
-        </div>
-      ))}
-    </div>
+    <KeyboardProvider>
+      <div className="space-y-2">
+        {items.map((item, index) => (
+          <div key={item.id}>
+            <ButtonQuestion
+              tabIndex={-1}
+              className="leading-5 h-16"
+              text={item.text}
+              keyboardShortcut={String(index + 1)}
+              passive={true}
+              selected={selectedId === item.id}
+              disabled={
+                checked || selectedId === item.id || correctIds[item.id]
+              }
+              muted={correctIds[item.id]}
+              status={statuses[item.id]}
+              onClick={() => handleOnClick(item.id, userOrder)}
+            />
+          </div>
+        ))}
+      </div>
+    </KeyboardProvider>
   );
 };
