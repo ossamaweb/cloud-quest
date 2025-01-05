@@ -3,7 +3,7 @@
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import * as React from "react";
 
 export const FillInTheBlank = ({
   data,
@@ -14,18 +14,18 @@ export const FillInTheBlank = ({
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
   const autoFocusRef = useAutoFocus();
 
-  const [value, setValue] = useState<Record<string, string>>(
+  const [value, setValue] = React.useState<Record<string, string>>(
     Object.fromEntries(data.blanks.map((blank) => [blank.id, ""]))
   );
 
-  const handleChange = useCallback(
+  const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, blankId: string) => {
       setValue((prev) => ({ ...prev, [blankId]: e.target.value }));
     },
     []
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const debounceTimeout = setTimeout(() => {
       const hasValue = Object.values(value).every((v) => v.trim().length > 0);
       onAnswer(hasValue);
@@ -34,7 +34,7 @@ export const FillInTheBlank = ({
     return () => clearTimeout(debounceTimeout);
   }, [onAnswer, value]);
 
-  const handleSubmit = useCallback(
+  const handleSubmit = React.useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       if (answered) {
@@ -44,12 +44,27 @@ export const FillInTheBlank = ({
     [data, value, onGrade, answered]
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!checked) return;
     gradeQuestion(data, value, onGrade);
   }, [checked, data, onGrade, value]);
 
-  const parts = useMemo(() => {
+  const handleOnFormClick = React.useCallback(
+    (event: React.MouseEvent<HTMLFormElement>) => {
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+      if (autoFocusRef.current) {
+        autoFocusRef.current.focus();
+      }
+    },
+    []
+  );
+
+  const parts = React.useMemo(() => {
     // Split the text by the placeholder pattern
     const arr = data.question.split(/(\{[0-9]+\})/g);
 
@@ -122,6 +137,7 @@ export const FillInTheBlank = ({
       id={data.id}
       name={data.id}
       onSubmit={handleSubmit}
+      onClick={handleOnFormClick}
       className="bg-input border-border border-2 rounded-sm py-2 px-4 min-h-40"
     >
       <div>
