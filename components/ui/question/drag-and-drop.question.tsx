@@ -143,7 +143,7 @@ interface DragAndDropQuestionState {
   draggingId: string | null;
   dragOverId: string | null;
   categoryItem: Record<string, string>;
-  answeredSize: number;
+  correctAnswersCount: number;
 }
 
 export const DragAndDrop = ({
@@ -161,7 +161,7 @@ export const DragAndDrop = ({
     draggingId: null,
     dragOverId: null,
     categoryItem: {},
-    answeredSize: 0,
+    correctAnswersCount: 0,
   });
 
   const handleDragOver = useCallback(
@@ -206,13 +206,11 @@ export const DragAndDrop = ({
         return;
       }
 
-      if (
-        data.correctPairings[itemId] &&
-        data.correctPairings[itemId] === categoryId
-      ) {
-        // correct
+      const correct = data.correctPairings[itemId] === categoryId;
+
+      if (correct) {
         setState((prev) => ({
-          answeredSize: prev.answeredSize,
+          correctAnswersCount: prev.correctAnswersCount,
           pairings: { ...prev.pairings, [itemId]: categoryId },
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId, itemId },
@@ -224,7 +222,6 @@ export const DragAndDrop = ({
           },
         }));
       } else {
-        // uncorrect
         setState((prev) => ({
           ...prev,
           dragOverId: null,
@@ -239,7 +236,7 @@ export const DragAndDrop = ({
           dragOverId: null,
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId: "", itemId: "" },
-          answeredSize: prev.answeredSize + 1,
+          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       }, 300);
     },

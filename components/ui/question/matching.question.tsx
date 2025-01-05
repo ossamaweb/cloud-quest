@@ -8,7 +8,7 @@ interface MatchingQuestionState {
   pairings: Record<string, string>;
   statuses: Record<string, LessonQuestionProps<MatchingQuestion>["status"]>;
   correctIds: Record<string, boolean>;
-  answeredSize: number;
+  correctAnswersCount: number;
 }
 
 export const Matching = ({
@@ -20,14 +20,14 @@ export const Matching = ({
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   const [
-    { selectedPair, pairings, statuses, correctIds, answeredSize },
+    { selectedPair, pairings, statuses, correctIds, correctAnswersCount },
     setState,
   ] = useState<MatchingQuestionState>({
     selectedPair: [null, null],
     pairings: {},
     statuses: {},
     correctIds: {},
-    answeredSize: 0,
+    correctAnswersCount: 0,
   });
 
   const handleOnClick = useCallback(
@@ -87,7 +87,7 @@ export const Matching = ({
             [term]: "unanswered",
             [definition]: "unanswered",
           },
-          answeredSize: prev.answeredSize + 1,
+          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       }, 300);
     },
@@ -103,10 +103,10 @@ export const Matching = ({
   }, []);
 
   useEffect(() => {
-    if (answeredSize === Object.keys(data.correctPairings).length) {
+    if (correctAnswersCount === Object.keys(data.correctPairings).length) {
       gradeQuestion(data, pairings, onGrade);
     }
-  }, [data, onGrade, pairings, answeredSize]);
+  }, [data, onGrade, pairings, correctAnswersCount]);
 
   const { definitions, terms } = useMemo(() => {
     return {

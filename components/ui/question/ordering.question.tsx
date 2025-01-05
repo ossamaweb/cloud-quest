@@ -8,7 +8,7 @@ interface OrderingQuestionState {
   userOrder: string[];
   statuses: Record<string, LessonQuestionProps<OrderingQuestion>["status"]>;
   correctIds: Record<string, boolean>;
-  answeredSize: number;
+  correctAnswersCount: number;
 }
 export const Ordering = ({
   data,
@@ -17,14 +17,14 @@ export const Ordering = ({
 }: LessonQuestionProps<OrderingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const [
-    { selectedId, userOrder, statuses, correctIds, answeredSize },
+    { selectedId, userOrder, statuses, correctIds, correctAnswersCount },
     setState,
   ] = useState<OrderingQuestionState>({
     selectedId: null,
     userOrder: [],
     statuses: {},
     correctIds: {},
-    answeredSize: 0,
+    correctAnswersCount: 0,
   });
 
   const handleOnClick = useCallback(
@@ -70,7 +70,7 @@ export const Ordering = ({
             ...prev.statuses,
             [selectedId]: "unanswered",
           },
-          answeredSize: prev.answeredSize + 1,
+          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       }, 300);
     },
@@ -86,10 +86,10 @@ export const Ordering = ({
   }, []);
 
   useEffect(() => {
-    if (answeredSize === data.correctOrder.length) {
+    if (correctAnswersCount === data.correctOrder.length) {
       gradeQuestion(data, userOrder, onGrade);
     }
-  }, [data, onGrade, userOrder, answeredSize]);
+  }, [data, onGrade, userOrder, correctAnswersCount]);
 
   const { items } = useMemo(() => {
     return {
