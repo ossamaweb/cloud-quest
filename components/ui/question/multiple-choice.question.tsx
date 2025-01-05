@@ -30,7 +30,7 @@ export const MultipleChoice = ({
             <ButtonQuestion
               text={option.text}
               keyboardShortcut={String(index + 1)}
-              selected={selectedId === option.id}
+              selected={selectedId === option.id && !checked}
               disabled={checked}
               status={checked && selectedId === option.id ? status : undefined}
               onClick={() => handleOnClick(option.id)}

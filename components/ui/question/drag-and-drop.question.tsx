@@ -43,10 +43,10 @@ const CategoryItem = ({
       <div
         className={cn(
           "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
-          draggingId && !droppedId && "bg-blue-500/20 border-blue-300",
+          draggingId && !droppedId && "bg-blue-500/20 border-blue-300/50",
           dragOverId === id && !droppedId && "scale-105",
-          correct && "border-solid bg-green-500/20 border-green-300",
-          incorrect && "bg-red-500/20 border-red-300",
+          correct && "border-solid bg-green-500/20 border-green-300/50",
+          incorrect && "bg-red-500/20 border-red-300/50",
           droppedId && !correct && "border-solid opacity-50"
         )}
       >
@@ -124,8 +124,8 @@ const DraggableItem = ({
           "truncate  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
-          correct && "bg-green-500/20 border-green-300",
-          incorrect && "bg-red-500/20 border-red-300",
+          correct && "bg-green-500/20 border-green-300/30",
+          incorrect && "bg-red-500/20 border-red-300/30",
           droppedId && "bg-muted border-transparent text-muted",
           className
         )}

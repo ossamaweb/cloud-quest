@@ -125,7 +125,7 @@ export const FillInTheBlank = ({
               "border-red-500 dark:text-red-500 text-red-700",
             checked &&
               correct &&
-              "border-green-600 dark:text-green-500 text-green-700"
+              "border-green-500 dark:text-green-500 text-green-700"
           )}
         />
       </span>

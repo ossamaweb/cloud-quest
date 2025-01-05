@@ -69,6 +69,20 @@ module.exports = {
 			transitionProperty: {
 				'width': 'width',
 			},
+			keyframes: {
+				"answer-scale-in": {
+					"0%": { transform: "scale(1)", },
+					"100%": { transform: "scale(1.02)", }
+				},
+				"answer-scale-in-2": {
+					"0%": { transform: "scale(1)", },
+					"100%": { transform: "scale(1.02)", }
+				}
+			},
+			animation: {
+				"answer-scale-in": "answer-scale-in 0.15s",
+				"answer-scale-in-2": "answer-scale-in-2 0.15s"
+			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

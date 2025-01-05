@@ -109,7 +109,7 @@ export const Ordering = ({
               text={item.text}
               keyboardShortcut={String(index + 1)}
               passive={true}
-              selected={selectedId === item.id}
+              selected={selectedId === item.id && !checked}
               disabled={
                 checked || selectedId === item.id || correctIds[item.id]
               }

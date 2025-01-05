@@ -128,7 +128,7 @@ export const Matching = ({
                 passive={true}
                 text={term.text}
                 keyboardShortcut={String(index + 1)}
-                selected={selectedPair[0] === term.id}
+                selected={selectedPair[0] === term.id && !checked}
                 disabled={
                   checked || selectedPair[0] === term.id || correctIds[term.id]
                 }
@@ -148,7 +148,7 @@ export const Matching = ({
                 text={def.text}
                 passive={true}
                 keyboardShortcut={String(terms.length + index + 1)}
-                selected={selectedPair[1] === def.id}
+                selected={selectedPair[1] === def.id && !checked}
                 disabled={checked || correctIds[def.id]}
                 muted={correctIds[def.id]}
                 status={statuses[def.id]}
