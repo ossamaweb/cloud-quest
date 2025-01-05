@@ -1,5 +1,7 @@
 "use client";
 
+import { useAutoFocus } from "@/hooks/use-auto-focus";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { LessonQuestionProps, ShortAnswerQuestion } from "@/lib/interfaces";
 import { gradeQuestion } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
@@ -10,6 +12,7 @@ export const ShortAnswer = ({
   onGrade,
   onAnswer,
 }: LessonQuestionProps<ShortAnswerQuestion>) => {
+  const autoFocusRef = useAutoFocus();
   const [value, setValue] = useState("");
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +31,10 @@ export const ShortAnswer = ({
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      gradeQuestion(data, value, onGrade);
+      const hasValue = value.trim().length > 0;
+      if (hasValue) {
+        gradeQuestion(data, value, onGrade);
+      }
     },
     [data, value, onGrade]
   );
@@ -48,8 +54,8 @@ export const ShortAnswer = ({
     >
       <input
         type="text"
+        ref={autoFocusRef}
         value={value}
-        autoFocus={true}
         autoComplete="off"
         disabled={checked}
         onChange={handleChange}

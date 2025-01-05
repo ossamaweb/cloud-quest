@@ -31,7 +31,7 @@ export const TrueFalse = ({
           disabled={checked}
           status={checked && selectedId === "1" ? status : undefined}
           onClick={() => handleOnClick("1")}
-          className="w-40 h-40 flex gap-2 flex-col justify-center"
+          className="sm:w-40 sm:h-40 w-28 h-28 flex gap-2 flex-col justify-center"
         >
           <CheckIcon className="w-16 h-16 flex-shrink-0 -order-1" />
         </ButtonQuestion>
@@ -44,7 +44,7 @@ export const TrueFalse = ({
           disabled={checked}
           status={checked && selectedId === "0" ? status : undefined}
           onClick={() => handleOnClick("0")}
-          className="w-40 h-40 flex gap-2 flex-col justify-center"
+          className="sm:w-40 sm:h-40 w-28 h-28 flex gap-2 flex-col justify-center"
         >
           <XIcon className="w-16 h-16 flex-shrink-0 -order-1" />
         </ButtonQuestion>

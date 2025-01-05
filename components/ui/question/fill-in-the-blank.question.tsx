@@ -1,9 +1,9 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export const FillInTheBlank = ({
   data,
@@ -12,7 +12,8 @@ export const FillInTheBlank = ({
   onAnswer,
   onGrade,
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
-  const isMobile = useIsMobile();
+  const autoFocusRef = useAutoFocus();
+
   const [value, setValue] = useState<Record<string, string>>(
     Object.fromEntries(data.blanks.map((blank) => [blank.id, ""]))
   );
@@ -83,7 +84,7 @@ export const FillInTheBlank = ({
       : false;
 
     return (
-      <span className="relative">
+      <span className="relative" key={blank.id}>
         <span
           className="bg-red-600 inline-block min-w-12 invisible pointer-events-none outline-none"
           aria-hidden="true"
@@ -96,10 +97,11 @@ export const FillInTheBlank = ({
         <input
           type="text"
           key={blank.id}
+          ref={index === 0 ? autoFocusRef : null}
           title={blank.id}
           value={value[blank.id]}
-          autoFocus={!isMobile && index === 0}
           disabled={checked}
+          autoComplete="off"
           onChange={(e) => handleChange(e, blank.id)}
           className={cn(
             "absolute inset-0 -bottom-0.5 border-b-2 border-border focus:border-blue-500 bg-transparent outline-none transition-colors",
