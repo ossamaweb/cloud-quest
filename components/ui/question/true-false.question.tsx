@@ -29,7 +29,7 @@ export const TrueFalse = ({
         <div>
           <ButtonQuestion
             keyboardShortcut="1"
-            selected={selectedId === "1" && !checked}
+            selected={selectedId === "1"}
             disabled={checked}
             status={checked && selectedId === "1" ? status : undefined}
             onClick={() => handleOnClick("1")}
@@ -42,7 +42,7 @@ export const TrueFalse = ({
         <div>
           <ButtonQuestion
             keyboardShortcut="2"
-            selected={selectedId === "0" && !checked}
+            selected={selectedId === "0"}
             disabled={checked}
             status={checked && selectedId === "0" ? status : undefined}
             onClick={() => handleOnClick("0")}

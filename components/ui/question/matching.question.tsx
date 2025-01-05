@@ -1,7 +1,11 @@
 import { LessonQuestionProps, MatchingQuestion } from "@/lib/interfaces";
 import ButtonQuestion from "../button-question";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { gradeQuestion, validateMatchAnswer } from "@/lib/utils";
+import {
+  AUTO_CHECK_DURATION,
+  gradeQuestion,
+  validateMatchAnswer,
+} from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 
 interface MatchingQuestionState {
@@ -90,7 +94,7 @@ export const Matching = ({
           },
           correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
-      }, 300);
+      }, AUTO_CHECK_DURATION);
     },
     [data.correctPairings]
   );
@@ -128,7 +132,7 @@ export const Matching = ({
                 passive={true}
                 text={term.text}
                 keyboardShortcut={String(index + 1)}
-                selected={selectedPair[0] === term.id && !checked}
+                selected={selectedPair[0] === term.id}
                 disabled={
                   checked || selectedPair[0] === term.id || correctIds[term.id]
                 }
@@ -148,7 +152,7 @@ export const Matching = ({
                 text={def.text}
                 passive={true}
                 keyboardShortcut={String(terms.length + index + 1)}
-                selected={selectedPair[1] === def.id && !checked}
+                selected={selectedPair[1] === def.id}
                 disabled={checked || correctIds[def.id]}
                 muted={correctIds[def.id]}
                 status={statuses[def.id]}

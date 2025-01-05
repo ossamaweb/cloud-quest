@@ -1,7 +1,11 @@
 import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ButtonQuestion from "../button-question";
-import { gradeQuestion, validateOrderingAnswer } from "@/lib/utils";
+import {
+  AUTO_CHECK_DURATION,
+  gradeQuestion,
+  validateOrderingAnswer,
+} from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 
 interface OrderingQuestionState {
@@ -73,7 +77,7 @@ export const Ordering = ({
           },
           correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
-      }, 300);
+      }, AUTO_CHECK_DURATION);
     },
     [data.correctOrder]
   );
@@ -109,7 +113,7 @@ export const Ordering = ({
               text={item.text}
               keyboardShortcut={String(index + 1)}
               passive={true}
-              selected={selectedId === item.id && !checked}
+              selected={selectedId === item.id}
               disabled={
                 checked || selectedId === item.id || correctIds[item.id]
               }

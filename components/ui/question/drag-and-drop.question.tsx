@@ -3,8 +3,8 @@ import {
   LessonQuestionProps,
   QuestionOption,
 } from "@/lib/interfaces";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { cn, gradeQuestion } from "@/lib/utils";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AUTO_CHECK_DURATION, cn, gradeQuestion } from "@/lib/utils";
 
 interface CategoryItemProps {
   id: string;
@@ -42,12 +42,14 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "transition-all scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
-          draggingId && !droppedId && "bg-blue-500/20 border-blue-300/50",
+          "transition-all duration-150",
+          "scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
+          draggingId && !droppedId && "bg-blue-400/20 border-blue-400/50",
           dragOverId === id && !droppedId && "scale-105",
-          correct && "border-solid bg-green-500/20 border-green-300/50",
-          incorrect && "bg-red-500/20 border-red-300/50",
-          droppedId && !correct && "border-solid opacity-50"
+          correct &&
+            "border-solid bg-zinc-50 dark:bg-zinc-900 border-green-500/50",
+          incorrect && "bg-red-500/20 border-red-500/50",
+          droppedId && !correct && "border-solid text-foreground/20"
         )}
       >
         <div className="leading-2 text-sm font-bold uppercase">{text}</div>
@@ -121,11 +123,14 @@ const DraggableItem = ({
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         className={cn(
-          "truncate  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
+          "transition-all duration-150",
+          "truncate bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
-          correct && "bg-green-500/20 border-green-300/30",
-          incorrect && "bg-red-500/20 border-red-300/30",
+          correct &&
+            "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+          incorrect &&
+            "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
           droppedId && "bg-muted border-transparent text-muted",
           className
         )}
@@ -151,8 +156,18 @@ export const DragAndDrop = ({
   checked,
   onGrade,
 }: LessonQuestionProps<DragAndDropQuestion>) => {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
   const [
-    { pairings, incorrect, correct, draggingId, dragOverId, categoryItem },
+    {
+      pairings,
+      incorrect,
+      correct,
+      draggingId,
+      dragOverId,
+      categoryItem,
+      correctAnswersCount,
+    },
     setState,
   ] = useState<DragAndDropQuestionState>({
     pairings: {},
@@ -230,7 +245,7 @@ export const DragAndDrop = ({
         }));
       }
 
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setState((prev) => ({
           ...prev,
           dragOverId: null,
@@ -238,10 +253,18 @@ export const DragAndDrop = ({
           correct: { categoryId: "", itemId: "" },
           correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
-      }, 300);
+      }, AUTO_CHECK_DURATION);
     },
     [categoryItem, data]
   );
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleDragStart = useCallback((e: React.DragEvent, itemId: string) => {
     e.dataTransfer.setData("text/plain", itemId);
@@ -263,16 +286,10 @@ export const DragAndDrop = ({
   }, []);
 
   useEffect(() => {
-    if (
-      Object.keys(pairings).length === Object.keys(data.correctPairings).length
-    ) {
-      const timeout = setTimeout(() => {
-        gradeQuestion(data, pairings, onGrade);
-      }, 300);
-
-      return () => clearTimeout(timeout);
+    if (correctAnswersCount === Object.keys(data.correctPairings).length) {
+      gradeQuestion(data, pairings, onGrade);
     }
-  }, [data, onGrade, pairings]);
+  }, [correctAnswersCount, data, onGrade, pairings]);
 
   const { itemsLookup, categories, items } = useMemo(() => {
     return {

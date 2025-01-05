@@ -8,6 +8,7 @@ export interface ButtonProps {
   className?: string;
   active?: boolean;
   disabled?: boolean;
+  tabIndex?: number;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -15,13 +16,14 @@ export default function Button({
   className,
   active,
   disabled,
+  tabIndex,
   children,
-
   onClick,
 }: ButtonProps) {
   return (
     <button
       type="button"
+      tabIndex={tabIndex}
       onClick={onClick}
       disabled={disabled}
       className={cn(

@@ -19,6 +19,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const AUTO_CHECK_DURATION = 500;
+
 const ANSWER_MSG_UNCORRECT = [
   "That's not quite right!",
   "Not exactly...",

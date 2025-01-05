@@ -2,25 +2,30 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
-  // Fill in the Blank Question
+  // Drag and Drop Question
   {
-    id: "fb-001",
-    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
-    question:
-      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
-    blanks: [
-      {
-        id: "blank1",
-        correctAnswer: "S3",
-        acceptableAnswers: ["Simple Storage Service", "S3"],
-      },
-      {
-        id: "blank2",
-        correctAnswer: "EBS",
-        acceptableAnswers: ["Elastic Block Store", "EBS"],
-      },
+    id: "dd-001",
+    type: QUESTION_TYPE.DRAG_AND_DROP,
+    question: "Drag each AWS service to its corresponding category.",
+    categories: [
+      { id: "cat1", text: "Compute" },
+      { id: "cat2", text: "Storage" },
+      { id: "cat3", text: "Database" },
+      { id: "cat4", text: "Networking" },
     ],
-    points: 10,
+    items: [
+      { id: "item1", text: "EC2" },
+      { id: "item2", text: "S3" },
+      { id: "item3", text: "RDS" },
+      { id: "item4", text: "CloudFront" },
+    ],
+    correctPairings: {
+      item1: "cat1",
+      item2: "cat2",
+      item3: "cat3",
+      item4: "cat4",
+    },
+    points: 20,
   },
 
   // Ordering Question
@@ -38,26 +43,21 @@ export const questionFixtures: Question[] = [
     points: 15,
   },
 
-  // True False Question
+  // Multiple Choice Question
   {
-    id: "tf-001",
-    type: QUESTION_TYPE.TRUE_FALSE,
-    question: "Amazon S3 can be used to host static websites.",
-    correctAnswer: true,
+    id: "mc-001",
+    type: QUESTION_TYPE.MULTIPLE_CHOICE,
+    question: "Which AWS service would you use for serverless computing?",
+    options: [
+      { id: "mc1-opt1", text: "AWS Lambda" },
+      { id: "mc1-opt2", text: "Amazon EC2" },
+      { id: "mc1-opt3", text: "Amazon RDS" },
+      { id: "mc1-opt4", text: "Amazon S3" },
+    ],
+    correctOptionId: "mc1-opt1",
     explanation:
-      "S3 provides static website hosting capabilities with custom domain support.",
-    points: 5,
-  },
-
-  // Short Answer Question
-  {
-    id: "sa-001",
-    type: QUESTION_TYPE.SHORT_ANSWER,
-    question: "What does the acronym EBS stand for in AWS?",
-    correctAnswer: "Elastic Block Store",
-    acceptableAnswers: ["Elastic Block Storage", "Amazon Elastic Block Store"],
-    caseSensitive: false,
-    points: 5,
+      "AWS Lambda is a serverless computing service that runs code in response to events.",
+    points: 10,
   },
 
   // Matching Question
@@ -86,47 +86,47 @@ export const questionFixtures: Question[] = [
     points: 20,
   },
 
-  // Drag and Drop Question
+  // Fill in the Blank Question
   {
-    id: "dd-001",
-    type: QUESTION_TYPE.DRAG_AND_DROP,
-    question: "Drag each AWS service to its corresponding category.",
-    categories: [
-      { id: "cat1", text: "Compute" },
-      { id: "cat2", text: "Storage" },
-      { id: "cat3", text: "Database" },
-      { id: "cat4", text: "Networking" },
+    id: "fb-001",
+    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
+    question:
+      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
+    blanks: [
+      {
+        id: "blank1",
+        correctAnswer: "S3",
+        acceptableAnswers: ["Simple Storage Service", "S3"],
+      },
+      {
+        id: "blank2",
+        correctAnswer: "EBS",
+        acceptableAnswers: ["Elastic Block Store", "EBS"],
+      },
     ],
-    items: [
-      { id: "item1", text: "EC2" },
-      { id: "item2", text: "S3" },
-      { id: "item3", text: "RDS" },
-      { id: "item4", text: "CloudFront" },
-    ],
-    correctPairings: {
-      item1: "cat1",
-      item2: "cat2",
-      item3: "cat3",
-      item4: "cat4",
-    },
-    points: 20,
+    points: 10,
   },
 
-  // Multiple Choice Question
+  // True False Question
   {
-    id: "mc-001",
-    type: QUESTION_TYPE.MULTIPLE_CHOICE,
-    question: "Which AWS service would you use for serverless computing?",
-    options: [
-      { id: "mc1-opt1", text: "AWS Lambda" },
-      { id: "mc1-opt2", text: "Amazon EC2" },
-      { id: "mc1-opt3", text: "Amazon RDS" },
-      { id: "mc1-opt4", text: "Amazon S3" },
-    ],
-    correctOptionId: "mc1-opt1",
+    id: "tf-001",
+    type: QUESTION_TYPE.TRUE_FALSE,
+    question: "Amazon S3 can be used to host static websites.",
+    correctAnswer: true,
     explanation:
-      "AWS Lambda is a serverless computing service that runs code in response to events.",
-    points: 10,
+      "S3 provides static website hosting capabilities with custom domain support.",
+    points: 5,
+  },
+
+  // Short Answer Question
+  {
+    id: "sa-001",
+    type: QUESTION_TYPE.SHORT_ANSWER,
+    question: "What does the acronym EBS stand for in AWS?",
+    correctAnswer: "Elastic Block Store",
+    acceptableAnswers: ["Elastic Block Storage", "Amazon Elastic Block Store"],
+    caseSensitive: false,
+    points: 5,
   },
 
   // Image Identification Question

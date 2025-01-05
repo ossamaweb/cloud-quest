@@ -37,6 +37,7 @@ export default function ButtonGame({
   return (
     <Button
       {...rest}
+      tabIndex={keyboardShortcut ? -1 : rest.tabIndex}
       onClick={onClick}
       className={cn(
         "border-transparent border-b-4 text-background w-40 py-2 inline-flex items-center justify-center select-none",
@@ -45,7 +46,7 @@ export default function ButtonGame({
         "bg-green-600 border-b-green-700 enabled:hover:bg-green-500",
         status === "incorrect" &&
           "bg-red-500 border-b-red-600 enabled:hover:bg-red-400",
-
+        keyboardShortcut && "focus:outline-none",
         className
       )}
     >

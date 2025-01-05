@@ -41,51 +41,74 @@ export default function ButtonQuestion({
   }, [keyboardShortcut, onClick, registerShortcut, unregisterShortcut]);
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      tabIndex={tabIndex}
+    <div
       className={cn(
-        "transition-all duration-150 select-none",
-        "flex items-center gap-4 w-full border-border border-2 border-b-4 rounded-sm bg-background px-4 py-3 text-foreground enabled:cursor-pointer",
-        "enabled:active:translate-y-0.5 enabled:active:bg-blue-500/5 enabled:active:border-b-2 enabled:active:pb-[calc(0.75rem+2px)]",
-        "focus:outline-offset-2",
-        selected &&
-          "animate-answer-scale-in-2 bg-blue-500/20 border-blue-300/50 dark:text-blue-300 text-blue-600",
-        !passive &&
-          !selected &&
-          "enabled:hover:bg-border/30 enabled:focus:bg-border/30",
-        status === "incorrect" &&
-          "animate-answer-scale-in bg-red-500/20 border-red-300/50 dark:text-red-300 text-red-700",
-        status === "correct" &&
-          "animate-answer-scale-in bg-green-500/20 border-green-300/50 dark:text-green-300 text-green-700",
-        selected && !status && "[&>svg]:text-blue-500",
-        !selected && !status && "[&>svg]:text-blue-400",
-        muted && "text-foreground/20",
-        className
+        "relative bg-background",
+        selected && "motion-safe:animate-answer-scale-in",
+        status === "incorrect" && "motion-safe:animate-answer-scale-in-2",
+        status === "correct" && "motion-safe:animate-answer-scale-in-2"
       )}
     >
-      {!!keyboardShortcut && (
-        <span
-          className={cn(
-            "transition-all duration-150",
-            "sm:inline-block hidden px-3 py-1.5 box-content border-2 rounded-sm leading-2 text-sm font-bold border-border text-foreground/30",
-            selected && "border-blue-300/50 dark:text-blue-400 text-blue-500",
-            status === "incorrect" &&
-              "border-red-300/50 dark:text-red-400 text-red-500",
-            status === "correct" &&
-              "border-green-300/50 dark:text-green-400 text-green-500",
-            muted && "text-foreground/15 border-border/80"
-          )}
-        >
-          {keyboardShortcut}
-        </span>
-      )}
-      {!!text && (
-        <span className="flex-1 text-center line-clamp-2">{text}</span>
-      )}
-      {children}
-    </button>
+      {/* Bottom layer for 3D effect */}
+      <div
+        className={cn(
+          "absolute inset-0 rounded-sm bg-border translate-y-0.5",
+          "transition-colors duration-150 ease-in-out",
+          selected && "bg-blue-400 dark:bg-blue-500",
+          status === "incorrect" && "bg-red-500 dark:bg-red-600",
+          status === "correct" && "bg-green-500 dark:bg-green-700"
+        )}
+      />
+      {/* Main button */}
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        tabIndex={keyboardShortcut ? -1 : tabIndex}
+        className={cn(
+          "relative transition-colors duration-150 ease-in-out select-none",
+          "flex items-center gap-4 w-full bg-background text-foreground border-border border-2 rounded-sm px-4 py-3",
+          "enabled:cursor-pointer enabled:active:translate-y-0.5",
+          !selected &&
+            "enabled:active:bg-zinc-50 dark:enabled:active:bg-zinc-900",
+          !passive &&
+            !selected &&
+            "enabled:hover:bg-zinc-50 dark:enabled:hover:bg-zinc-900 enabled:focus:bg-zinc-50 dark:enabled:focus:bg-zinc-900",
+          keyboardShortcut ? "focus:outline-none" : "focus:outline-offset-2",
+          selected &&
+            "bg-zinc-50 dark:bg-zinc-900 border-blue-400 dark:border-blue-500 dark:text-blue-500 text-blue-600",
+          status === "incorrect" &&
+            "bg-zinc-50 dark:bg-zinc-900 border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
+          status === "correct" &&
+            "bg-zinc-50 dark:bg-zinc-900 border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+          selected && !status && "[&>svg]:text-blue-600",
+          !selected && !status && "[&>svg]:text-blue-400 ",
+          muted && "text-foreground/20",
+          className
+        )}
+      >
+        {!!keyboardShortcut && (
+          <span
+            className={cn(
+              "transition-all duration-150 ease-in-out",
+              "sm:inline-block hidden px-3 py-1.5 box-content border-2 rounded-sm leading-2 text-sm font-bold border-border text-foreground/30",
+              selected &&
+                "border-blue-400 dark:border-blue-500 dark:text-blue-500 text-blue-600",
+              status === "incorrect" &&
+                "border-red-500 dark:border-red-600 dark:text-red-500 text-red-600",
+              status === "correct" &&
+                "border-green-500 dark:border-green-700 dark:text-green-500 text-green-600",
+              muted && "text-foreground/15 border-border/80"
+            )}
+          >
+            {keyboardShortcut}
+          </span>
+        )}
+        {!!text && (
+          <span className="flex-1 text-center line-clamp-2">{text}</span>
+        )}
+        {children}
+      </button>
+    </div>
   );
 }
