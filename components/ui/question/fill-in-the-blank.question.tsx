@@ -110,8 +110,9 @@ export const FillInTheBlank = ({
         key={blank.id}
         title={blank.id}
         role="textbox"
-        ref={index === 0 ? autoFocusRef : null}
         aria-multiline="false"
+        inputMode="email"
+        ref={index === 0 ? autoFocusRef : null}
         tabIndex={!checked ? 0 : -1}
         contentEditable={!checked}
         suppressContentEditableWarning={true}

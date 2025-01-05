@@ -58,7 +58,7 @@ export default function ButtonQuestion({
       {/* Bottom layer for 3D effect */}
       <div
         className={cn(
-          "absolute inset-0 rounded-sm bg-border translate-y-0.5",
+          "absolute inset-0 rounded-sm bg-border md:translate-y-0.5 translate-y-px",
           selected && "bg-blue-400 dark:bg-blue-500",
           status === "incorrect" && "bg-red-500 dark:bg-red-600",
           status === "correct" && "bg-green-500 dark:bg-green-700",
@@ -74,7 +74,7 @@ export default function ButtonQuestion({
         className={cn(
           "relative select-none",
           "flex items-center gap-4 w-full bg-background text-foreground border-border border-2 rounded-sm px-4 py-3",
-          "enabled:cursor-pointer enabled:active:translate-y-0.5",
+          "enabled:cursor-pointer md:enabled:active:translate-y-0.5 enabled:active:translate-y-px",
           !passive &&
             !selected &&
             "enabled:hover:bg-zinc-50 dark:enabled:hover:bg-zinc-900 enabled:focus:bg-zinc-50 dark:enabled:focus:bg-zinc-900",
