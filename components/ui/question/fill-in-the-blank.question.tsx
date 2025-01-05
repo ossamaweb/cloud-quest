@@ -107,7 +107,7 @@ export const FillInTheBlank = ({
           contentEditable={true}
           suppressContentEditableWarning={true}
         >
-          {value[blank.id]}
+          {value[blank.id] || "blank"}
         </span>
         <input
           type="text"
