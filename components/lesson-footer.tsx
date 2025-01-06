@@ -29,7 +29,7 @@ export default function LessonFooter({
 }: LessonFooterProps) {
   return (
     <KeyboardProvider>
-      <div className="w-full bg-background relative">
+      <div className="w-full bg-background sticky bottom-0">
         <div
           className={cn(
             "bg-background border-t-2 border-border",
