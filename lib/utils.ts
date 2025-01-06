@@ -19,9 +19,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// If you update this update it also in the
-// "answer-scale-in" & "answer-scale-in-2" animations in tailwind.config.js
-export const AUTO_CHECK_DURATION = 400;
+export const AUTO_CHECK_DURATION = 500;
 
 const ANSWER_MSG_UNCORRECT = [
   "That's not quite right!",

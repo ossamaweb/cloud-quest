@@ -49,7 +49,7 @@ export default function ButtonQuestion({
   return (
     <div
       className={cn(
-        "relative bg-background",
+        "relative bg-background rounded-sm",
         selected && "motion-safe:animate-answer-scale-in",
         status === "incorrect" && "motion-safe:animate-answer-scale-in-2",
         status === "correct" && "motion-safe:animate-answer-scale-in-2"
@@ -62,6 +62,7 @@ export default function ButtonQuestion({
           selected && "bg-blue-400 dark:bg-blue-500",
           status === "incorrect" && "bg-red-500 dark:bg-red-600",
           status === "correct" && "bg-green-500 dark:bg-green-700",
+          muted && "bg-border/80",
           "transition-all duration-300 ease-in-out"
         )}
       />
@@ -69,8 +70,8 @@ export default function ButtonQuestion({
       <button
         type="button"
         onClick={onClick}
-        disabled={disabled}
         tabIndex={keyboardShortcut ? -1 : tabIndex}
+        disabled={disabled || status == "correct" || status === "incorrect"}
         className={cn(
           "relative select-none",
           "flex items-center gap-4 w-full bg-background text-foreground border-border border-2 rounded-sm px-4 py-3",
@@ -86,7 +87,7 @@ export default function ButtonQuestion({
             "bg-zinc-50 dark:bg-zinc-900 border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
           selected && !status && "[&>svg]:text-blue-600",
           !selected && !status && "[&>svg]:text-blue-400 ",
-          muted && "text-foreground/20",
+          muted && "text-foreground/20 bg-background border-border/80",
           "transition-all duration-300 ease-in-out",
           className
         )}

@@ -18,8 +18,6 @@ interface MatchingQuestionState {
 
 export const Matching = ({
   data,
-  checked,
-  status,
   onGrade,
 }: LessonQuestionProps<MatchingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -77,9 +75,10 @@ export const Matching = ({
           [term]: correct ? "correct" : "incorrect",
           [definition]: correct ? "correct" : "incorrect",
         },
+        correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
       }));
 
-      // Update final state after animation
+      // Update correct state after animation
       timeoutRef.current = setTimeout(() => {
         setState((prev) => ({
           ...prev,
@@ -92,9 +91,8 @@ export const Matching = ({
             [term]: "unanswered",
             [definition]: "unanswered",
           },
-          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
-      }, AUTO_CHECK_DURATION);
+      }, AUTO_CHECK_DURATION * 2);
     },
     [data.correctPairings]
   );
@@ -133,9 +131,7 @@ export const Matching = ({
                 text={term.text}
                 keyboardShortcut={String(index + 1)}
                 selected={selectedPair[0] === term.id}
-                disabled={
-                  checked || selectedPair[0] === term.id || correctIds[term.id]
-                }
+                disabled={selectedPair[0] === term.id || correctIds[term.id]}
                 muted={correctIds[term.id]}
                 status={statuses[term.id]}
                 onClick={() => handleOnClick([term.id, selectedPair[1]])}
@@ -153,7 +149,7 @@ export const Matching = ({
                 passive={true}
                 keyboardShortcut={String(terms.length + index + 1)}
                 selected={selectedPair[1] === def.id}
-                disabled={checked || correctIds[def.id]}
+                disabled={correctIds[def.id]}
                 muted={correctIds[def.id]}
                 status={statuses[def.id]}
                 onClick={() => handleOnClick([selectedPair[0], def.id])}

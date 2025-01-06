@@ -42,34 +42,38 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "transition-all duration-150",
+          "transition-all duration-300 ease-in-out",
           "scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
           draggingId && !droppedId && "bg-blue-400/20 border-blue-400/50",
           dragOverId === id && !droppedId && "scale-105",
           correct &&
             "border-solid bg-zinc-50 dark:bg-zinc-900 border-green-500/50",
           incorrect && "bg-red-500/20 border-red-500/50",
-          droppedId && !correct && "border-solid text-foreground/20"
+          droppedId && !correct && "border-solid opacity-30"
         )}
       >
         <div className="leading-2 text-sm font-bold uppercase">{text}</div>
 
         <div className="flex gap-2 mt-2">
           {droppedId && itemData && (
-            <DraggableItem
+            <div
               key={droppedId}
-              id={itemData.id}
-              text={itemData.text}
-              draggable={false}
-              incorrect={incorrect}
-              correct={correct}
-              droppedId=""
-              handleDragStart={() => null}
-              handleDragEnd={() => null}
               className={cn(
                 "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150"
               )}
-            />
+            >
+              <DraggableItem
+                // key={droppedId}
+                id={itemData.id}
+                text={itemData.text}
+                draggable={false}
+                incorrect={incorrect}
+                correct={correct}
+                droppedId=""
+                handleDragStart={() => null}
+                handleDragEnd={() => null}
+              />
+            </div>
           )}
         </div>
       </div>
@@ -123,7 +127,7 @@ const DraggableItem = ({
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         className={cn(
-          "transition-all duration-150",
+          "transition-all duration-300 ease-in-out",
           "truncate bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
@@ -225,7 +229,6 @@ export const DragAndDrop = ({
 
       if (correct) {
         setState((prev) => ({
-          correctAnswersCount: prev.correctAnswersCount,
           pairings: { ...prev.pairings, [itemId]: categoryId },
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId, itemId },
@@ -235,6 +238,7 @@ export const DragAndDrop = ({
             ...prev.categoryItem,
             [categoryId]: itemId,
           },
+          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       } else {
         setState((prev) => ({
@@ -251,7 +255,6 @@ export const DragAndDrop = ({
           dragOverId: null,
           incorrect: { categoryId: "", itemId: "" },
           correct: { categoryId: "", itemId: "" },
-          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       }, AUTO_CHECK_DURATION);
     },

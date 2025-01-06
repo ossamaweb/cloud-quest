@@ -61,6 +61,7 @@ export const Ordering = ({
           ...prev.statuses,
           [selectedId]: correct ? "correct" : "incorrect",
         },
+        correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
       }));
 
       // Update final state after animation
@@ -75,7 +76,6 @@ export const Ordering = ({
             ...prev.statuses,
             [selectedId]: "unanswered",
           },
-          correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       }, AUTO_CHECK_DURATION);
     },
@@ -114,9 +114,7 @@ export const Ordering = ({
               keyboardShortcut={String(index + 1)}
               passive={true}
               selected={selectedId === item.id}
-              disabled={
-                checked || selectedId === item.id || correctIds[item.id]
-              }
+              disabled={selectedId === item.id || correctIds[item.id]}
               muted={correctIds[item.id]}
               status={statuses[item.id]}
               onClick={() => handleOnClick(item.id, userOrder)}
