@@ -42,7 +42,7 @@ const CategoryItem = ({
     >
       <div
         className={cn(
-          "transition-all duration-300 ease-in-out",
+          "transition-all duration-250 ease-in-out",
           "scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
           draggingId && !droppedId && "bg-blue-400/20 border-blue-400/50",
           dragOverId === id && !droppedId && "scale-105",
@@ -127,14 +127,14 @@ const DraggableItem = ({
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         className={cn(
-          "transition-all duration-300 ease-in-out",
+          "transition-all duration-250 ease-in-out",
           "truncate bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
           correct &&
-            "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+            "bg-green-100 dark:bg-zinc-950 border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
           incorrect &&
-            "border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
+            "bg-red-100 dark:bg-zinc-950 border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
           droppedId && "opacity-0",
           className
         )}

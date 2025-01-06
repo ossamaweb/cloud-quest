@@ -92,7 +92,7 @@ export const Matching = ({
             [definition]: "unanswered",
           },
         }));
-      }, AUTO_CHECK_DURATION * 2);
+      }, AUTO_CHECK_DURATION);
     },
     [data.correctPairings]
   );

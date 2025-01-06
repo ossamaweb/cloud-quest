@@ -82,8 +82,11 @@ module.exports = {
 				}
 			},
 			animation: {
-				"answer-scale-in": "answer-scale-in 0.3s ease-in-out",
-				"answer-scale-in-2": "answer-scale-in-2 0.3s ease-in-out"
+				"answer-scale-in": "answer-scale-in 0.25s ease-in-out",
+				"answer-scale-in-2": "answer-scale-in-2 0.25s ease-in-out"
+			},
+			transitionDuration: {
+				'250': '250ms'
 			}
 		}
 	},

@@ -76,7 +76,7 @@ export default function LessonFooter({
                     <div
                       className={cn(
                         "w-10 h-10 bg-background flex items-center justify-center rounded-full",
-                        "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in motion-safe:duration-300 motion-safe:ease-in-out"
+                        "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in motion-safe:duration-250 motion-safe:ease-in-out"
                       )}
                     >
                       {status === "incorrect" ? (

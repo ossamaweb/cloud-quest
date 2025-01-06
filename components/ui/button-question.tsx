@@ -63,7 +63,7 @@ export default function ButtonQuestion({
           status === "incorrect" && "bg-red-500 dark:bg-red-600",
           status === "correct" && "bg-green-500 dark:bg-green-700",
           muted && "bg-border/80",
-          "transition-all duration-300 ease-in-out"
+          "transition-all duration-250 ease-in-out"
         )}
       />
       {/* Main button */}
@@ -80,15 +80,15 @@ export default function ButtonQuestion({
             !selected &&
             "enabled:hover:bg-zinc-50 dark:enabled:hover:bg-zinc-900 enabled:focus:bg-zinc-50 dark:enabled:focus:bg-zinc-900",
           selected &&
-            "bg-zinc-50 dark:bg-zinc-900 border-blue-400 dark:border-blue-500 dark:text-blue-500 text-blue-600",
+            "bg-blue-50 dark:bg-zinc-900 border-blue-400 dark:border-blue-500 dark:text-blue-500 text-blue-600",
           status === "incorrect" &&
-            "bg-zinc-50 dark:bg-zinc-900 border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
+            "bg-red-50 dark:bg-zinc-900 border-red-500 dark:border-red-600 dark:text-red-500 text-red-700",
           status === "correct" &&
-            "bg-zinc-50 dark:bg-zinc-900 border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
+            "bg-green-50 dark:bg-zinc-900 border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
           selected && !status && "[&>svg]:text-blue-600",
           !selected && !status && "[&>svg]:text-blue-400 ",
           muted && "text-foreground/20 bg-background border-border/80",
-          "transition-all duration-300 ease-in-out",
+          "transition-all duration-250 ease-in-out",
           className
         )}
       >
@@ -103,7 +103,7 @@ export default function ButtonQuestion({
               status === "correct" &&
                 "border-green-500 dark:border-green-700 dark:text-green-500 text-green-600",
               muted && "text-foreground/15 border-border/80",
-              "transition-all duration-300 ease-in-out"
+              "transition-all duration-250 ease-in-out"
             )}
           >
             {keyboardShortcut}
