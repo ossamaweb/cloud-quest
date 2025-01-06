@@ -2,6 +2,80 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // Image Identification Question
+  {
+    id: "use-001",
+    type: QUESTION_TYPE.IMAGE_IDENTIFICATION,
+    question:
+      "Which AWS service would you use for serverless real-time data processing?",
+    image: {
+      url: "/imgs/weird.png",
+      altText: "Data processing workflow diagram",
+    },
+    options: [
+      { id: "opt1", text: "Amazon Kinesis" },
+      { id: "opt2", text: "Amazon RDS" },
+      { id: "opt3", text: "Amazon DynamoDB" },
+      { id: "opt4", text: "Amazon Redshift" },
+    ],
+    correctOptionId: "opt1",
+    points: 10,
+  },
+
+  {
+    id: "arch-001",
+    type: QUESTION_TYPE.IMAGE_IDENTIFICATION,
+    question:
+      "Which AWS service architecture pattern is shown in this diagram?",
+    image: {
+      url: "/imgs/small.png",
+      altText: "AWS architecture pattern diagram",
+    },
+    options: [
+      { id: "pat1", text: "Event-Driven Architecture" },
+      { id: "pat2", text: "Monolithic Architecture" },
+      { id: "pat3", text: "Layered Architecture" },
+      { id: "pat4", text: "Microservices Architecture" },
+    ],
+    correctOptionId: "pat4",
+    points: 15,
+  },
+  {
+    id: "sec-001",
+    type: QUESTION_TYPE.IMAGE_IDENTIFICATION,
+    question: "Which AWS security service is represented by this icon?",
+    image: {
+      url: "/imgs/medium.jpg",
+      altText: "AWS security service icon",
+    },
+    options: [
+      { id: "sec1", text: "AWS WAF" },
+      { id: "sec2", text: "AWS Shield" },
+      { id: "sec3", text: "AWS GuardDuty" },
+      { id: "sec4", text: "AWS Inspector" },
+    ],
+    correctOptionId: "sec3",
+    points: 10,
+  },
+
+  {
+    id: "img-001",
+    type: QUESTION_TYPE.IMAGE_IDENTIFICATION,
+    question: "Identify the AWS service represented by this architecture icon:",
+    image: {
+      url: "/imgs/large.jpg",
+      altText: "AWS service architecture icon",
+    },
+    options: [
+      { id: "img1", text: "AWS Lambda" },
+      { id: "img2", text: "AWS EC2" },
+      { id: "img3", text: "AWS ECS" },
+      { id: "img4", text: "AWS Batch" },
+    ],
+    correctOptionId: "img1",
+    points: 10,
+  },
+
   // Fill in the Blank Question
   {
     id: "fb-001",
@@ -22,6 +96,7 @@ export const questionFixtures: Question[] = [
     ],
     points: 10,
   },
+
   // Short Answer Question
   {
     id: "sa-001",
@@ -32,6 +107,7 @@ export const questionFixtures: Question[] = [
     caseSensitive: false,
     points: 5,
   },
+
   // Matching Question
   {
     id: "match-001",
@@ -125,25 +201,6 @@ export const questionFixtures: Question[] = [
       item4: "cat4",
     },
     points: 20,
-  },
-
-  // Image Identification Question
-  {
-    id: "img-001",
-    type: QUESTION_TYPE.IMAGE_IDENTIFICATION,
-    question: "Identify the AWS service represented by this architecture icon:",
-    image: {
-      url: "/images/aws-services/lambda-icon.png",
-      altText: "AWS service architecture icon",
-    },
-    options: [
-      { id: "img1", text: "AWS Lambda" },
-      { id: "img2", text: "AWS EC2" },
-      { id: "img3", text: "AWS ECS" },
-      { id: "img4", text: "AWS Batch" },
-    ],
-    correctOptionId: "img1",
-    points: 10,
   },
 
   // Scenario Based Question

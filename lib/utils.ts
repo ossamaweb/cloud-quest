@@ -185,13 +185,15 @@ const QUESTION_GRADING: Record<
   },
 
   [QUESTION_TYPE.IMAGE_IDENTIFICATION]: (question, userAnswer) => {
-    throw new Error("Function not implemented.");
-    // const imgQuestion = question as ImageIdentificationQuestion;
-    // const userIdentification = (userAnswer as string).toLowerCase().trim();
-    // const correct = imgQuestion.correctOptionId
-    //   .map((id) => id.toLowerCase().trim())
-    //   .includes(userIdentification);
-    // return { correct, points: correct ? imgQuestion.points ?? 0 : 0 };
+    const imgQuestion = question as ImageIdentificationQuestion;
+    const imgAnswer = userAnswer as string;
+    const correct = imgQuestion.correctOptionId === imgAnswer;
+
+    return {
+      correct,
+      points: correct ? imgQuestion.points ?? 0 : 0,
+      autoCheck: false,
+    };
   },
 };
 

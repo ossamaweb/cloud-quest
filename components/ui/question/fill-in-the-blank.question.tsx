@@ -117,7 +117,6 @@ export const FillInTheBlank = ({
         contentEditable={!checked}
         suppressContentEditableWarning={true}
         onInput={(e) => handleOnInput(e, blank.id)}
-        // onKeyDown={handleOnKeyDown}
         className={cn(
           "border-b-2 border-border bg-transparent outline-none",
           !checked && "focus:border-blue-500",
@@ -144,7 +143,7 @@ export const FillInTheBlank = ({
       name={data.id}
       onSubmit={handleSubmit}
       onClick={handleOnFormClick}
-      className="bg-input  border-border border-2 rounded-sm py-2 px-4 min-h-40 cursor-default"
+      className="bg-input border-border border-2 rounded-sm py-2 px-4 min-h-40 cursor-default"
     >
       <div className="inline">
         {parts.map((part) =>

@@ -1,33 +1,68 @@
+"use client";
+
 import {
-  ImageIdentificationQuestion,
   LessonQuestionProps,
+  ImageIdentificationQuestion,
 } from "@/lib/interfaces";
+import ButtonQuestion from "../button-question";
+import { useCallback, useState } from "react";
+import { gradeQuestion } from "@/lib/utils";
+import { KeyboardProvider } from "@/hooks/use-keyboard";
+import Image from "next/image";
 
 export const ImageIdentification = ({
   data,
+  status,
+  checked,
+  onGrade,
 }: LessonQuestionProps<ImageIdentificationQuestion>) => {
+  const [{ selectedId }, setState] = useState({ selectedId: "" });
+
+  const handleOnClick = useCallback(
+    (optionId: string) => {
+      setState({ selectedId: optionId });
+      gradeQuestion(data, optionId, onGrade);
+    },
+    [data, onGrade]
+  );
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">{data.question}</h3>
-      <img
-        src={data.image.url}
-        alt={data.image.altText}
-        className="max-w-full h-auto"
-      />
-      <div className="space-y-2">
-        {data.options.map((option) => (
-          <label key={option.id} className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name={data.id}
-              value={option.id}
-              //onChange={() => onGrade(option.id)}
-              //onGrade: (optionId: string) => void;
-            />
-            <span>{option.text}</span>
-          </label>
-        ))}
+    <KeyboardProvider>
+      <div className="flex sm:flex-row flex-col justify-center items-stretch sm:gap-8 gap-4">
+        <div className="sm:flex-1 sm:h-auto h-64 flex items-center justify-center bg-input border-border border-2 rounded-md p-2">
+          {!!data.image.url && (
+            <figure className="relative rounded-md overflow-hidden">
+              <Image
+                src={data.image.url}
+                alt={data.image.altText}
+                className="object-contain"
+                width={256}
+                height={256}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 25vw"
+                priority={true}
+              />
+            </figure>
+          )}
+        </div>
+
+        <div className="flex-1 grid grid-cols-1 gap-4">
+          {data.options.map((option, index) => (
+            <div key={option.id}>
+              <ButtonQuestion
+                className="leading-5 h-16"
+                text={option.text}
+                keyboardShortcut={String(index + 1)}
+                selected={selectedId === option.id}
+                disabled={checked || selectedId === option.id}
+                status={
+                  checked && selectedId === option.id ? status : undefined
+                }
+                onClick={() => handleOnClick(option.id)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </KeyboardProvider>
   );
 };

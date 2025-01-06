@@ -18,9 +18,7 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
   return (
     <div className={cn("w-full h-full", props.className)}>
       <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
-        <h2 className="font-bold sm:text-2xl text-xl text-foreground">
-          <QuestionHeaderRenderer type={props.data.type} />
-        </h2>
+        <QuestionHeaderRenderer type={props.data.type} />
 
         <div className="flex-1 flex flex-col items-stretch justify-center">
           <div className="sm:space-y-8 space-y-4">
@@ -29,19 +27,6 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
           </div>
         </div>
       </div>
-
-      {/* <p className="text-base text-foreground mt-4">{description}</p> */}
-
-      {/* {imageSrc && (
-        <figure className="mt-8 bg-muted rounded-lg p-2">
-          <img src={imageSrc} alt={imageAlt} className="rounded-lg" />
-          {imageCaption && (
-            <figcaption className="text-sm text-muted-foreground mt-2 text-center">
-              {imageCaption}
-            </figcaption>
-          )}
-        </figure>
-      )} */}
     </div>
   );
 }
@@ -51,28 +36,40 @@ function QuestionHeaderRenderer({
 }: {
   type: QUESTION_TYPE;
 }): React.ReactNode {
-  switch (type) {
-    case QUESTION_TYPE.MULTIPLE_CHOICE:
-      return "Select the correct option";
-    case QUESTION_TYPE.DRAG_AND_DROP:
-      return "Drag and drop to correct positions";
-    case QUESTION_TYPE.SCENARIO_BASED:
-      return "Solve the following scenario";
-    case QUESTION_TYPE.SHORT_ANSWER:
-      return "Type your answer";
-    case QUESTION_TYPE.FILL_IN_THE_BLANK:
-      return "Fill in the blank";
-    case QUESTION_TYPE.MATCHING:
-      return "Select the matching pairs";
-    case QUESTION_TYPE.TRUE_FALSE:
-      return "True or false";
-    case QUESTION_TYPE.ORDERING:
-      return "Select in order";
-    case QUESTION_TYPE.IMAGE_IDENTIFICATION:
-      return "Identify the image";
-    default:
-      return "Answer the following question";
+  const pageTitle = React.useMemo(() => {
+    switch (type) {
+      case QUESTION_TYPE.MULTIPLE_CHOICE:
+        return "Select the correct option";
+      case QUESTION_TYPE.DRAG_AND_DROP:
+        return "Drag and drop to correct positions";
+      case QUESTION_TYPE.SCENARIO_BASED:
+        return "Solve the following scenario";
+      case QUESTION_TYPE.SHORT_ANSWER:
+        return "Type your answer";
+      case QUESTION_TYPE.FILL_IN_THE_BLANK:
+        return "Fill in the blank";
+      case QUESTION_TYPE.MATCHING:
+        return "Select the matching pairs";
+      case QUESTION_TYPE.TRUE_FALSE:
+        return "True or false";
+      case QUESTION_TYPE.ORDERING:
+        return "Select in order";
+      case QUESTION_TYPE.IMAGE_IDENTIFICATION:
+        return null;
+      default:
+        return "Answer the following question";
+    }
+  }, [type]);
+
+  if (!pageTitle) {
+    return null;
   }
+
+  return (
+    <h2 className="font-bold sm:text-2xl text-xl text-foreground">
+      {pageTitle}
+    </h2>
+  );
 }
 
 function QuestionTitleRenderer({
