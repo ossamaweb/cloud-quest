@@ -1,6 +1,6 @@
 "use client";
 
-import { useAutoFocus } from "@/hooks/use-auto-focus";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
 import * as React from "react";
@@ -12,7 +12,8 @@ export const FillInTheBlank = ({
   onAnswer,
   onGrade,
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
-  const autoFocusRef = useAutoFocus();
+  const isMobile = useIsMobile();
+  const inputRefs = React.useRef<Map<string, HTMLSpanElement>>(new Map());
 
   const [value, setValue] = React.useState<Record<string, string>>(
     Object.fromEntries(data.blanks.map((blank) => [blank.id, ""]))
@@ -27,14 +28,15 @@ export const FillInTheBlank = ({
     return () => clearTimeout(debounceTimeout);
   }, [onAnswer, value]);
 
-  const handleSubmit = React.useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      if (answered) {
-        gradeQuestion(data, value, onGrade);
+  const setInputRef = React.useCallback(
+    (element: HTMLSpanElement | null, blankId: string) => {
+      if (element) {
+        inputRefs.current.set(blankId, element);
+      } else {
+        inputRefs.current.delete(blankId);
       }
     },
-    [data, value, onGrade, answered]
+    []
   );
 
   const handleOnInput = React.useCallback(
@@ -49,13 +51,41 @@ export const FillInTheBlank = ({
     []
   );
 
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLSpanElement>, currentBlankId: string) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+
+        const currentBlankIndex = data.blanks.findIndex(
+          (blank) => blank.id === currentBlankId
+        );
+
+        // Get next blank if exists
+        const nextBlank = data.blanks[currentBlankIndex + 1];
+        if (nextBlank) {
+          const nextElement = inputRefs.current.get(nextBlank.id);
+          nextElement?.focus();
+        }
+      }
+    },
+    [data.blanks]
+  );
+
   React.useEffect(() => {
     if (!checked) return;
     gradeQuestion(data, value, onGrade);
   }, [checked, data, onGrade, value]);
 
-  const handleOnFormClick = React.useCallback(
-    (event: React.MouseEvent<HTMLFormElement>) => {
+  const autoFocusOnFirstInput = React.useCallback(() => {
+    if (data.blanks.length) {
+      const firstElement = inputRefs.current.get(data.blanks[0].id);
+      firstElement?.focus();
+    }
+  }, [data.blanks]);
+
+  const handleOnContainerClick = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      // Auto focus on the first input when clicking anywhere on the form
       if (
         event.target instanceof HTMLInputElement ||
         event.target instanceof HTMLTextAreaElement ||
@@ -64,12 +94,17 @@ export const FillInTheBlank = ({
         return;
       }
 
-      if (autoFocusRef.current) {
-        autoFocusRef.current.focus();
-      }
+      autoFocusOnFirstInput();
     },
-    [autoFocusRef]
+    [autoFocusOnFirstInput]
   );
+
+  React.useEffect(() => {
+    if (!isMobile) {
+      // Auto focus on the first input if not from Mobile
+      autoFocusOnFirstInput();
+    }
+  }, [autoFocusOnFirstInput, isMobile]);
 
   const parts = React.useMemo(() => {
     // Split the text by the placeholder pattern
@@ -112,11 +147,12 @@ export const FillInTheBlank = ({
         role="textbox"
         aria-multiline="false"
         inputMode="email"
-        ref={index === 0 ? autoFocusRef : null}
+        ref={(element) => setInputRef(element, blank.id)}
         tabIndex={!checked ? 0 : -1}
         contentEditable={!checked}
         suppressContentEditableWarning={true}
         onInput={(e) => handleOnInput(e, blank.id)}
+        onKeyDown={(e) => handleKeyDown(e, blank.id)}
         className={cn(
           "border-b-2 border-border bg-transparent outline-none",
           !checked && "focus:border-blue-500",
@@ -138,11 +174,8 @@ export const FillInTheBlank = ({
   };
 
   return (
-    <form
-      id={data.id}
-      name={data.id}
-      onSubmit={handleSubmit}
-      onClick={handleOnFormClick}
+    <div
+      onClick={handleOnContainerClick}
       className="bg-input border-border border-2 rounded-sm py-2 px-4 min-h-40 cursor-default"
     >
       <div className="inline">
@@ -150,8 +183,6 @@ export const FillInTheBlank = ({
           part.type === "text" ? part.value : renderInput(part.index)
         )}
       </div>
-
-      <input type="submit" hidden={true} />
-    </form>
+    </div>
   );
 };

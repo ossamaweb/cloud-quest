@@ -35,7 +35,7 @@ export const ImageIdentification = ({
               <Image
                 src={data.image.url}
                 alt={data.image.altText}
-                className="object-contain"
+                className="object-contain w-auto h-auto"
                 width={256}
                 height={256}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 25vw"

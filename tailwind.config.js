@@ -72,11 +72,13 @@ module.exports = {
 			keyframes: {
 				"answer-scale-in": {
 					"0%": { transform: "scale(1)", },
-					"100%": { transform: "scale(1.02)", }
+					"50%": { transform: "scale(1.02)", },
+					"100%": { transform: "scale(1)", }
 				},
 				"answer-scale-in-2": {
 					"0%": { transform: "scale(1)", },
-					"100%": { transform: "scale(1.02)", }
+					"50%": { transform: "scale(1.02)", },
+					"100%": { transform: "scale(1)", }
 				}
 			},
 			animation: {

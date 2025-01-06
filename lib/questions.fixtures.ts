@@ -2,6 +2,27 @@ import { QUESTION_TYPE } from "./enums";
 import { Question } from "./interfaces";
 
 export const questionFixtures: Question[] = [
+  // Fill in the Blank Question
+  {
+    id: "fb-001",
+    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
+    question:
+      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
+    blanks: [
+      {
+        id: "blank1",
+        correctAnswer: "S3",
+        acceptableAnswers: ["Simple Storage Service", "S3"],
+      },
+      {
+        id: "blank2",
+        correctAnswer: "EBS",
+        acceptableAnswers: ["Elastic Block Store", "EBS"],
+      },
+    ],
+    points: 10,
+  },
+
   // Image Identification Question
   {
     id: "use-001",
@@ -73,27 +94,6 @@ export const questionFixtures: Question[] = [
       { id: "img4", text: "AWS Batch" },
     ],
     correctOptionId: "img1",
-    points: 10,
-  },
-
-  // Fill in the Blank Question
-  {
-    id: "fb-001",
-    type: QUESTION_TYPE.FILL_IN_THE_BLANK,
-    question:
-      "AWS {1} is used for storing and retrieving objects, while AWS {2} is used for block storage.",
-    blanks: [
-      {
-        id: "blank1",
-        correctAnswer: "S3",
-        acceptableAnswers: ["Simple Storage Service", "S3"],
-      },
-      {
-        id: "blank2",
-        correctAnswer: "EBS",
-        acceptableAnswers: ["Elastic Block Store", "EBS"],
-      },
-    ],
     points: 10,
   },
 

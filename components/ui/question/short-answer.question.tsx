@@ -1,7 +1,6 @@
 "use client";
 
 import { useAutoFocus } from "@/hooks/use-auto-focus";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { LessonQuestionProps, ShortAnswerQuestion } from "@/lib/interfaces";
 import { gradeQuestion } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
