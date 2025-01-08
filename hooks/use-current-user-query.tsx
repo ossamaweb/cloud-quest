@@ -25,11 +25,8 @@ export default function useCurrentUserQuery() {
     error,
   } = useQuery({
     queryKey,
+    enabled: Boolean(cognito.user?.userId),
     queryFn: async () => {
-      if (!cognito.user?.userId) {
-        throw new UserError("No user ID found", "AUTH_ERROR");
-      }
-
       try {
         const userModel = await client.models.User.get<CurrentUserSelectionSet>(
           {
@@ -61,7 +58,7 @@ export default function useCurrentUserQuery() {
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled: Boolean(cognito.user?.userId),
+
     retry: (failureCount, error) => {
       // Only retry on network errors, not on business logic errors
       if (error instanceof UserError) {

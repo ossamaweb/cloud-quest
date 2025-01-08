@@ -96,13 +96,19 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
 }
 
 async function main() {
+  if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
+    throw new Error(
+      "ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required"
+    );
+  }
+
   Amplify.configure(outputs);
 
   try {
     // Sign in the user first
     const { isSignedIn } = await signIn({
-      username: process.env.ADMIN_USERNAME!,
-      password: process.env.ADMIN_PASSWORD!,
+      username: process.env.ADMIN_USERNAME,
+      password: process.env.ADMIN_PASSWORD,
     });
 
     if (!isSignedIn) {

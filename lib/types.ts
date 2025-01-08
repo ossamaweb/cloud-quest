@@ -19,7 +19,7 @@ export type UserWithStats = SelectionSet<
   CurrentUserSelectionSet
 >;
 
-export const userModulesSelectionSet = [
+export const listModulesSelectionSet = [
   "id",
   "slug",
   "order",
@@ -28,11 +28,12 @@ export const userModulesSelectionSet = [
   "courseId",
   "difficulty",
   "lessons.*",
+  "userProgress.*",
 ] as const;
 
-export type UserModulesSelectionSet = typeof userModulesSelectionSet;
+export type ListModulesSelectionSet = typeof listModulesSelectionSet;
 
-export type UserModule = SelectionSet<
+export type ListModule = SelectionSet<
   Schema["Module"]["type"],
-  UserModulesSelectionSet
+  ListModulesSelectionSet
 >;

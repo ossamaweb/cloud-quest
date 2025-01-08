@@ -10,7 +10,6 @@ interface CourseModulesProps {
   userId: string | null;
   courseId: string | null;
   courseSlug: string;
-  userModules: UserWithStats["modules"];
 }
 
 export default function CourseModules({
