@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "npx tsx tools/amplify-seed.ts"
+    "codegen": "npx ampx generate graphql-client-code --app-id d15m5mz0uevgdr --branch feature/setup-data --out lib/graphql",
+    "seed": "npx tsx tools/amplify/seed.ts"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^6.5.5",
