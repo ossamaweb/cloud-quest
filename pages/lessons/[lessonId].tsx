@@ -1,7 +1,7 @@
 "use client";
 
 import LessonFooter from "@/components/lesson-footer";
-import LessonLoading from "@/components/lesson-loading";
+import PageLoading from "@/components/page-loading";
 import LessonQuestion from "@/components/lesson-question";
 import Button from "@/components/ui/button";
 import ProgressBar from "@/components/ui/progress-bar";
@@ -86,7 +86,7 @@ export default function Lesson() {
   if (loading) {
     return (
       <main>
-        <LessonLoading tip="Did you know" />
+        <PageLoading tip="Did you know" />
       </main>
     );
   }

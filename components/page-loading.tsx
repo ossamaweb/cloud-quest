@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 import * as React from "react";
 import IconCloud from "./ui/icon-cloud";
 
-interface LessonLoadingProps {
+interface PageLoadingProps {
   className?: string;
   tip?: string;
 }
 
-export default function LessonLoading({
+export default function PageLoading({
   tip,
   className = "",
 }: LessonLoadingProps) {
