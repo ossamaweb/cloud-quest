@@ -4,34 +4,54 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import ModuleNode from "./ui/module-node";
 import { useRouter } from "next/router";
-import { UserModule } from "@/lib/types";
+import { ListModule } from "@/lib/types";
 
 interface CourseModuleProps {
   index: number;
-  data: UserModule;
+  data: ListModule;
+  courseSlug: string;
+
   className?: string;
 }
 
 export default function CourseModule({
-  index,
+  index: moduleIndex,
   data,
+  courseSlug,
   className = "",
 }: CourseModuleProps) {
   const router = useRouter();
   const handleOnModuleNodeClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, slug: string) => {
-      // Handle module node click
-      console.log("Module node clicked:", slug);
-      router.push(`/lessons/${slug}`);
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      lessonSlug: string
+    ) => {
+      router.push(`/${courseSlug}/${data.slug}/${lessonSlug}`);
     },
-    [router]
+    [courseSlug, data.slug, router]
   );
 
-  const lessonsSize = React.useMemo(
-    () => data.lessons.length,
-    [data.lessons.length]
-  );
+  const { isModuleLocked, lessons, lessonsSize, lastLessonOrder } =
+    React.useMemo(() => {
+      const userProgress = data.userProgress?.[0];
+      const isModuleLocked = !userProgress && data.order > 1; // the first module should be open by default
+      return {
+        isModuleLocked,
+        lessons: data.lessons.sort((a, b) => (a.order || 0) - (b.order || 0)),
+        lessonsSize: data.lessons.length,
+        lastLessonOrder: isModuleLocked
+          ? 0
+          : userProgress?.lastLessonOrder ?? 1,
+      };
+    }, [data.lessons, data.order, data.userProgress]);
 
+  console.log({
+    moduleIndex,
+    isModuleLocked,
+    lessons,
+    lessonsSize,
+    lastLessonOrder,
+  });
   return (
     <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">
@@ -51,16 +71,18 @@ export default function CourseModule({
       </div>
 
       <div className="flex items-center flex-col gap-6">
-        {data.lessons.map((lesson, nodeIndex) => (
+        {lessons.map((lesson, nodeIndex) => (
           <ModuleNode
             key={lesson.id}
             id={lesson.id}
             slug={lesson.slug}
             index={nodeIndex}
+            inverse={moduleIndex % 2 !== 0}
             total={lessonsSize}
-            inverse={index % 2 !== 0}
-            current={false}
-            inactive={index > 0}
+            current={
+              isModuleLocked ? undefined : lesson.order === lastLessonOrder
+            }
+            locked={isModuleLocked || lesson.order > lastLessonOrder}
             onClick={handleOnModuleNodeClick}
           />
         ))}

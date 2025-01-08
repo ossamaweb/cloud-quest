@@ -1,21 +1,25 @@
 "use client";
 
 import * as React from "react";
-import { useUserModulesQuery } from "@/hooks/use-user-modules-query";
+import { useListModulesQuery } from "@/hooks/use-list-modules-query";
 import CourseModule from "./course-module";
+import { UserWithStats } from "@/lib/types";
 
 interface CourseModulesProps {
   className?: string;
-  courseId: string | null;
   userId: string | null;
+  courseId: string | null;
+  courseSlug: string;
+  userModules: UserWithStats["modules"];
 }
 
 export default function CourseModules({
   className = "",
   userId,
   courseId,
+  courseSlug,
 }: CourseModulesProps) {
-  const { userModules, error, isError } = useUserModulesQuery(userId, courseId);
+  const { userModules, error, isError } = useListModulesQuery(courseId);
 
   if (isError) {
     return <div>Error loading user: {error?.message}</div>;
@@ -25,10 +29,16 @@ export default function CourseModules({
     return <div>loading...</div>;
   }
 
+  console.log({ userModules });
   return (
     <div className="space-y-16 mb-16">
       {userModules?.map((userModule, index) => (
-        <CourseModule key={userModule.id} index={index} data={userModule} />
+        <CourseModule
+          key={userModule.id}
+          index={index}
+          data={userModule}
+          courseSlug={courseSlug}
+        />
       ))}
     </div>
   );

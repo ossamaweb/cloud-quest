@@ -102,6 +102,7 @@ export const schema = a.schema({
       user: a.belongsTo("User", "userId"),
       moduleId: a.id(),
       module: a.belongsTo("Module", "moduleId"),
+      lastLessonOrder: a.integer().default(0),
       startDate: a.datetime().required(),
       completionDate: a.datetime(),
     })

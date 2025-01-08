@@ -12,7 +12,7 @@ interface ModuleNodeProps {
   total: number;
   inverse: boolean;
   current?: boolean;
-  inactive?: boolean;
+  locked?: boolean;
   className?: string;
   onClick: (event: React.MouseEvent<HTMLButtonElement>, slug: string) => void;
 }
@@ -25,34 +25,29 @@ export default function ModuleNode({
   total,
   inverse = false,
   current = false,
-  inactive = true,
+  locked = true,
   onClick,
 }: ModuleNodeProps) {
   return (
     <button
-      id={current && !inactive ? "currentNode" : undefined}
+      id={current && !locked ? "currentNode" : undefined}
       type="button"
       style={getModuleNodeTranslation(index, total, inverse)}
       className="relative text-left group flex items-center justify-center w-24 h-24"
-      onClick={(e) => (inactive ? null : onClick(e, slug))}
+      onClick={(e) => (locked ? null : onClick(e, slug))}
     >
       <div className="absolute inset-0">
         <IconCloud
           className={cn(
             "absolute -bottom-1.5 -left-1",
-            !inactive && !current
-              ? "text-primary-darker"
-              : "text-gray-400 dark:text-gray-800"
+            !locked ? "text-primary-darker" : "text-gray-400 dark:text-gray-800"
           )}
         />
         <IconCloud
           className={cn(
             "absolute text-primary transition-all duration-100",
-            !inactive && !current
-              ? "text-primary"
-              : "text-gray-300 dark:text-gray-700",
-            !inactive &&
-              "group-hover:translate-y-1 group-hover:-translate-x-0.5"
+            !locked ? "text-primary" : "text-gray-300 dark:text-gray-700",
+            !locked && "group-hover:translate-y-1 group-hover:-translate-x-0.5"
           )}
         />
       </div>
@@ -60,21 +55,21 @@ export default function ModuleNode({
       <div
         className={cn(
           "relative mt-2",
-          !inactive &&
+          !locked &&
             "group-hover:translate-y-1 group-hover:-translate-x-0.5 transition-all duration-100",
-          !inactive && !current
+          !locked
             ? "text-primary-foreground"
             : "text-gray-400 dark:text-gray-800"
         )}
       >
-        {!inactive && !current ? (
+        {!locked && !current ? (
           <CheckIcon strokeWidth={4} size="2rem" />
         ) : (
           <Star fill="currentColor" strokeWidth={3} size="2rem" />
         )}
       </div>
 
-      {current && !inactive && (
+      {current && !locked && (
         <div className="absolute -top-4 motion-safe:animate-bounce  motion-safe:duration-1000 p-2 rounded-sm uppercase font-bold text-primary bg-background border-border border-2">
           Start
         </div>

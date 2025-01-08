@@ -32,6 +32,7 @@ export default function Dashboard() {
           <CourseModules
             userId={currentUser.id}
             courseId={currentUser.courses[0]?.courseId}
+            courseSlug={currentUser.courses[0]?.course.slug}
           />
         </MainContent>
         <SidebarRight>
