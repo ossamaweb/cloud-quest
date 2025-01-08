@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "sandbox": "npx ampx sandbox",
     "codegen": "npx ampx generate graphql-client-code --app-id d15m5mz0uevgdr --branch feature/setup-data --out lib/graphql",
     "seed": "npx tsx tools/amplify/seed.ts"
   },

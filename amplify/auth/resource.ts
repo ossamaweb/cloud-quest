@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineAuth } from "@aws-amplify/backend";
 
 /**
