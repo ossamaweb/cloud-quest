@@ -1,5 +1,5 @@
-import { type Schema } from "@/amplify/data/schema";
 import { generateClient } from "aws-amplify/api";
+import { type Schema } from "./data/schema";
 
 const client = generateClient<Schema>();
 

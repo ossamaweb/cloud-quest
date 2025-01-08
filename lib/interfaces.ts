@@ -68,7 +68,6 @@ export interface ShortAnswerQuestion extends BaseQuestion {
   type: QUESTION_TYPE.SHORT_ANSWER;
   correctAnswer: string;
   acceptableAnswers?: string[]; // Alternative correct answers
-  caseSensitive?: boolean;
 }
 
 export interface FillInTheBlankQuestion extends BaseQuestion {
