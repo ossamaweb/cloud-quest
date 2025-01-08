@@ -1,8 +1,8 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import client from "@/amplify/client";
 import { useQuery } from "@tanstack/react-query";
-import { UserStatus } from "@/lib/graphql/API";
 import { useMemo } from "react";
+import { currentUserSelectionSet, CurrentUserSelectionSet } from "@/lib/types";
 
 class UserError extends Error {
   constructor(message: string, public code?: string) {
@@ -12,21 +12,7 @@ class UserError extends Error {
   }
 }
 
-const currentUserSelectionSet = [
-  "id",
-  "username",
-  "email",
-  "profilePicture",
-  "status",
-  "stats.*",
-  "courses.id",
-  "courses.courseId",
-  "courses.enrollmentDate",
-  "courses.completionDate",
-  "courses.course.*",
-];
-
-export function useCurrentUserQuery() {
+export default function useCurrentUserQuery() {
   const cognito = useAuthenticator();
   const queryKey = useMemo(
     () => ["currentUser", cognito.user?.userId],
@@ -45,11 +31,11 @@ export function useCurrentUserQuery() {
       }
 
       try {
-        const userModel = await client.models.User.get(
-          { id: cognito.user.userId },
+        const userModel = await client.models.User.get<CurrentUserSelectionSet>(
           {
-            selectionSet: currentUserSelectionSet,
-          }
+            id: cognito.user.userId,
+          },
+          { selectionSet: currentUserSelectionSet }
         );
 
         if (userModel.errors) {
@@ -61,16 +47,16 @@ export function useCurrentUserQuery() {
           throw new UserError("No user data found", "NOT_FOUND");
         }
 
-        if (userData.status !== UserStatus.ACTIVE) {
+        if (userData.status !== "ACTIVE") {
           throw new UserError(
             `Account ${userData.status?.toLowerCase()}`,
             "STATUS_ERROR"
           );
         }
 
-        return userModel.data;
+        return userData;
       } catch (error) {
-        console.error("[useCurrentUser] Error:", error);
+        console.error("[useCurrentUserQuery] Error:", error);
         throw error;
       }
     },

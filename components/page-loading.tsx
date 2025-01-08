@@ -9,10 +9,7 @@ interface PageLoadingProps {
   tip?: string;
 }
 
-export default function PageLoading({
-  tip,
-  className = "",
-}: LessonLoadingProps) {
+export default function PageLoading({ tip, className = "" }: PageLoadingProps) {
   return (
     <div
       className={cn(

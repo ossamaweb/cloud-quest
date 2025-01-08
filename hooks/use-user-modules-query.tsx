@@ -1,32 +1,20 @@
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import client from "@/amplify/client";
 import { useQuery } from "@tanstack/react-query";
-import { UserStatus } from "@/lib/graphql/API";
 import { useMemo } from "react";
+import { UserModulesSelectionSet, userModulesSelectionSet } from "@/lib/types";
 
-class UserModuleError extends Error {
+class UserModulesError extends Error {
   constructor(message: string, public code?: string) {
     super(message);
-    this.name = "UserModuleError";
+    this.name = "UserModulesError";
     this.code = code;
   }
 }
 
-const currentUserSelectionSet = [
-  "id",
-  "username",
-  "email",
-  "profilePicture",
-  "status",
-  "stats.*",
-  "courses.id",
-  "courses.courseId",
-  "courses.enrollmentDate",
-  "courses.completionDate",
-  "courses.course.*",
-];
-
-export function useUserModulesQuery(userId: string, courseId: string) {
+export function useUserModulesQuery(
+  userId: string | null,
+  courseId: string | null
+) {
   const queryKey = useMemo(
     () => ["userModules", `${userId}::${courseId}`],
     [userId, courseId]
@@ -40,53 +28,47 @@ export function useUserModulesQuery(userId: string, courseId: string) {
     queryKey,
     queryFn: async () => {
       if (!userId) {
-        throw new UserModuleError("No user ID found", "NOT_FOUND");
+        throw new UserModulesError("No user ID found", "NOT_FOUND");
       }
 
       if (!courseId) {
-        throw new UserModuleError("No course ID found", "NOT_FOUND");
+        throw new UserModulesError("No course ID found", "NOT_FOUND");
       }
-
       try {
-        const userModel = await client.models.User.get(
-          { id: cognito.user.userId },
-          {
-            selectionSet: currentUserSelectionSet,
-          }
-        );
+        const userModules =
+          await client.models.Module.list<UserModulesSelectionSet>({
+            filter: { courseId: { eq: courseId } },
+            selectionSet: userModulesSelectionSet,
+          });
 
-        if (userModel.errors) {
-          throw new UserError(JSON.stringify(userModel.errors), "API_ERROR");
-        }
-
-        const userData = userModel.data;
-        if (!userData) {
-          throw new UserError("No user data found", "NOT_FOUND");
-        }
-
-        if (userData.status !== UserStatus.ACTIVE) {
-          throw new UserError(
-            `Account ${userData.status?.toLowerCase()}`,
-            "STATUS_ERROR"
+        if (userModules.errors) {
+          throw new UserModulesError(
+            JSON.stringify(userModules.errors),
+            "API_ERROR"
           );
         }
 
-        return userModel.data;
+        const userModulesData = userModules.data;
+        if (!userModulesData) {
+          throw new UserModulesError("No modules data found", "NOT_FOUND");
+        }
+
+        return userModulesData.sort((a, b) => (a.order || 0) - (b.order || 0));
       } catch (error) {
-        console.error("[useCurrentUser] Error:", error);
+        console.error("[useUserModulesQuery] Error:", error);
         throw error;
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled: Boolean(cognito.user?.userId),
+    enabled: Boolean(userId) && Boolean(courseId),
     retry: (failureCount, error) => {
       // Only retry on network errors, not on business logic errors
-      if (error instanceof UserError) {
+      if (error instanceof UserModulesError) {
         return false;
       }
       return failureCount < 2;
     },
   });
 
-  return { currentUser, isError, error };
+  return { userModules, isError, error };
 }

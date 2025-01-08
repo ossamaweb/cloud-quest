@@ -7,17 +7,21 @@ import IconCloud from "./icon-cloud";
 
 interface ModuleNodeProps {
   index: number;
+  id: string | null;
+  slug: string;
   total: number;
   inverse: boolean;
   current?: boolean;
   inactive?: boolean;
   className?: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>, slug: string) => void;
 }
 
 export default function ModuleNode({
   className = "",
   index,
+  id,
+  slug,
   total,
   inverse = false,
   current = false,
@@ -30,7 +34,7 @@ export default function ModuleNode({
       type="button"
       style={getModuleNodeTranslation(index, total, inverse)}
       className="relative text-left group flex items-center justify-center w-24 h-24"
-      onClick={(e) => (inactive ? null : onClick(e, `lesson-${index}`))}
+      onClick={(e) => (inactive ? null : onClick(e, slug))}
     >
       <div className="absolute inset-0">
         <IconCloud

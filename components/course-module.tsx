@@ -4,24 +4,32 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import ModuleNode from "./ui/module-node";
 import { useRouter } from "next/router";
+import { UserModule } from "@/lib/types";
 
-interface ModuleContainerProps {
+interface CourseModuleProps {
   index: number;
+  data: UserModule;
   className?: string;
 }
 
-export default function ModuleContainer({
+export default function CourseModule({
   index,
+  data,
   className = "",
-}: ModuleContainerProps) {
+}: CourseModuleProps) {
   const router = useRouter();
   const handleOnModuleNodeClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, slug: string) => {
       // Handle module node click
-      console.log("Module node clicked:", id);
-      router.push(`/lessons/${id}`);
+      console.log("Module node clicked:", slug);
+      router.push(`/lessons/${slug}`);
     },
     [router]
+  );
+
+  const lessonsSize = React.useMemo(
+    () => data.lessons.length,
+    [data.lessons.length]
   );
 
   return (
@@ -38,24 +46,24 @@ export default function ModuleContainer({
       <div className="relative text-center">
         <div className="absolute top-1/2 h-0.5 w-full bg-border rounded-md" />
         <h2 className="relative px-4 inline-block text-lg bg-background font-bold text-muted-foreground/50 text-center">
-          Module name
+          {data.title}
         </h2>
       </div>
 
       <div className="flex items-center flex-col gap-6">
-        {Array(6)
-          .fill(0)
-          .map((_, nodeIndex) => (
-            <ModuleNode
-              key={nodeIndex}
-              index={nodeIndex}
-              total={6}
-              inverse={index % 2 !== 0}
-              current={nodeIndex === 5}
-              inactive={index > 0}
-              onClick={handleOnModuleNodeClick}
-            />
-          ))}
+        {data.lessons.map((lesson, nodeIndex) => (
+          <ModuleNode
+            key={lesson.id}
+            id={lesson.id}
+            slug={lesson.slug}
+            index={nodeIndex}
+            total={lessonsSize}
+            inverse={index % 2 !== 0}
+            current={false}
+            inactive={index > 0}
+            onClick={handleOnModuleNodeClick}
+          />
+        ))}
       </div>
     </div>
   );
