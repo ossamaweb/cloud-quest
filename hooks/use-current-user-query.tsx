@@ -26,7 +26,7 @@ const currentUserSelectionSet = [
   "courses.course.*",
 ];
 
-export function useCurrentUser() {
+export function useCurrentUserQuery() {
   const cognito = useAuthenticator();
   const queryKey = useMemo(
     () => ["currentUser", cognito.user?.userId],

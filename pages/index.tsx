@@ -7,10 +7,10 @@ import SidebarLeft from "@/components/sidebar-left";
 import BottomBar from "@/components/bottom-bar";
 import UserMenu from "@/components/user-menu";
 import ModuleContainer from "@/components/module-container";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useCurrentUserQuery } from "@/hooks/use-current-user-query";
 
 export default function Dashboard() {
-  const { currentUser, isError, error } = useCurrentUser();
+  const { currentUser, isError, error } = useCurrentUserQuery();
 
   if (isError) {
     return <div>Error loading user: {error?.message}</div>;
