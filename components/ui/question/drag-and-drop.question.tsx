@@ -1,10 +1,11 @@
 import {
-  DragAndDropQuestion,
   LessonQuestionProps,
+  DragAndDropQuestion,
   QuestionOption,
 } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AUTO_CHECK_DURATION, cn, gradeQuestion } from "@/lib/utils";
+import { QuestionType } from "@/lib/graphql/API";
 
 interface CategoryItemProps {
   id: string;
@@ -290,7 +291,7 @@ export const DragAndDrop = ({
 
   useEffect(() => {
     if (correctAnswersCount === Object.keys(data.correctPairings).length) {
-      gradeQuestion(data, pairings, onGrade);
+      gradeQuestion(QuestionType.DRAG_AND_DROP, data, pairings, onGrade);
     }
   }, [correctAnswersCount, data, onGrade, pairings]);
 

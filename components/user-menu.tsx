@@ -8,7 +8,6 @@ import { UserWithStats } from "@/lib/types";
 
 interface UserMenuProps {
   currentUser: UserWithStats;
-
   className?: string;
 }
 

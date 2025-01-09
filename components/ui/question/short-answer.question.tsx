@@ -1,6 +1,7 @@
 "use client";
 
 import { useAutoFocus } from "@/hooks/use-auto-focus";
+import { QuestionType } from "@/lib/graphql/API";
 import { LessonQuestionProps, ShortAnswerQuestion } from "@/lib/interfaces";
 import { gradeQuestion } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
@@ -32,7 +33,7 @@ export const ShortAnswer = ({
       e.preventDefault();
       const hasValue = value.trim().length > 0;
       if (hasValue) {
-        gradeQuestion(data, value, onGrade);
+        gradeQuestion(QuestionType.SHORT_ANSWER, data, value, onGrade);
       }
     },
     [data, value, onGrade]
@@ -41,7 +42,7 @@ export const ShortAnswer = ({
   useEffect(() => {
     if (!checked) return;
 
-    gradeQuestion(data, value, onGrade);
+    gradeQuestion(QuestionType.SHORT_ANSWER, data, value, onGrade);
   }, [checked, data, onGrade, value]);
 
   return (

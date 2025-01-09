@@ -44,7 +44,7 @@ export function useListModulesQuery(courseId: string | null) {
 
         return listModulesData.sort((a, b) => (a.order || 0) - (b.order || 0));
       } catch (error) {
-        console.error("[useUserModulesQuery] Error:", error);
+        console.error("[useListModulesQuery] Error:", error);
         throw error;
       }
     },

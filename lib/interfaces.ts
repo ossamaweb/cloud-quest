@@ -1,4 +1,4 @@
-import { QUESTION_TYPE } from "./enums";
+import { QuestionType } from "./graphql/API";
 
 // Common types
 export type ID = string;
@@ -12,7 +12,6 @@ export interface QuestionOption {
 
 export interface BaseQuestion {
   id: ID;
-  type: QUESTION_TYPE;
   question: string;
   explanation?: string;
   points?: number;
@@ -20,13 +19,11 @@ export interface BaseQuestion {
 
 // Specific question type interfaces
 export interface MultipleChoiceQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.MULTIPLE_CHOICE;
   options: QuestionOption[];
   correctOptionId: ID;
 }
 
 export interface DragAndDropQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.DRAG_AND_DROP;
   categories: QuestionOption[];
   items: QuestionOption[];
   correctPairings: Record<ID, ID>; // itemId -> categoryId
@@ -58,20 +55,17 @@ interface RubricCriterion {
   };
 }
 export interface ScenarioBasedQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.SCENARIO_BASED;
   scenario: string;
   correctAnswer: string;
   rubric?: RubricCriterion[];
 }
 
 export interface ShortAnswerQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.SHORT_ANSWER;
   correctAnswer: string;
   acceptableAnswers?: string[]; // Alternative correct answers
 }
 
 export interface FillInTheBlankQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.FILL_IN_THE_BLANK;
   blanks: {
     id: ID;
     correctAnswer: string;
@@ -80,25 +74,21 @@ export interface FillInTheBlankQuestion extends BaseQuestion {
 }
 
 export interface MatchingQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.MATCHING;
   terms: QuestionOption[];
   definitions: QuestionOption[];
   correctPairings: Record<ID, ID>; // termId -> definitionId
 }
 
 export interface TrueFalseQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.TRUE_FALSE;
   correctAnswer: boolean;
 }
 
 export interface OrderingQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.ORDERING;
   items: QuestionOption[];
   correctOrder: ID[]; // Array of item IDs in correct order
 }
 
 export interface ImageIdentificationQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.IMAGE_IDENTIFICATION;
   image: {
     url: string;
     altText: string;
@@ -108,7 +98,7 @@ export interface ImageIdentificationQuestion extends BaseQuestion {
 }
 
 // Union type for all question types
-export type Question =
+export type QuestionData =
   | MultipleChoiceQuestion
   | DragAndDropQuestion
   | ScenarioBasedQuestion
@@ -120,6 +110,8 @@ export type Question =
   | ImageIdentificationQuestion;
 
 export interface LessonQuestionProps<T> {
+  title: string;
+  type: keyof typeof QuestionType | null;
   data: T;
   answered: boolean;
   checked: boolean;
@@ -128,7 +120,7 @@ export interface LessonQuestionProps<T> {
     correct: boolean,
     points: number,
     autoCheck: boolean,
-    data: Question
+    data: QuestionData
   ) => void;
   onAnswer: (answered: boolean) => void;
   className?: string;

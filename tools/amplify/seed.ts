@@ -7,6 +7,7 @@ import { createUserMutation } from "@/amplify/data/mutations";
 import coursesSeedData from "./seed-data/002_courses.seed";
 import modulesSeedData from "./seed-data/003_modules.seed";
 import lessonsSeedData from "./seed-data/004_lessons.seed";
+import questionsSeedData from "./seed-data/005_questions.seed";
 
 export async function seedData({ userId, username, signInDetails }: AuthUser) {
   // 1. Create default Course
@@ -41,7 +42,7 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
 
   // 7. Create Modules
   for (const moduleData of modulesSeedData) {
-    const _module = await client.models.Module.create({
+    await client.models.Module.create({
       id: moduleData.id,
       slug: moduleData.slug,
       title: moduleData.title,
@@ -56,7 +57,7 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
 
   // 9. Create Lessons
   for (const lessonData of lessonsSeedData) {
-    const lesson = await client.models.Lesson.create({
+    await client.models.Lesson.create({
       id: lessonData.id,
       slug: lessonData.slug,
       title: lessonData.title,
@@ -67,27 +68,14 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
     });
   }
 
-  console.log("3. lessons created.", { count: lessonsSeedData.length });
+  console.log("4. lessons created.", { count: lessonsSeedData.length });
+
   // 10. Create Questions for the lesson
-  // const question = await client.models.Question.create({
-  //   lessonId: lesson.data?.id,
-  //   order: 1,
-  //   type: "MULTIPLE_CHOICE",
-  //   question: "What does AWS stand for?",
-  //   questionData: {
-  //     options: [
-  //       "Amazon Web Services",
-  //       "Advanced Web System",
-  //       "Automated Web Server",
-  //       "Amazon Web System",
-  //     ],
-  //     correctAnswer: 0,
-  //   },
-  //   points: 10,
-  //   difficulty: "EASY",
-  //   version: 1,
-  //   tags: ["basics", "terminology"],
-  // });
+  for (const questionData of questionsSeedData) {
+    await client.models.Question.create(questionData);
+  }
+
+  console.log("5. questions created.", { count: questionsSeedData.length });
 
   return {
     user,

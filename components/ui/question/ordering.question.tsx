@@ -7,6 +7,7 @@ import {
   validateOrderingAnswer,
 } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import { QuestionType } from "@/lib/graphql/API";
 
 interface OrderingQuestionState {
   selectedId: string | null;
@@ -92,7 +93,7 @@ export const Ordering = ({
 
   useEffect(() => {
     if (correctAnswersCount === data.correctOrder.length) {
-      gradeQuestion(data, userOrder, onGrade);
+      gradeQuestion(QuestionType.ORDERING, data, userOrder, onGrade);
     }
   }, [data, onGrade, userOrder, correctAnswersCount]);
 

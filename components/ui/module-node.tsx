@@ -40,14 +40,15 @@ export default function ModuleNode({
         <IconCloud
           className={cn(
             "absolute -bottom-1.5 -left-1",
-            !locked ? "text-primary-darker" : "text-gray-400 dark:text-gray-800"
+            !locked ? "text-primary-darker" : "text-zinc-400 dark:text-zinc-800"
           )}
         />
         <IconCloud
           className={cn(
             "absolute text-primary transition-all duration-100",
-            !locked ? "text-primary" : "text-gray-300 dark:text-gray-700",
-            !locked && "group-hover:translate-y-1 group-hover:-translate-x-0.5"
+            !locked ? "text-primary" : "text-zinc-300 dark:text-zinc-700",
+            !locked &&
+              "group-hover:translate-y-0.5 group-hover:-translate-x-0.5"
           )}
         />
       </div>
@@ -56,10 +57,9 @@ export default function ModuleNode({
         className={cn(
           "relative mt-2",
           !locked &&
-            "group-hover:translate-y-1 group-hover:-translate-x-0.5 transition-all duration-100",
-          !locked
-            ? "text-primary-foreground"
-            : "text-gray-400 dark:text-gray-800"
+            "text-primary-foreground group-hover:translate-y-0.5 group-hover:-translate-x-0.5 transition-all duration-100",
+          locked && "text-zinc-400 dark:text-zinc-800",
+          current && "text-zinc-200 dark:text-zinc-900"
         )}
       >
         {!locked && !current ? (

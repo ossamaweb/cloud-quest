@@ -7,6 +7,7 @@ import {
   validateMatchAnswer,
 } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import { QuestionType } from "@/lib/graphql/API";
 
 interface MatchingQuestionState {
   selectedPair: [string | null, string | null];
@@ -107,7 +108,7 @@ export const Matching = ({
 
   useEffect(() => {
     if (correctAnswersCount === Object.keys(data.correctPairings).length) {
-      gradeQuestion(data, pairings, onGrade);
+      gradeQuestion(QuestionType.MATCHING, data, pairings, onGrade);
     }
   }, [data, onGrade, pairings, correctAnswersCount]);
 

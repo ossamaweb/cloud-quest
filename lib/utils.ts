@@ -8,12 +8,11 @@ import {
   MatchingQuestion,
   MultipleChoiceQuestion,
   OrderingQuestion,
-  Question,
-  ScenarioBasedQuestion,
+  QuestionData,
   ShortAnswerQuestion,
   TrueFalseQuestion,
 } from "./interfaces";
-import { QUESTION_TYPE } from "./enums";
+import { QuestionType } from "./graphql/API";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -81,13 +80,13 @@ export function validateOrderingAnswer(
 }
 
 const QUESTION_GRADING: Record<
-  QUESTION_TYPE,
+  QuestionType,
   (
-    question: Question,
+    question: QuestionData,
     userAnswer: unknown
   ) => { correct: boolean; points: number; autoCheck: boolean }
 > = {
-  [QUESTION_TYPE.MULTIPLE_CHOICE]: (question, userAnswer) => {
+  [QuestionType.MULTIPLE_CHOICE]: (question, userAnswer) => {
     const mcQuestion = question as MultipleChoiceQuestion;
     const mcAnswer = userAnswer as string;
     const correct = mcAnswer === mcQuestion.correctOptionId;
@@ -95,7 +94,7 @@ const QUESTION_GRADING: Record<
     return { correct, points, autoCheck: false };
   },
 
-  [QUESTION_TYPE.DRAG_AND_DROP]: (question, userAnswer) => {
+  [QuestionType.DRAG_AND_DROP]: (question, userAnswer) => {
     const ddQuestion = question as DragAndDropQuestion;
     const ddAnswer = userAnswer as Record<string, string>;
 
@@ -109,11 +108,11 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.SCENARIO_BASED]: (question, userAnswer) => {
+  [QuestionType.SCENARIO_BASED]: (question, userAnswer) => {
     throw new Error("Function not implemented.");
   },
 
-  [QUESTION_TYPE.SHORT_ANSWER]: (question, userAnswer) => {
+  [QuestionType.SHORT_ANSWER]: (question, userAnswer) => {
     const saQuestion = question as ShortAnswerQuestion;
     const userText = (userAnswer as string).toLowerCase().trim();
     const correctAnswers = [
@@ -131,7 +130,7 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.FILL_IN_THE_BLANK]: (question, userAnswer) => {
+  [QuestionType.FILL_IN_THE_BLANK]: (question, userAnswer) => {
     // throw new Error("Function not implemented.");
     const fibQuestion = question as FillInTheBlankQuestion;
     const fibAnswer = userAnswer as Record<string, string>;
@@ -149,7 +148,7 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.MATCHING]: (question, userAnswer) => {
+  [QuestionType.MATCHING]: (question, userAnswer) => {
     const mQuestion = question as MatchingQuestion;
     const mAnswer = userAnswer as Record<string, string>;
 
@@ -162,7 +161,7 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.TRUE_FALSE]: (question, userAnswer) => {
+  [QuestionType.TRUE_FALSE]: (question, userAnswer) => {
     const tfQuestion = question as TrueFalseQuestion;
     const correct = userAnswer === tfQuestion.correctAnswer;
     return {
@@ -172,7 +171,7 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.ORDERING]: (question, userAnswer) => {
+  [QuestionType.ORDERING]: (question, userAnswer) => {
     const oQuestion = question as OrderingQuestion;
     const userOrder = userAnswer as string[];
     const correct = validateOrderingAnswer(userOrder, oQuestion.correctOrder);
@@ -184,7 +183,7 @@ const QUESTION_GRADING: Record<
     };
   },
 
-  [QUESTION_TYPE.IMAGE_IDENTIFICATION]: (question, userAnswer) => {
+  [QuestionType.IMAGE_IDENTIFICATION]: (question, userAnswer) => {
     const imgQuestion = question as ImageIdentificationQuestion;
     const imgAnswer = userAnswer as string;
     const correct = imgQuestion.correctOptionId === imgAnswer;
@@ -198,11 +197,12 @@ const QUESTION_GRADING: Record<
 };
 
 export function gradeQuestion(
-  data: Question,
+  type: QuestionType,
+  data: QuestionData,
   userAnswer: unknown,
   cb: LessonQuestionProps<unknown>["onGrade"]
 ): void {
-  const questionGrading = QUESTION_GRADING[data.type];
+  const questionGrading = QUESTION_GRADING[type];
   if (!questionGrading) {
     throw new Error("Function not implemented.");
   }

@@ -1,11 +1,13 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
+import { QuestionType } from "@/lib/graphql/API";
+import { LessonQuestionProps, FillInTheBlankQuestion } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
 import * as React from "react";
 
 export const FillInTheBlank = ({
+  title,
   data,
   checked,
   answered,
@@ -73,7 +75,7 @@ export const FillInTheBlank = ({
 
   React.useEffect(() => {
     if (!checked) return;
-    gradeQuestion(data, value, onGrade);
+    gradeQuestion(QuestionType.FILL_IN_THE_BLANK, data, value, onGrade);
   }, [checked, data, onGrade, value]);
 
   const autoFocusOnFirstInput = React.useCallback(() => {
@@ -108,7 +110,7 @@ export const FillInTheBlank = ({
 
   const parts = React.useMemo(() => {
     // Split the text by the placeholder pattern
-    const arr = data.question.split(/(\{[0-9]+\})/g);
+    const arr = title.split(/(\{[0-9]+\})/g);
 
     const parts = arr.map(
       (
@@ -127,7 +129,7 @@ export const FillInTheBlank = ({
     );
 
     return parts;
-  }, [data.question]);
+  }, [title]);
 
   const renderInput = (index: number) => {
     const blank = data.blanks[index];

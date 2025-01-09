@@ -5,6 +5,7 @@ import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
 import { gradeQuestion } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import { QuestionType } from "@/lib/graphql/API";
 
 export const MultipleChoice = ({
   data,
@@ -17,7 +18,7 @@ export const MultipleChoice = ({
   const handleOnClick = useCallback(
     (optionId: string) => {
       setState({ selectedId: optionId });
-      gradeQuestion(data, optionId, onGrade);
+      gradeQuestion(QuestionType.MULTIPLE_CHOICE, data, optionId, onGrade);
     },
     [data, onGrade]
   );

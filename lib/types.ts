@@ -37,3 +37,21 @@ export type ListModule = SelectionSet<
   Schema["Module"]["type"],
   ListModulesSelectionSet
 >;
+
+export const getLessonSelectionSet = [
+  "id",
+  "slug",
+  "title",
+  "content",
+  "order",
+  "type",
+  "moduleId",
+  "questions.*",
+] as const;
+
+export type GetLessonSelectionSet = typeof getLessonSelectionSet;
+
+export type GetLesson = SelectionSet<
+  Schema["Lesson"]["type"],
+  GetLessonSelectionSet
+>;

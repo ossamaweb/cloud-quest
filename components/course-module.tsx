@@ -26,6 +26,7 @@ export default function CourseModule({
       event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
       lessonSlug: string
     ) => {
+      event.preventDefault();
       router.push(`/${courseSlug}/${data.slug}/${lessonSlug}`);
     },
     [courseSlug, data.slug, router]
@@ -45,13 +46,6 @@ export default function CourseModule({
       };
     }, [data.lessons, data.order, data.userProgress]);
 
-  console.log({
-    moduleIndex,
-    isModuleLocked,
-    lessons,
-    lessonsSize,
-    lastLessonOrder,
-  });
   return (
     <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">

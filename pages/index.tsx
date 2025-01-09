@@ -1,3 +1,5 @@
+"use client";
+
 import TopBar from "@/components/top-bar";
 import SidebarRight from "@/components/sidebar-right";
 import MainContent from "@/components/main-content";
@@ -5,8 +7,8 @@ import PageLoading from "@/components/page-loading";
 import SidebarLeft from "@/components/sidebar-left";
 import BottomBar from "@/components/bottom-bar";
 import UserMenu from "@/components/user-menu";
-import useCurrentUserQuery from "@/hooks/use-current-user-query";
 import CourseModules from "@/components/course-modules";
+import useCurrentUserQuery from "@/hooks/use-current-user-query";
 
 export default function Dashboard() {
   const { currentUser, isError, error } = useCurrentUserQuery();

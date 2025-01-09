@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { gradeQuestion } from "@/lib/utils";
 import { CheckIcon, XIcon } from "lucide-react";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import { QuestionType } from "@/lib/graphql/API";
 
 export const TrueFalse = ({
   data,
@@ -18,7 +19,7 @@ export const TrueFalse = ({
   const handleOnClick = useCallback(
     (selectedId: string) => {
       setState({ selectedId });
-      gradeQuestion(data, selectedId === "1", onGrade);
+      gradeQuestion(QuestionType.TRUE_FALSE, data, selectedId === "1", onGrade);
     },
     [data, onGrade]
   );
