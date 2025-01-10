@@ -1,5 +1,4 @@
 import { LessonQuestionProps, MatchingQuestion } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AUTO_CHECK_DURATION,
@@ -7,7 +6,7 @@ import {
   validateMatchAnswer,
 } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
-import { QuestionType } from "@/lib/graphql/API";
+import ButtonQuestion from "@/components/ui/button-question";
 
 interface MatchingQuestionState {
   selectedPair: [string | null, string | null];

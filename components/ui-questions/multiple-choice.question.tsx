@@ -1,11 +1,10 @@
 "use client";
 
 import { LessonQuestionProps, MultipleChoiceQuestion } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
 import { gradeQuestion, validateMultipleChoiceAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
-import { QuestionType } from "@/lib/graphql/API";
+import ButtonQuestion from "../ui/button-question";
 
 export const MultipleChoice = ({
   data,

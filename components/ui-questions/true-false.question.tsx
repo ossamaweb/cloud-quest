@@ -1,11 +1,11 @@
 "use client";
 
 import { LessonQuestionProps, TrueFalseQuestion } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
 import { gradeQuestion, validateTrueOrFalseAnswer } from "@/lib/utils";
 import { CheckIcon, XIcon } from "lucide-react";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import ButtonQuestion from "../ui/button-question";
 
 export const TrueFalse = ({
   data,

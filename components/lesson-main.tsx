@@ -2,14 +2,12 @@
 import * as React from "react";
 import LessonFooter from "@/components/lesson-footer";
 import LessonQuestion from "@/components/lesson-question";
-import Button from "@/components/ui/button";
-import ProgressBar from "@/components/ui/progress-bar";
+import LessonCompleted from "@/components/lesson-completed";
+import LessonHeader from "@/components/lesson-header";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LessonQuestionProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
-import { XIcon } from "lucide-react";
 import { GetLesson } from "@/lib/types";
-import LessonCompleted from "./lesson-completed";
 
 interface LessonMainState {
   questionState: {
@@ -167,19 +165,7 @@ export default function LessonMain({ questions, onComplete }: LessonMainProps) {
     <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
       <div className="relative flex-1 flex flex-col justify-between">
         {!lessonState.completed && (
-          <div className="sticky top-0 z-10 flex-shrink-0 bg-background">
-            <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
-              <div className="flex justify-between items-center sm:gap-4 gap-2">
-                <div>
-                  <Button className="hover:bg-transparent -ml-3 px-2 py-1 dark:text-zinc-700 text-zinc-500 hover:text-foreground/50">
-                    <XIcon />
-                  </Button>
-                </div>
-
-                <ProgressBar value={lessonState.progress} />
-              </div>
-            </div>
-          </div>
+          <LessonHeader progress={lessonState.progress} />
         )}
 
         <div className="flex-1">

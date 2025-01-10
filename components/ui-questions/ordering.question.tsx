@@ -1,6 +1,6 @@
 import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ButtonQuestion from "../button-question";
+import ButtonQuestion from "@/components/ui/button-question";
 import {
   AUTO_CHECK_DURATION,
   gradeQuestion,

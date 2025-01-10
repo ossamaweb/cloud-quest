@@ -4,11 +4,11 @@ import {
   LessonQuestionProps,
   ImageIdentificationQuestion,
 } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
 import { gradeQuestion, validateImageIdentificationAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 import Image from "next/image";
+import ButtonQuestion from "@/components/ui/button-question";
 
 export const ImageIdentification = ({
   data,

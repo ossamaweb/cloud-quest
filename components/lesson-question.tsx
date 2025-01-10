@@ -14,15 +14,15 @@ import {
   TrueFalseQuestion,
 } from "@/lib/interfaces";
 import * as React from "react";
-import { MultipleChoice } from "./ui/question/multiple-choice.question";
-import { DragAndDrop } from "./ui/question/drag-and-drop.question";
-import { ScenarioBased } from "./ui/question/scenario-based.question";
-import { ImageIdentification } from "./ui/question/image-identification.question";
-import { Matching } from "./ui/question/matching.question";
-import { Ordering } from "./ui/question/ordering.question";
-import { ShortAnswer } from "./ui/question/short-answer.question";
-import { TrueFalse } from "./ui/question/true-false.question";
-import { FillInTheBlank } from "./ui/question/fill-in-the-blank.question";
+import { MultipleChoice } from "@/components/ui-questions/multiple-choice.question";
+import { DragAndDrop } from "@/components/ui-questions/drag-and-drop.question";
+import { ScenarioBased } from "@/components/ui-questions/scenario-based.question";
+import { ImageIdentification } from "@/components/ui-questions/image-identification.question";
+import { Matching } from "@/components/ui-questions/matching.question";
+import { Ordering } from "@/components/ui-questions/ordering.question";
+import { ShortAnswer } from "@/components/ui-questions/short-answer.question";
+import { TrueFalse } from "@/components/ui-questions/true-false.question";
+import { FillInTheBlank } from "@/components/ui-questions/fill-in-the-blank.question";
 import { cn } from "@/lib/utils";
 import { QuestionType } from "@/lib/graphql/API";
 
