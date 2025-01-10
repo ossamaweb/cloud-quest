@@ -20,6 +20,14 @@ export default function CourseModules({
 }: CourseModulesProps) {
   const { userModules, error, isError } = useListModulesQuery(courseId);
 
+  React.useEffect(() => {
+    // Instant scroll to current lesson
+    if (userModules && userModules.length > 0) {
+      const element = document.getElementById("currentLessonNode");
+      element?.scrollIntoView({ behavior: "auto", block: "center" });
+    }
+  }, [userModules]);
+
   if (isError) {
     return <div>Error loading user: {error?.message}</div>;
   }
@@ -29,6 +37,7 @@ export default function CourseModules({
   }
 
   console.log({ userModules });
+
   return (
     <div className="space-y-16 mb-16">
       {userModules?.map((userModule, index) => (

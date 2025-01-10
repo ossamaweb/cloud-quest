@@ -131,3 +131,26 @@ export function getLessonNodeTranslation(
     transform: `translateX(${x}px)`,
   } as React.CSSProperties;
 }
+
+// Helper function to add leading zero if needed
+function padWithZero(num: number): string {
+  return num.toString().padStart(2, "0");
+}
+
+export function formatTimeWithHours(totalSeconds: number): string {
+  // Calculate each time unit
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  // Pad each unit with leading zeros
+  const paddedHours = padWithZero(hours);
+  const paddedMinutes = padWithZero(minutes);
+  const paddedSeconds = padWithZero(seconds);
+
+  // Return HH:MM:SS format if there are hours, otherwise MM:SS
+  if (hours > 0) {
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+  }
+  return `${paddedMinutes}:${paddedSeconds}`;
+}

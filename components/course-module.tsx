@@ -61,13 +61,6 @@ export default function CourseModule({
     };
   }, [data.lessons, data.order, previousData]);
 
-  React.useEffect(() => {
-    if (currentLesson) {
-      const element = document.getElementById("currentLessonNode");
-      element?.scrollIntoView({ behavior: "auto", block: "center" });
-    }
-  }, [currentLesson]);
-
   return (
     <div className={cn("relative space-y-16", className)}>
       {/* <div className="absolute top-0 w-full rounded-lg p-4 bg-primary">

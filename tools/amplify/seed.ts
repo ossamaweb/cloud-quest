@@ -3,12 +3,12 @@ import { Amplify } from "aws-amplify";
 import { signIn, getCurrentUser, AuthUser } from "aws-amplify/auth";
 import outputs from "@/amplify_outputs.json";
 import client from "@/amplify/client";
-
 import coursesSeedData from "./seed-data/002_courses.seed";
 import modulesSeedData from "./seed-data/003_modules.seed";
 import lessonsSeedData from "./seed-data/004_lessons.seed";
 import questionsSeedData from "./seed-data/005_questions.seed";
-import { setupNewUser } from "@/lib/helpers/setup-new-user.helper";
+import { setupNewUser } from "@/lib/helpers/user.helpers";
+import * as readline from "readline";
 
 export async function seedData({ userId, username, signInDetails }: AuthUser) {
   // 1. Create default Course
@@ -81,11 +81,54 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
   };
 }
 
+async function tempSeed({ userId, username, signInDetails }: AuthUser) {
+  // 9. Create Lessons
+  for (const lessonData of lessonsSeedData) {
+    await client.models.Lesson.create({
+      id: lessonData.id,
+      slug: lessonData.slug,
+      title: lessonData.title,
+      content: lessonData.content,
+      order: lessonData.order,
+      type: lessonData.type,
+      moduleId: lessonData.moduleId,
+    });
+  }
+
+  console.log("4. lessons created.", { count: lessonsSeedData.length });
+
+  return true;
+}
+
+function askForConfirmation(question: string): Promise<boolean> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(`${question} (y/N): `, (answer) => {
+      rl.close();
+      resolve(answer.toLowerCase() === "y");
+    });
+  });
+}
+
 async function main() {
   if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
     throw new Error(
       "ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required"
     );
+  }
+
+  // Ask for confirmation before proceeding
+  const confirmed = await askForConfirmation(
+    "WARNING: This operation will seed the database with initial data. This action cannot be undone. Do you want to continue?"
+  );
+
+  if (!confirmed) {
+    console.log("Operation cancelled by user");
+    process.exit(0);
   }
 
   Amplify.configure(outputs);
@@ -101,11 +144,12 @@ async function main() {
       throw new Error("Failed to sign in");
     }
 
-    const currentUser = await getCurrentUser();
+    const cognitoUser = await getCurrentUser();
 
     // After successful sign in proceed with seeding
     console.log("Starting data seeding...");
-    const seededData = await seedData(currentUser);
+    const seededData = await seedData(cognitoUser);
+
     console.log("Data seeding completed successfully:", seededData);
   } catch (error) {
     console.error("Error seeding data:", error);

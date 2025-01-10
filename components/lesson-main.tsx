@@ -75,6 +75,10 @@ export default function LessonMain({
   const [{ questionState, lessonState, lessonStats }, setState] =
     React.useState<LessonMainState>(LessonMainInitialState);
 
+  const durationsRef = React.useRef<
+    Record<string, { start: number; end: number; duration: number }>
+  >({});
+
   const { questionsSize, sortedQuestions } = React.useMemo(() => {
     return {
       sortedQuestions: questions.sort(
@@ -115,7 +119,7 @@ export default function LessonMain({
             progress,
           },
           lessonStats: {
-            duration: lessonStats.duration + 0,
+            ...lessonStats,
             points: Math.floor(lessonStats.points + props.points),
             accuracy: Math.max(0, Math.min(100, accuracy)),
             answersCount,
@@ -151,25 +155,42 @@ export default function LessonMain({
     }));
   }, [questionsSize]);
 
-  const handleOnSave = React.useCallback(() => {
-    onSave({
-      accuracy: lessonStats.accuracy,
-      points: lessonStats.points,
-      duration: lessonStats.duration,
-    });
-  }, [lessonStats.accuracy, lessonStats.duration, lessonStats.points, onSave]);
+  const handleOnSave = React.useCallback(
+    (totalDuration: number) => {
+      if (!lessonState.saved) {
+        onSave({
+          accuracy: lessonStats.accuracy,
+          points: lessonStats.points,
+          duration: totalDuration,
+        });
+
+        durationsRef.current = {};
+      }
+    },
+    [lessonState.saved, lessonStats.accuracy, lessonStats.points, onSave]
+  );
 
   const handleOnContinue = React.useCallback(
     (nextQuestionIndex: number) => {
       const finalQuestion = nextQuestionIndex >= questionsSize;
-
+      let totalDuration = 0;
       if (finalQuestion) {
-        handleOnSave();
+        totalDuration = Object.keys(durationsRef.current)
+          .map((key) => durationsRef.current[key].duration)
+          .reduce((acc, v) => acc + v, 0);
+
+        totalDuration = Math.ceil(totalDuration / 1000); // convert to seconds
+
+        handleOnSave(totalDuration);
       }
 
       setState((prev) => {
         return {
           ...prev,
+          lessonStats: {
+            ...prev.lessonStats,
+            duration: totalDuration,
+          },
           lessonState: {
             ...prev.lessonState,
             saving: finalQuestion,
@@ -187,6 +208,22 @@ export default function LessonMain({
     },
     [handleOnSave, questionsSize]
   );
+
+  React.useEffect(() => {
+    if (questionState.checked) {
+      const endTime = new Date().getTime();
+      durationsRef.current[questionState.index] = {
+        ...durationsRef.current[questionState.index],
+        end: endTime,
+        duration: endTime - durationsRef.current[questionState.index].start,
+      };
+    } else {
+      durationsRef.current[questionState.index] = {
+        ...durationsRef.current[questionState.index],
+        start: new Date().getTime(),
+      };
+    }
+  }, [questionState.index, questionState.checked]);
 
   React.useEffect(() => {
     if (saved) {
@@ -218,6 +255,7 @@ export default function LessonMain({
               value={String(questionState.index)}
               activationMode="manual"
               className="w-full h-full"
+              onValueChange={(e) => console.log("onValueChange", e)}
             >
               {sortedQuestions.map((item, index) => (
                 <TabsContent

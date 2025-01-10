@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { StarIcon, TargetIcon, ThumbsUpIcon, TimerIcon } from "lucide-react";
+import { formatTimeWithHours } from "@/lib/utils";
 
 interface LessonCompletedProps {
   points: number;
@@ -55,7 +56,9 @@ export default function LessonCompleted({
               </div>
               <div className="flex-1 flex items-center justify-center space-x-2 text-amber-500 bg-background rounded-md ">
                 <TimerIcon />
-                <span className="text-lg font-bold">{duration}</span>
+                <span className="text-lg font-bold">
+                  {formatTimeWithHours(duration)}
+                </span>
               </div>
             </div>
           </div>
