@@ -178,7 +178,7 @@ export default function LessonMain({
             ...prev.questionState,
             index: finalQuestion ? prev.questionState.index : nextQuestionIndex, // do not move to next qustion when saving
             status: "unanswered",
-            checked: false,
+            checked: finalQuestion ? true : false,
             answered: false,
             explanation: undefined,
           },

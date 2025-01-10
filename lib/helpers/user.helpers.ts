@@ -1,6 +1,29 @@
 import client from "@/amplify/client";
-import { CurrentUserSelectionSet, currentUserSelectionSet } from "../types";
+import { currentUserSelectionSet, CurrentUserSelectionSet } from "../types";
 import coursesSeedData from "@/tools/amplify/seed-data/002_courses.seed";
+
+export class UserError extends Error {
+  constructor(message: string, public code?: string) {
+    super(message);
+    this.name = "UserError";
+    this.code = code;
+  }
+}
+
+export async function getUser(id: string) {
+  const userModel = await client.models.User.get<CurrentUserSelectionSet>(
+    {
+      id,
+    },
+    { selectionSet: currentUserSelectionSet }
+  );
+
+  if (userModel.errors) {
+    throw new UserError(JSON.stringify(userModel.errors), "API_ERROR");
+  }
+
+  return userModel;
+}
 
 export async function setupNewUser(cognitoUser: {
   userId: string;

@@ -1,19 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import client from "@/amplify/client";
 import {
-  createUserLessonCompletionSet,
+  CreateUserLessonCompletion,
   CreateUserLessonCompletionSet,
-  UserModuleProgressCreate,
+  UserLessonCompletion,
+  UserLessonCompletionCreateType,
   UserWithStats,
 } from "@/lib/types";
-
-class CreateUserLessonCompletionError extends Error {
-  constructor(message: string, public code?: string) {
-    super(message);
-    this.name = "CreateUserLessonCompletionError";
-    this.code = code;
-  }
-}
+import { getUser } from "@/lib/helpers/user.helpers";
 
 export interface CreateUserLessonCompletionInput {
   userId: string;
@@ -24,8 +18,62 @@ export interface CreateUserLessonCompletionInput {
   accuracy: number;
   points: number;
   duration: number;
-  userModuleProgress: UserModuleProgressCreate | undefined;
   currentUser: UserWithStats;
+}
+
+async function createUserLessonCompletion(
+  input: CreateUserLessonCompletionInput
+) {
+  const completion = await client.models.UserLessonCompletion.create({
+    userId: input.userId,
+    lessonId: input.lessonId,
+    accuracy: input.accuracy,
+    points: input.points,
+    duration: input.duration,
+  });
+
+  if (completion.errors) {
+    throw new CreateUserLessonCompletionError(
+      JSON.stringify(completion.errors),
+      "API_ERROR"
+    );
+  }
+
+  return completion;
+}
+
+async function updateUserStats(input: CreateUserLessonCompletionInput) {
+  const currentUser = await getUser(input.userId);
+  const stats = currentUser.data?.stats;
+
+  if (!stats) {
+    throw new CreateUserLessonCompletionError(
+      "No user stats found",
+      "NOT_FOUND"
+    );
+  }
+  const updateUserStats = await client.models.UserStats.update({
+    id: stats.id,
+    lessonsCompleted: (stats.lessonsCompleted ?? 0) + 1,
+    points: Math.floor((stats.points ?? 0) + input.points),
+    // streak: a.integer().default(0),
+    // longestStreak: a.integer().default(0),
+  });
+
+  if (updateUserStats.errors) {
+    throw new CreateUserLessonCompletionError(
+      JSON.stringify(updateUserStats.errors),
+      "API_ERROR"
+    );
+  }
+}
+
+class CreateUserLessonCompletionError extends Error {
+  constructor(message: string, public code?: string) {
+    super(message);
+    this.name = "CreateUserLessonCompletionError";
+    this.code = code;
+  }
 }
 
 export function useCreateLessonCompletionMutation(courseSlug: string | null) {
@@ -34,71 +82,11 @@ export function useCreateLessonCompletionMutation(courseSlug: string | null) {
   return useMutation({
     mutationFn: async (input: CreateUserLessonCompletionInput) => {
       try {
-        const completion = await client.models.UserLessonCompletion.create({
-          userId: input.userId,
-          lessonId: input.lessonId,
-          accuracy: input.accuracy,
-          points: input.points,
-          duration: input.duration,
-        });
-
+        const completion = await createUserLessonCompletion(input);
         console.log({ completion });
 
-        if (completion.errors) {
-          throw new CreateUserLessonCompletionError(
-            JSON.stringify(completion.errors),
-            "API_ERROR"
-          );
-        }
-
-        const stats = input.currentUser.stats;
-        const updateUserStats = await client.models.UserStats.update({
-          id: stats.id,
-          lessonsCompleted: (stats.lessonsCompleted ?? 0) + 1,
-          points: Math.floor((stats.points ?? 0) + input.points),
-          // streak: a.integer().default(0),
-          // longestStreak: a.integer().default(0),
-        });
-
-        if (updateUserStats.errors) {
-          throw new CreateUserLessonCompletionError(
-            JSON.stringify(updateUserStats.errors),
-            "API_ERROR"
-          );
-        }
-
-        if (input.userModuleProgress?.id) {
-          // Update Module Progress
-          const updateModuleProgress =
-            await client.models.UserModuleProgress.update({
-              id: input.userModuleProgress?.id,
-              lastLessonOrder: input.lessonOrder,
-            });
-          console.log({ updateModuleProgress });
-          if (updateModuleProgress.errors) {
-            throw new CreateUserLessonCompletionError(
-              JSON.stringify(updateModuleProgress.errors),
-              "API_ERROR"
-            );
-          }
-        } else {
-          // Create New Module Progress
-          const createModuleProgress =
-            await client.models.UserModuleProgress.create({
-              userId: input.userId,
-              moduleId: input.moduleId,
-              lastLessonOrder: input.lessonOrder,
-              startDate: new Date().toISOString(),
-            });
-          console.log({ createModuleProgress });
-
-          if (createModuleProgress.errors) {
-            throw new CreateUserLessonCompletionError(
-              JSON.stringify(createModuleProgress.errors),
-              "API_ERROR"
-            );
-          }
-        }
+        const userStats = await updateUserStats(input);
+        console.log({ userStats });
 
         await Promise.all([
           queryClient.refetchQueries({

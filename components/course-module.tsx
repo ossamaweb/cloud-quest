@@ -2,21 +2,22 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import ModuleNode from "./ui/module-node";
+import LessonNode from "./ui/lesson-node";
 import { useRouter } from "next/router";
 import { ListModule } from "@/lib/types";
 
 interface CourseModuleProps {
   index: number;
   data: ListModule;
+  previousData?: ListModule;
   courseSlug: string;
-
   className?: string;
 }
 
 export default function CourseModule({
   index: moduleIndex,
   data,
+  previousData,
   courseSlug,
   className = "",
 }: CourseModuleProps) {
@@ -32,26 +33,40 @@ export default function CourseModule({
     [courseSlug, data.slug, router]
   );
 
-  const {
-    isModuleLocked,
-    lessons,
-    lessonsSize,
-    currentLessonOrder,
-    lastLessonOrder,
-  } = React.useMemo(() => {
-    const userProgress = data.userProgress?.[0];
-    const isModuleLocked = !userProgress && data.order > 1; // the first module should be open by default
-    const lastLessonOrder = isModuleLocked
-      ? 0
-      : userProgress?.lastLessonOrder ?? 0;
+  const { lessons, lessonsSize, currentLesson } = React.useMemo(() => {
+    const isPreviousModuleCompleted = previousData
+      ? previousData?.lessons.every((lesson) => lesson.userCompletions?.[0])
+      : false;
+
+    const isCurrentModuleCompleted = data.lessons.every(
+      (lesson) => lesson.userCompletions?.[0]
+    );
+
+    const isModuleUnlocked =
+      data.order === 1 ? true : isPreviousModuleCompleted;
+
+    const lessons = data.lessons.sort(
+      (a, b) => (a.order || 0) - (b.order || 0)
+    );
+
+    const currentLesson =
+      isModuleUnlocked && !isCurrentModuleCompleted
+        ? lessons.find((lesson) => !lesson.userCompletions?.[0])
+        : undefined;
+
     return {
-      isModuleLocked,
-      lessons: data.lessons.sort((a, b) => (a.order || 0) - (b.order || 0)),
-      lessonsSize: data.lessons.length,
-      lastLessonOrder,
-      currentLessonOrder: lastLessonOrder + 1,
+      lessonsSize: lessons.length,
+      lessons,
+      currentLesson,
     };
-  }, [data.lessons, data.order, data.userProgress]);
+  }, [data.lessons, data.order, previousData]);
+
+  React.useEffect(() => {
+    if (currentLesson) {
+      const element = document.getElementById("currentLessonNode");
+      element?.scrollIntoView({ behavior: "auto", block: "center" });
+    }
+  }, [currentLesson]);
 
   return (
     <div className={cn("relative space-y-16", className)}>
@@ -73,17 +88,17 @@ export default function CourseModule({
 
       <div className="flex items-center flex-col gap-6">
         {lessons.map((lesson, nodeIndex) => (
-          <ModuleNode
+          <LessonNode
             key={lesson.id}
             id={lesson.id}
             slug={lesson.slug}
+            title={lesson.title}
+            content={lesson.content}
             index={nodeIndex}
             inverse={moduleIndex % 2 !== 0}
             total={lessonsSize}
-            current={
-              isModuleLocked ? undefined : lesson.order === currentLessonOrder
-            }
-            locked={isModuleLocked || lesson.order > currentLessonOrder}
+            current={currentLesson?.id === lesson.id}
+            completed={!!lesson.userCompletions?.[0]}
             onClick={handleOnModuleNodeClick}
           />
         ))}

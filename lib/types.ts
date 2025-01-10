@@ -26,7 +26,7 @@ export const listModulesSelectionSet = [
   "courseId",
   "difficulty",
   "lessons.*",
-  "userProgress.*",
+  "lessons.userCompletions.*",
 ] as const;
 export type ListModulesSelectionSet = typeof listModulesSelectionSet;
 export type ListModule = SelectionSet<
@@ -43,7 +43,6 @@ export const getLessonSelectionSet = [
   "type",
   "moduleId",
   "questions.*",
-  "module.userProgress.*",
 ] as const;
 export type GetLessonSelectionSet = typeof getLessonSelectionSet;
 export type GetLesson = SelectionSet<
@@ -65,7 +64,5 @@ export type CreateUserLessonCompletion = SelectionSet<
 >;
 
 export type UserLessonCompletion = Schema["UserLessonCompletion"]["type"];
-export type UserModuleProgressCreate =
-  Schema["UserModuleProgress"]["createType"];
-export type UserModuleProgressUpdate =
-  Schema["UserModuleProgress"]["updateType"];
+export type UserLessonCompletionCreateType =
+  Schema["UserLessonCompletion"]["createType"];

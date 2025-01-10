@@ -9,7 +9,7 @@ import {
   CreateUserLessonCompletionInput,
   useCreateLessonCompletionMutation,
 } from "@/hooks/use-create-lesson-completion-mutation";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+
 import { lessonFixture } from "@/lib/lesson.fixtures";
 import useCurrentUserQuery from "@/hooks/use-current-user-query";
 
@@ -23,8 +23,6 @@ export default function Lesson() {
     (router.query?.courseSlug ?? null) as string | null
   );
   const [saved, setSaved] = React.useState(false);
-
-  console.log(lesson);
 
   const handleOnComplete = React.useCallback(() => {
     router.push(`/`);
@@ -51,7 +49,6 @@ export default function Lesson() {
         lessonOrder: lesson.order,
         lessonSlug: lesson.slug,
         moduleId: lesson.moduleId,
-        userModuleProgress: lesson.module.userProgress?.[0],
         currentUser: currentUserQuery.currentUser,
       };
 

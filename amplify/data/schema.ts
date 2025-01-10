@@ -10,7 +10,6 @@ export const schema = a.schema({
       status: a.enum(["ACTIVE", "INACTIVE", "SUSPENDED"]),
       stats: a.hasOne("UserStats", "userId"),
       courses: a.hasMany("UserCourseEnrollment", "userId"),
-      modules: a.hasMany("UserModuleProgress", "userId"),
       lessons: a.hasMany("UserLessonCompletion", "userId"),
       achievements: a.hasMany("UserAchievement", "userId"),
     })
@@ -96,26 +95,12 @@ export const schema = a.schema({
       courseId: a.id(),
       course: a.belongsTo("Course", "courseId"),
       lessons: a.hasMany("Lesson", "moduleId"),
-      userProgress: a.hasMany("UserModuleProgress", "moduleId"),
     })
     .secondaryIndexes((index) => [index("slug")])
     .authorization((allow) => [
       allow.owner(),
       allow.authenticated().to(["read"]),
     ]),
-
-  UserModuleProgress: a
-    .model({
-      id: a.id(),
-      userId: a.id(),
-      user: a.belongsTo("User", "userId"),
-      moduleId: a.id(),
-      module: a.belongsTo("Module", "moduleId"),
-      lastLessonOrder: a.integer().default(0),
-      startDate: a.datetime().required(),
-      completionDate: a.datetime(),
-    })
-    .authorization((allow) => [allow.owner()]),
 
   Lesson: a
     .model({

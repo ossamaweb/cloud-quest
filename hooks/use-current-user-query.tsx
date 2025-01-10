@@ -1,19 +1,7 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import client from "@/amplify/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { currentUserSelectionSet, CurrentUserSelectionSet } from "@/lib/types";
-
-import coursesSeedData from "@/tools/amplify/seed-data/002_courses.seed";
-import { setupNewUser } from "@/lib/helpers/setup-new-user.helper";
-
-class UserError extends Error {
-  constructor(message: string, public code?: string) {
-    super(message);
-    this.name = "UserError";
-    this.code = code;
-  }
-}
+import { getUser, setupNewUser, UserError } from "@/lib/helpers/user.helpers";
 
 export default function useCurrentUserQuery() {
   const cognito = useAuthenticator();
@@ -32,16 +20,12 @@ export default function useCurrentUserQuery() {
     enabled: Boolean(cognito.user?.userId),
     queryFn: async () => {
       try {
-        const userModel = await client.models.User.get<CurrentUserSelectionSet>(
-          {
-            id: cognito.user.userId,
-          },
-          { selectionSet: currentUserSelectionSet }
-        );
+        const userModel = await getUser(cognito.user.userId);
 
         let userData = userModel.data;
 
         if (!userData) {
+          // create new user with stats & enrollment
           const newUser = await setupNewUser({
             userId: cognito.user.userId,
             username: cognito.user.username,
@@ -53,10 +37,6 @@ export default function useCurrentUserQuery() {
 
         if (!userData) {
           throw new UserError("No user data found", "NOT_FOUND");
-        }
-
-        if (userModel.errors) {
-          throw new UserError(JSON.stringify(userModel.errors), "API_ERROR");
         }
 
         if (userData.status !== "ACTIVE") {

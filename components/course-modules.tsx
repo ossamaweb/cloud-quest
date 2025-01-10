@@ -36,6 +36,7 @@ export default function CourseModules({
           key={userModule.id}
           index={index}
           data={userModule}
+          previousData={userModules?.[index - 1]}
           courseSlug={courseSlug}
         />
       ))}

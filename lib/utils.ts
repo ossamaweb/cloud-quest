@@ -113,7 +113,7 @@ export function gradeQuestion({
   });
 }
 
-export function getModuleNodeTranslation(
+export function getLessonNodeTranslation(
   index = 0,
   numNodes = 6,
   inverse = false
