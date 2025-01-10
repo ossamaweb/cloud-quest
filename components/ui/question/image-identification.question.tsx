@@ -6,13 +6,13 @@ import {
 } from "@/lib/interfaces";
 import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
-import { gradeQuestion } from "@/lib/utils";
+import { gradeQuestion, validateImageIdentificationAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 import Image from "next/image";
-import { QuestionType } from "@/lib/graphql/API";
 
 export const ImageIdentification = ({
   data,
+  points,
   status,
   checked,
   onGrade,
@@ -22,9 +22,21 @@ export const ImageIdentification = ({
   const handleOnClick = useCallback(
     (optionId: string) => {
       setState({ selectedId: optionId });
-      gradeQuestion(QuestionType.IMAGE_IDENTIFICATION, data, optionId, onGrade);
+
+      const correct = validateImageIdentificationAnswer(
+        optionId,
+        data.correctOptionId
+      );
+      gradeQuestion({
+        onGrade,
+        data,
+        trials: [correct],
+        totalPoints: points,
+        autoCheck: false,
+        answersCount: 1,
+      });
     },
-    [data, onGrade]
+    [data, onGrade, points]
   );
 
   return (

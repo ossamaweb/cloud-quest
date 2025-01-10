@@ -11,21 +11,25 @@ interface LessonFooterProps {
   answered: boolean;
   checked: boolean;
   status: LessonQuestionProps<unknown>["status"];
+  completed: boolean;
   questionIndex: number;
   questionExplanation?: string;
   hasExplanation?: boolean;
   handleOnCheck: () => void;
   handleOnContinue: () => void;
+  handleOnComplete: () => void;
 }
 
 export default function LessonFooter({
   answered,
   checked,
   status,
+  completed,
   questionIndex,
   questionExplanation,
   handleOnCheck,
   handleOnContinue,
+  handleOnComplete,
 }: LessonFooterProps) {
   return (
     <KeyboardProvider>
@@ -41,11 +45,11 @@ export default function LessonFooter({
               <div className="sm:w-auto w-full">
                 <ButtonGame
                   className="w-full sm:w-40"
-                  disabled={!answered || checked}
+                  disabled={!completed && (!answered || checked)}
                   keyboardShortcut="Enter"
-                  onClick={handleOnCheck}
+                  onClick={completed ? handleOnComplete : handleOnCheck}
                 >
-                  Check
+                  {completed ? "Continue" : "Check"}
                 </ButtonGame>
               </div>
             </div>

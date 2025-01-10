@@ -1,18 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import {
-  DragAndDropQuestion,
-  FillInTheBlankQuestion,
-  ImageIdentificationQuestion,
-  LessonQuestionProps,
-  MatchingQuestion,
-  MultipleChoiceQuestion,
-  OrderingQuestion,
-  QuestionData,
-  ShortAnswerQuestion,
-  TrueFalseQuestion,
-} from "./interfaces";
-import { QuestionType } from "./graphql/API";
+import { LessonQuestionProps, QuestionData } from "./interfaces";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,6 +34,22 @@ export function getQuestionEndMessage(
   return "";
 }
 
+export function validateMultipleChoiceAnswer(
+  userAnswer: string,
+  correctAnswer: string
+): boolean {
+  return userAnswer === correctAnswer;
+}
+
+export const validateImageIdentificationAnswer = validateMultipleChoiceAnswer;
+
+export function validateTrueOrFalseAnswer(
+  userAnswer: boolean,
+  correctAnswer: boolean
+): boolean {
+  return userAnswer === correctAnswer;
+}
+
 export function validateBlankAnswer(
   userAnswer: string | undefined,
   correctAnswer: string,
@@ -54,11 +58,13 @@ export function validateBlankAnswer(
   const userValue = userAnswer?.trim().toLowerCase() ?? "";
   const correctAnswers = [correctAnswer, ...(acceptableAnswers ?? [])];
   const blankCorrect =
-    correctAnswers.map((ac) => ac.toLowerCase().trim()).includes(userValue) ??
+    correctAnswers.map((ca) => ca.toLowerCase().trim()).includes(userValue) ??
     false;
 
   return blankCorrect;
 }
+
+export const validateShortAnswer = validateBlankAnswer;
 
 export function validateMatchAnswer(
   userAnswer: Record<string, string>,
@@ -79,137 +85,32 @@ export function validateOrderingAnswer(
   );
 }
 
-const QUESTION_GRADING: Record<
-  QuestionType,
-  (
-    question: QuestionData,
-    userAnswer: unknown
-  ) => { correct: boolean; points: number; autoCheck: boolean }
-> = {
-  [QuestionType.MULTIPLE_CHOICE]: (question, userAnswer) => {
-    const mcQuestion = question as MultipleChoiceQuestion;
-    const mcAnswer = userAnswer as string;
-    const correct = mcAnswer === mcQuestion.correctOptionId;
-    const points = mcQuestion.points ?? 0;
-    return { correct, points, autoCheck: false };
-  },
-
-  [QuestionType.DRAG_AND_DROP]: (question, userAnswer) => {
-    const ddQuestion = question as DragAndDropQuestion;
-    const ddAnswer = userAnswer as Record<string, string>;
-
-    const correct = Object.entries(ddAnswer).every(
-      ([key, value]) => ddQuestion.correctPairings[key] === value
-    );
-    return {
-      correct,
-      points: correct ? ddQuestion.points ?? 0 : 0,
-      autoCheck: true,
-    };
-  },
-
-  [QuestionType.SCENARIO_BASED]: (question, userAnswer) => {
-    throw new Error("Function not implemented.");
-  },
-
-  [QuestionType.SHORT_ANSWER]: (question, userAnswer) => {
-    const saQuestion = question as ShortAnswerQuestion;
-    const userText = (userAnswer as string).toLowerCase().trim();
-    const correctAnswers = [
-      saQuestion.correctAnswer,
-      ...(saQuestion.acceptableAnswers ?? []),
-    ];
-    const correct =
-      correctAnswers
-        .map((answer) => answer.toLowerCase().trim())
-        .includes(userText) ?? false;
-    return {
-      correct,
-      points: correct ? saQuestion.points ?? 0 : 0,
-      autoCheck: true,
-    };
-  },
-
-  [QuestionType.FILL_IN_THE_BLANK]: (question, userAnswer) => {
-    // throw new Error("Function not implemented.");
-    const fibQuestion = question as FillInTheBlankQuestion;
-    const fibAnswer = userAnswer as Record<string, string>;
-
-    // Check if all blanks are filled and correct
-    const correct = fibQuestion.blanks.every(
-      ({ id, correctAnswer, acceptableAnswers }) =>
-        validateBlankAnswer(fibAnswer[id], correctAnswer, acceptableAnswers)
-    );
-
-    return {
-      correct,
-      points: correct ? fibQuestion.points ?? 0 : 0,
-      autoCheck: true,
-    };
-  },
-
-  [QuestionType.MATCHING]: (question, userAnswer) => {
-    const mQuestion = question as MatchingQuestion;
-    const mAnswer = userAnswer as Record<string, string>;
-
-    const correct = validateMatchAnswer(mAnswer, mQuestion.correctPairings);
-
-    return {
-      correct,
-      points: correct ? mQuestion.points ?? 0 : 0,
-      autoCheck: true,
-    };
-  },
-
-  [QuestionType.TRUE_FALSE]: (question, userAnswer) => {
-    const tfQuestion = question as TrueFalseQuestion;
-    const correct = userAnswer === tfQuestion.correctAnswer;
-    return {
-      correct,
-      points: correct ? tfQuestion.points ?? 0 : 0,
-      autoCheck: false,
-    };
-  },
-
-  [QuestionType.ORDERING]: (question, userAnswer) => {
-    const oQuestion = question as OrderingQuestion;
-    const userOrder = userAnswer as string[];
-    const correct = validateOrderingAnswer(userOrder, oQuestion.correctOrder);
-
-    return {
-      correct,
-      points: correct ? oQuestion.points ?? 0 : 0,
-      autoCheck: true,
-    };
-  },
-
-  [QuestionType.IMAGE_IDENTIFICATION]: (question, userAnswer) => {
-    const imgQuestion = question as ImageIdentificationQuestion;
-    const imgAnswer = userAnswer as string;
-    const correct = imgQuestion.correctOptionId === imgAnswer;
-
-    return {
-      correct,
-      points: correct ? imgQuestion.points ?? 0 : 0,
-      autoCheck: false,
-    };
-  },
-};
-
-export function gradeQuestion(
-  type: QuestionType,
-  data: QuestionData,
-  userAnswer: unknown,
-  cb: LessonQuestionProps<unknown>["onGrade"]
-): void {
-  const questionGrading = QUESTION_GRADING[type];
-  if (!questionGrading) {
-    throw new Error("Function not implemented.");
-  }
-
-  const { correct, points, autoCheck } = questionGrading(data, userAnswer);
-
-  cb(correct, points, autoCheck, data);
+export function gradeQuestion({
+  trials,
+  answersCount,
+  totalPoints,
+  autoCheck,
+  data,
+  onGrade,
+}: {
+  trials: boolean[];
+  answersCount: number;
+  totalPoints: number;
+  autoCheck: boolean;
+  data: QuestionData;
+  onGrade: LessonQuestionProps<unknown>["onGrade"];
+}): void {
+  const correctTrials = trials.filter((correct) => correct);
+  const accuracy = (correctTrials.length / trials.length) * 100;
+  const correct = correctTrials.length === answersCount;
+  onGrade({
+    correct,
+    points: (totalPoints * accuracy) / 100,
+    accuracy: accuracy * answersCount,
+    answersCount,
+    autoCheck,
+    data,
+  });
 }
 
 export function getModuleNodeTranslation(

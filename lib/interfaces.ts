@@ -1,4 +1,4 @@
-import { QuestionType } from "./graphql/API";
+import { QuestionDifficulty, QuestionType } from "./graphql/API";
 
 // Common types
 export type ID = string;
@@ -11,10 +11,7 @@ export interface QuestionOption {
 }
 
 export interface BaseQuestion {
-  id: ID;
-  question: string;
   explanation?: string;
-  points?: number;
 }
 
 // Specific question type interfaces
@@ -110,18 +107,29 @@ export type QuestionData =
   | ImageIdentificationQuestion;
 
 export interface LessonQuestionProps<T> {
+  className?: string;
+  id: string | null;
   title: string;
   type: keyof typeof QuestionType | null;
+  points: number;
+  difficulty: keyof typeof QuestionDifficulty | null;
   data: T;
   answered: boolean;
   checked: boolean;
   status: "unanswered" | "correct" | "incorrect";
-  onGrade: (
-    correct: boolean,
-    points: number,
-    autoCheck: boolean,
-    data: QuestionData
-  ) => void;
   onAnswer: (answered: boolean) => void;
-  className?: string;
+  onGrade: ({
+    correct,
+    points,
+    accuracy,
+    autoCheck,
+    data,
+  }: {
+    correct: boolean;
+    points: number;
+    accuracy: number;
+    answersCount: number;
+    autoCheck: boolean;
+    data: QuestionData;
+  }) => void;
 }

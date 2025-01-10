@@ -1,7 +1,6 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { QuestionType } from "@/lib/graphql/API";
 import { LessonQuestionProps, FillInTheBlankQuestion } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
 import * as React from "react";
@@ -9,8 +8,8 @@ import * as React from "react";
 export const FillInTheBlank = ({
   title,
   data,
+  points,
   checked,
-  answered,
   onAnswer,
   onGrade,
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
@@ -74,9 +73,24 @@ export const FillInTheBlank = ({
   );
 
   React.useEffect(() => {
-    if (!checked) return;
-    gradeQuestion(QuestionType.FILL_IN_THE_BLANK, data, value, onGrade);
-  }, [checked, data, onGrade, value]);
+    if (checked) {
+      const trials = data.blanks.map((blank) =>
+        validateBlankAnswer(
+          value[blank.id],
+          blank.correctAnswer,
+          blank.acceptableAnswers
+        )
+      );
+      gradeQuestion({
+        onGrade,
+        data,
+        trials,
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: data.blanks.length,
+      });
+    }
+  }, [checked, data, onGrade, points, value]);
 
   const autoFocusOnFirstInput = React.useCallback(() => {
     if (data.blanks.length) {

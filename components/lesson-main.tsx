@@ -9,28 +9,59 @@ import { LessonQuestionProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
 import { GetLesson } from "@/lib/types";
+import LessonCompleted from "./lesson-completed";
+
+interface LessonMainState {
+  questionState: {
+    answered: boolean;
+    checked: boolean;
+    status: LessonQuestionProps<unknown>["status"];
+    index: number;
+    explanation?: string;
+  };
+  lessonState: {
+    progress: number;
+    completed: boolean;
+  };
+  lessonStats: {
+    duration: number;
+    points: number;
+    accuracy: number;
+    weightedAccuracy: number;
+    answersCount: number;
+  };
+}
+
+const LessonMainInitialState: LessonMainState = {
+  questionState: {
+    answered: false,
+    checked: false,
+    status: "unanswered",
+    index: 0,
+    explanation: undefined,
+  },
+  lessonState: {
+    progress: 0,
+    completed: false,
+  },
+  lessonStats: {
+    duration: 0,
+    points: 0,
+    accuracy: 0,
+    weightedAccuracy: 0,
+    answersCount: 0,
+  },
+};
 
 interface LessonMainProps {
   id: string | null;
   slug: string;
   questions: GetLesson["questions"];
+  onComplete: () => void;
 }
-export default function LessonMain({ questions }: LessonMainProps) {
-  const [stateUI, setStateUI] = React.useState<{
-    answered: boolean;
-    checked: boolean;
-    status: LessonQuestionProps<unknown>["status"];
-    progress: number;
-    questionIndex: number;
-    questionExplanation?: string;
-  }>({
-    answered: false, // debug
-    checked: false,
-    status: "unanswered",
-    progress: 0,
-    questionIndex: 0,
-    questionExplanation: undefined,
-  });
+export default function LessonMain({ questions, onComplete }: LessonMainProps) {
+  const [{ questionState, lessonState, lessonStats }, setState] =
+    React.useState<LessonMainState>(LessonMainInitialState);
 
   const { questionsSize, sortedQuestions } = React.useMemo(() => {
     return {
@@ -44,70 +75,117 @@ export default function LessonMain({ questions }: LessonMainProps) {
   const handleOnGrade = React.useCallback<
     LessonQuestionProps<unknown>["onGrade"]
   >(
-    (correct, points, autoCheck, data) => {
-      console.log({ correct, points, autoCheck, data });
+    (props) => {
+      setState((prev) => {
+        const questionIndex = prev.questionState.index + 1;
 
-      setStateUI((prev) => ({
-        ...prev,
-        answered: true,
-        checked: autoCheck,
-        status: correct ? "correct" : "incorrect",
-        questionExplanation: data.explanation,
-        progress: autoCheck
-          ? (100 * (prev.questionIndex + 1)) / questionsSize
-          : prev.progress,
-      }));
+        const progress = props.autoCheck
+          ? (100 * questionIndex) / questionsSize
+          : prev.lessonState.progress;
+
+        const weightedAccuracy =
+          prev.lessonStats.weightedAccuracy + props.accuracy;
+        const answersCount = prev.lessonStats.answersCount + props.answersCount;
+        const accuracy = Math.floor(weightedAccuracy / answersCount);
+
+        return {
+          ...prev,
+          questionState: {
+            ...prev.questionState,
+            answered: true,
+            checked: props.autoCheck,
+            status: props.correct ? "correct" : "incorrect",
+            explanation: props.data.explanation,
+          },
+          lessonState: {
+            ...prev.lessonState,
+            progress: progress,
+          },
+          lessonStats: {
+            duration: prev.lessonStats.duration + 0,
+            points: Math.floor(prev.lessonStats.points + props.points),
+            accuracy: Math.max(0, Math.min(100, accuracy)),
+            answersCount,
+            weightedAccuracy,
+          },
+        };
+      });
     },
     [questionsSize]
   );
 
   const handleOnAnswer = React.useCallback((answered: boolean) => {
-    setStateUI((prev) => ({
+    setState((prev) => ({
       ...prev,
-      answered,
+      questionState: {
+        ...prev.questionState,
+        answered,
+      },
     }));
   }, []);
 
   const handleOnCheck = React.useCallback(() => {
-    setStateUI((prev) => ({
+    setState((prev) => ({
       ...prev,
-      progress: (100 * (prev.questionIndex + 1)) / questionsSize,
-      checked: true,
+      lessonState: {
+        ...prev.lessonState,
+        progress: (100 * (prev.questionState.index + 1)) / questionsSize,
+      },
+      questionState: {
+        ...prev.questionState,
+        checked: true,
+      },
     }));
   }, [questionsSize]);
 
   const handleOnContinue = React.useCallback(() => {
-    setStateUI((prev) => ({
-      status: "unanswered",
-      checked: false, // debug
-      answered: false, // debug
-      progress: prev.progress,
-      questionIndex: Math.min(prev.questionIndex + 1, questionsSize),
-      questionExplanation: undefined,
-    }));
+    setState((prev) => {
+      const questionIndex = Math.min(
+        prev.questionState.index + 1,
+        questionsSize
+      );
+      const completed = questionIndex > questionsSize - 1;
+      return {
+        ...prev,
+        lessonState: {
+          ...prev.lessonState,
+          completed,
+        },
+        questionState: {
+          ...prev.questionState,
+          index: questionIndex,
+          status: "unanswered",
+          checked: false,
+          answered: false,
+          explanation: undefined,
+        },
+      };
+    });
   }, [questionsSize]);
 
   return (
     <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
       <div className="relative flex-1 flex flex-col justify-between">
-        <div className="sticky top-0 z-10 flex-shrink-0 bg-background">
-          <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
-            <div className="flex justify-between items-center sm:gap-4 gap-2">
-              <div>
-                <Button className="hover:bg-transparent -ml-3 px-2 py-1 dark:text-zinc-700 text-zinc-500 hover:text-foreground/50">
-                  <XIcon />
-                </Button>
-              </div>
+        {!lessonState.completed && (
+          <div className="sticky top-0 z-10 flex-shrink-0 bg-background">
+            <div className="max-w-6xl mx-auto sm:px-8 px-4 sm:py-8 py-4">
+              <div className="flex justify-between items-center sm:gap-4 gap-2">
+                <div>
+                  <Button className="hover:bg-transparent -ml-3 px-2 py-1 dark:text-zinc-700 text-zinc-500 hover:text-foreground/50">
+                    <XIcon />
+                  </Button>
+                </div>
 
-              <ProgressBar value={stateUI.progress} />
+                <ProgressBar value={lessonState.progress} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="flex-1">
           <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
             <Tabs
-              value={String(stateUI.questionIndex)}
+              value={String(questionState.index)}
               activationMode="manual"
               className="w-full h-full"
             >
@@ -123,30 +201,50 @@ export default function LessonMain({ questions }: LessonMainProps) {
                   )}
                 >
                   <LessonQuestion
+                    id={item.id}
                     title={item.question}
                     type={item.type}
+                    points={item.points}
+                    difficulty={item.difficulty}
                     data={item.questionData}
-                    answered={stateUI.answered}
-                    checked={stateUI.checked}
-                    status={stateUI.status}
+                    answered={questionState.answered}
+                    checked={questionState.checked}
+                    status={questionState.status}
                     onGrade={handleOnGrade}
                     onAnswer={handleOnAnswer}
                   />
                 </TabsContent>
               ))}
+              <TabsContent
+                key="lessonCompleted"
+                value={String(questionsSize)}
+                tabIndex={-1}
+                className={cn(
+                  "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
+                  "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
+                )}
+              >
+                <LessonCompleted
+                  points={lessonStats.points}
+                  accuracy={lessonStats.accuracy}
+                  duration={lessonStats.duration}
+                />
+              </TabsContent>
             </Tabs>
           </div>
         </div>
       </div>
 
       <LessonFooter
-        answered={stateUI.answered}
-        checked={stateUI.checked}
-        status={stateUI.status}
-        questionIndex={stateUI.questionIndex}
-        questionExplanation={stateUI.questionExplanation}
+        answered={questionState.answered}
+        checked={questionState.checked}
+        status={questionState.status}
+        questionIndex={questionState.index}
+        questionExplanation={questionState.explanation}
+        completed={lessonState.completed}
         handleOnCheck={handleOnCheck}
         handleOnContinue={handleOnContinue}
+        handleOnComplete={onComplete}
       />
     </div>
   );
