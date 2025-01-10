@@ -8,6 +8,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LessonQuestionProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
 import { GetLesson } from "@/lib/types";
+import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
 
 interface LessonMainState {
   questionState: {
@@ -19,7 +20,8 @@ interface LessonMainState {
   };
   lessonState: {
     progress: number;
-    completed: boolean;
+    saving: boolean;
+    saved: boolean;
   };
   lessonStats: {
     duration: number;
@@ -40,7 +42,8 @@ const LessonMainInitialState: LessonMainState = {
   },
   lessonState: {
     progress: 0,
-    completed: false,
+    saving: false,
+    saved: false,
   },
   lessonStats: {
     duration: 0,
@@ -53,11 +56,22 @@ const LessonMainInitialState: LessonMainState = {
 
 interface LessonMainProps {
   id: string | null;
-  slug: string;
   questions: GetLesson["questions"];
+  saved: boolean;
   onComplete: () => void;
+  onSave: (
+    data: Pick<
+      CreateUserLessonCompletionInput,
+      "accuracy" | "points" | "duration"
+    >
+  ) => void;
 }
-export default function LessonMain({ questions, onComplete }: LessonMainProps) {
+export default function LessonMain({
+  questions,
+  saved,
+  onComplete,
+  onSave,
+}: LessonMainProps) {
   const [{ questionState, lessonState, lessonStats }, setState] =
     React.useState<LessonMainState>(LessonMainInitialState);
 
@@ -75,33 +89,34 @@ export default function LessonMain({ questions, onComplete }: LessonMainProps) {
   >(
     (props) => {
       setState((prev) => {
-        const questionIndex = prev.questionState.index + 1;
+        const { lessonState, lessonStats, questionState } = prev;
+
+        const questionIndex = questionState.index + 1;
 
         const progress = props.autoCheck
           ? (100 * questionIndex) / questionsSize
-          : prev.lessonState.progress;
+          : lessonState.progress;
 
-        const weightedAccuracy =
-          prev.lessonStats.weightedAccuracy + props.accuracy;
-        const answersCount = prev.lessonStats.answersCount + props.answersCount;
+        const weightedAccuracy = lessonStats.weightedAccuracy + props.accuracy;
+        const answersCount = lessonStats.answersCount + props.answersCount;
         const accuracy = Math.floor(weightedAccuracy / answersCount);
 
         return {
           ...prev,
           questionState: {
-            ...prev.questionState,
+            ...questionState,
             answered: true,
             checked: props.autoCheck,
             status: props.correct ? "correct" : "incorrect",
             explanation: props.data.explanation,
           },
           lessonState: {
-            ...prev.lessonState,
-            progress: progress,
+            ...lessonState,
+            progress,
           },
           lessonStats: {
-            duration: prev.lessonStats.duration + 0,
-            points: Math.floor(prev.lessonStats.points + props.points),
+            duration: lessonStats.duration + 0,
+            points: Math.floor(lessonStats.points + props.points),
             accuracy: Math.max(0, Math.min(100, accuracy)),
             answersCount,
             weightedAccuracy,
@@ -136,37 +151,66 @@ export default function LessonMain({ questions, onComplete }: LessonMainProps) {
     }));
   }, [questionsSize]);
 
-  const handleOnContinue = React.useCallback(() => {
-    setState((prev) => {
-      const questionIndex = Math.min(
-        prev.questionState.index + 1,
-        questionsSize
-      );
-      const completed = questionIndex > questionsSize - 1;
-      return {
+  const handleOnSave = React.useCallback(() => {
+    onSave({
+      accuracy: lessonStats.accuracy,
+      points: lessonStats.points,
+      duration: lessonStats.duration,
+    });
+  }, [lessonStats.accuracy, lessonStats.duration, lessonStats.points, onSave]);
+
+  const handleOnContinue = React.useCallback(
+    (nextQuestionIndex: number) => {
+      const finalQuestion = nextQuestionIndex >= questionsSize;
+
+      if (finalQuestion) {
+        handleOnSave();
+      }
+
+      setState((prev) => {
+        return {
+          ...prev,
+          lessonState: {
+            ...prev.lessonState,
+            saving: finalQuestion,
+          },
+          questionState: {
+            ...prev.questionState,
+            index: finalQuestion ? prev.questionState.index : nextQuestionIndex, // do not move to next qustion when saving
+            status: "unanswered",
+            checked: false,
+            answered: false,
+            explanation: undefined,
+          },
+        };
+      });
+    },
+    [handleOnSave, questionsSize]
+  );
+
+  React.useEffect(() => {
+    if (saved) {
+      setState((prev) => ({
         ...prev,
         lessonState: {
           ...prev.lessonState,
-          completed,
+          saving: false,
+          saved: true,
         },
         questionState: {
           ...prev.questionState,
-          index: questionIndex,
-          status: "unanswered",
+          index: Math.min(prev.questionState.index + 1, questionsSize + 1),
           checked: false,
           answered: false,
-          explanation: undefined,
         },
-      };
-    });
-  }, [questionsSize]);
+      }));
+    }
+  }, [questionsSize, saved]);
 
   return (
     <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
       <div className="relative flex-1 flex flex-col justify-between">
-        {!lessonState.completed && (
-          <LessonHeader progress={lessonState.progress} />
-        )}
+        {!lessonState.saved && <LessonHeader progress={lessonState.progress} />}
 
         <div className="flex-1">
           <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
@@ -201,6 +245,7 @@ export default function LessonMain({ questions, onComplete }: LessonMainProps) {
                   />
                 </TabsContent>
               ))}
+
               <TabsContent
                 key="lessonCompleted"
                 value={String(questionsSize)}
@@ -227,7 +272,8 @@ export default function LessonMain({ questions, onComplete }: LessonMainProps) {
         status={questionState.status}
         questionIndex={questionState.index}
         questionExplanation={questionState.explanation}
-        completed={lessonState.completed}
+        saved={lessonState.saved}
+        saving={lessonState.saving}
         handleOnCheck={handleOnCheck}
         handleOnContinue={handleOnContinue}
         handleOnComplete={onComplete}

@@ -48,7 +48,6 @@ export function useListModulesQuery(courseId: string | null) {
         throw error;
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
 
     retry: (failureCount, error) => {
       // Only retry on network errors, not on business logic errors

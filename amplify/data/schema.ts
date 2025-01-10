@@ -41,7 +41,10 @@ export const schema = a.schema({
       pointValue: a.integer(),
       userAchievements: a.hasMany("UserAchievement", "achievementId"),
     })
-    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   UserAchievement: a
     .model({
@@ -65,7 +68,10 @@ export const schema = a.schema({
       enrolledUsers: a.hasMany("UserCourseEnrollment", "courseId"),
     })
     .secondaryIndexes((index) => [index("slug")])
-    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   UserCourseEnrollment: a
     .model({
@@ -93,7 +99,10 @@ export const schema = a.schema({
       userProgress: a.hasMany("UserModuleProgress", "moduleId"),
     })
     .secondaryIndexes((index) => [index("slug")])
-    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   UserModuleProgress: a
     .model({
@@ -122,7 +131,10 @@ export const schema = a.schema({
       userCompletions: a.hasMany("UserLessonCompletion", "lessonId"),
     })
     .secondaryIndexes((index) => [index("slug")])
-    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   UserLessonCompletion: a
     .model({
@@ -161,7 +173,10 @@ export const schema = a.schema({
       version: a.integer().default(1), // For tracking questionData schema changes
       tags: a.string().array(), // For categorization and filtering
     })
-    .authorization((allow) => [allow.owner(), allow.guest().to(["read"])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

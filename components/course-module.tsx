@@ -32,19 +32,26 @@ export default function CourseModule({
     [courseSlug, data.slug, router]
   );
 
-  const { isModuleLocked, lessons, lessonsSize, lastLessonOrder } =
-    React.useMemo(() => {
-      const userProgress = data.userProgress?.[0];
-      const isModuleLocked = !userProgress && data.order > 1; // the first module should be open by default
-      return {
-        isModuleLocked,
-        lessons: data.lessons.sort((a, b) => (a.order || 0) - (b.order || 0)),
-        lessonsSize: data.lessons.length,
-        lastLessonOrder: isModuleLocked
-          ? 0
-          : userProgress?.lastLessonOrder ?? 1,
-      };
-    }, [data.lessons, data.order, data.userProgress]);
+  const {
+    isModuleLocked,
+    lessons,
+    lessonsSize,
+    currentLessonOrder,
+    lastLessonOrder,
+  } = React.useMemo(() => {
+    const userProgress = data.userProgress?.[0];
+    const isModuleLocked = !userProgress && data.order > 1; // the first module should be open by default
+    const lastLessonOrder = isModuleLocked
+      ? 0
+      : userProgress?.lastLessonOrder ?? 0;
+    return {
+      isModuleLocked,
+      lessons: data.lessons.sort((a, b) => (a.order || 0) - (b.order || 0)),
+      lessonsSize: data.lessons.length,
+      lastLessonOrder,
+      currentLessonOrder: lastLessonOrder + 1,
+    };
+  }, [data.lessons, data.order, data.userProgress]);
 
   return (
     <div className={cn("relative space-y-16", className)}>
@@ -74,9 +81,9 @@ export default function CourseModule({
             inverse={moduleIndex % 2 !== 0}
             total={lessonsSize}
             current={
-              isModuleLocked ? undefined : lesson.order === lastLessonOrder
+              isModuleLocked ? undefined : lesson.order === currentLessonOrder
             }
-            locked={isModuleLocked || lesson.order > lastLessonOrder}
+            locked={isModuleLocked || lesson.order > currentLessonOrder}
             onClick={handleOnModuleNodeClick}
           />
         ))}

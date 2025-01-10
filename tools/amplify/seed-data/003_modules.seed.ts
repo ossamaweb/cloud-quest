@@ -1,6 +1,6 @@
 import { CreateModuleInput, ModuleDifficulty } from "@/lib/graphql/API";
 
-const modulesSeedData: Array<CreateModuleInput> = [
+const modulesSeedData: [CreateModuleInput, ...CreateModuleInput[]] = [
   {
     id: "module-001",
     courseId: "aws-fundamentals",

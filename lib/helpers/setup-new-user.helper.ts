@@ -1,13 +1,16 @@
-import client from "../../client";
+import client from "@/amplify/client";
+import { CurrentUserSelectionSet, currentUserSelectionSet } from "../types";
+import coursesSeedData from "@/tools/amplify/seed-data/002_courses.seed";
 
-export async function createUserMutation(
-  cognitoUser: {
-    userId: string;
-    username: string;
-    email: string;
-  },
-  defaultCourseId: string
-) {
+export async function setupNewUser(cognitoUser: {
+  userId: string;
+  username: string;
+  email: string;
+}) {
+  const defaultCourseId = coursesSeedData[0].id;
+  if (!defaultCourseId) {
+    throw new Error("Provide a default course ID");
+  }
   try {
     // Create User record
     const user = await client.models.User.create({
@@ -48,11 +51,18 @@ export async function createUserMutation(
       throw new Error("Failed to create user course enrollment record");
     }
 
-    return {
-      user: user.data,
-      userStats: userStats.data,
-      userCourseEnrollment: enrollment.data,
-    };
+    const userModel = await client.models.User.get<CurrentUserSelectionSet>(
+      {
+        id: user.data.id,
+      },
+      { selectionSet: currentUserSelectionSet }
+    );
+
+    if (!userModel?.data?.id) {
+      throw new Error("Failed to return user user record");
+    }
+
+    return userModel;
   } catch (error) {
     console.error("Error creating user with stats:", error);
     throw error;

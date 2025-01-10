@@ -3,11 +3,12 @@ import { Amplify } from "aws-amplify";
 import { signIn, getCurrentUser, AuthUser } from "aws-amplify/auth";
 import outputs from "@/amplify_outputs.json";
 import client from "@/amplify/client";
-import { createUserMutation } from "@/amplify/data/mutations";
+
 import coursesSeedData from "./seed-data/002_courses.seed";
 import modulesSeedData from "./seed-data/003_modules.seed";
 import lessonsSeedData from "./seed-data/004_lessons.seed";
 import questionsSeedData from "./seed-data/005_questions.seed";
+import { setupNewUser } from "@/lib/helpers/setup-new-user.helper";
 
 export async function seedData({ userId, username, signInDetails }: AuthUser) {
   // 1. Create default Course
@@ -20,16 +21,13 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
   console.log("1. course created.", { id: course.data.id });
 
   // 2. Create User with UserStats and UserCourseEnrollment
-  const user = await createUserMutation(
-    {
-      userId,
-      username,
-      email: signInDetails?.loginId ?? username,
-    },
-    course.data.id
-  );
+  const user = await setupNewUser({
+    userId,
+    username,
+    email: signInDetails?.loginId ?? username,
+  });
 
-  console.log("2. user created.", { id: user.user.id });
+  console.log("2. user created.", { id: user.data?.id });
 
   // 2. Create Achievements
   // const achievement = await client.models.Achievement.create({

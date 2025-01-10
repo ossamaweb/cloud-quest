@@ -7,7 +7,6 @@ import {
   validateOrderingAnswer,
 } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
-import { QuestionType } from "@/lib/graphql/API";
 
 interface OrderingQuestionState {
   selectedId: string | null;

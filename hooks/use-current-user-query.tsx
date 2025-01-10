@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { currentUserSelectionSet, CurrentUserSelectionSet } from "@/lib/types";
 
+import coursesSeedData from "@/tools/amplify/seed-data/002_courses.seed";
+import { setupNewUser } from "@/lib/helpers/setup-new-user.helper";
+
 class UserError extends Error {
   constructor(message: string, public code?: string) {
     super(message);
@@ -14,6 +17,7 @@ class UserError extends Error {
 
 export default function useCurrentUserQuery() {
   const cognito = useAuthenticator();
+
   const queryKey = useMemo(
     () => ["currentUser", cognito.user?.userId],
     [cognito.user?.userId]
@@ -35,13 +39,24 @@ export default function useCurrentUserQuery() {
           { selectionSet: currentUserSelectionSet }
         );
 
-        if (userModel.errors) {
-          throw new UserError(JSON.stringify(userModel.errors), "API_ERROR");
+        let userData = userModel.data;
+
+        if (!userData) {
+          const newUser = await setupNewUser({
+            userId: cognito.user.userId,
+            username: cognito.user.username,
+            email: cognito.user.signInDetails?.loginId ?? cognito.username,
+          });
+
+          userData = newUser.data;
         }
 
-        const userData = userModel.data;
         if (!userData) {
           throw new UserError("No user data found", "NOT_FOUND");
+        }
+
+        if (userModel.errors) {
+          throw new UserError(JSON.stringify(userModel.errors), "API_ERROR");
         }
 
         if (userData.status !== "ACTIVE") {

@@ -25,13 +25,13 @@ export default function UserMenu({
       <li>
         <Button className="text-amber-300 font-bold">
           <ZapIcon fill="currentColor" />
-          <span>{currentUser.stats.streak}</span>
+          <span>{currentUser.stats?.streak}</span>
         </Button>
       </li>
       <li>
         <Button className="text-blue-500 font-bold">
           <StarIcon fill="currentColor" />
-          <span>{currentUser.stats.points}</span>
+          <span>{currentUser.stats?.points}</span>
         </Button>
       </li>
     </ul>

@@ -21,8 +21,6 @@ export default function Dashboard() {
     return <PageLoading />;
   }
 
-  console.log({ currentUser });
-
   return (
     <div className="flex flex-col">
       <TopBar>
