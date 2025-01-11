@@ -164,7 +164,7 @@ async function main() {
 
     // After successful sign in proceed with seeding
     console.log("Starting data seeding...");
-    const seededData = await seedData("aws-fundamentals", false, null);
+    const seededData = await seedData("aws-fundamentals", true, null);
 
     console.log("Data seeding completed successfully:", seededData);
   } catch (error) {

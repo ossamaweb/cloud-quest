@@ -88,7 +88,7 @@ export default function Lesson() {
     <main>
       <LessonMain
         id={lesson.id}
-        questions={lessonFixture.questions}
+        questions={lesson.questions}
         saved={saved}
         onComplete={handleOnComplete}
         onSave={handleOnSave}
