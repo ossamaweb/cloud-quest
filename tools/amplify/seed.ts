@@ -85,8 +85,11 @@ export async function seedData(
   console.log("4. lessons created.", { count: lessonsSeedData.length });
 
   // 10. Create Questions for the lesson
-  for (const questionData of questionsSeedData) {
-    await client.models.Question.create(questionData);
+  for (const questionSeedData of questionsSeedData) {
+    await client.models.Question.create({
+      ...questionSeedData,
+      questionData: JSON.stringify(questionSeedData.questionData),
+    });
   }
 
   console.log("5. questions created.", { count: questionsSeedData.length });
