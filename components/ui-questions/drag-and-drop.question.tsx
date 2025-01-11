@@ -1,10 +1,11 @@
 import {
-  DragAndDropQuestion,
   LessonQuestionProps,
+  DragAndDropQuestion,
   QuestionOption,
 } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AUTO_CHECK_DURATION, cn, gradeQuestion } from "@/lib/utils";
+import { QuestionType } from "@/lib/graphql/API";
 
 interface CategoryItemProps {
   id: string;
@@ -152,11 +153,13 @@ interface DragAndDropQuestionState {
   draggingId: string | null;
   dragOverId: string | null;
   categoryItem: Record<string, string>;
+  trials: boolean[];
   correctAnswersCount: number;
 }
 
 export const DragAndDrop = ({
   data,
+  points,
   checked,
   onGrade,
 }: LessonQuestionProps<DragAndDropQuestion>) => {
@@ -170,6 +173,7 @@ export const DragAndDrop = ({
       draggingId,
       dragOverId,
       categoryItem,
+      trials,
       correctAnswersCount,
     },
     setState,
@@ -180,6 +184,7 @@ export const DragAndDrop = ({
     draggingId: null,
     dragOverId: null,
     categoryItem: {},
+    trials: [],
     correctAnswersCount: 0,
   });
 
@@ -238,12 +243,14 @@ export const DragAndDrop = ({
             ...prev.categoryItem,
             [categoryId]: itemId,
           },
+          trials: [...prev.trials, true],
           correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
         }));
       } else {
         setState((prev) => ({
           ...prev,
           dragOverId: null,
+          trials: [...prev.trials, false],
           incorrect: { categoryId, itemId },
           correct: { categoryId: "", itemId: "" },
         }));
@@ -290,9 +297,16 @@ export const DragAndDrop = ({
 
   useEffect(() => {
     if (correctAnswersCount === Object.keys(data.correctPairings).length) {
-      gradeQuestion(data, pairings, onGrade);
+      gradeQuestion({
+        onGrade,
+        data,
+        trials,
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: Object.keys(data.correctPairings).length,
+      });
     }
-  }, [correctAnswersCount, data, onGrade, pairings]);
+  }, [correctAnswersCount, data, onGrade, points, trials]);
 
   const { itemsLookup, categories, items } = useMemo(() => {
     return {

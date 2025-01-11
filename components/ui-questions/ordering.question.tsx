@@ -1,6 +1,6 @@
 import { LessonQuestionProps, OrderingQuestion } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ButtonQuestion from "../button-question";
+import ButtonQuestion from "@/components/ui/button-question";
 import {
   AUTO_CHECK_DURATION,
   gradeQuestion,
@@ -13,22 +13,31 @@ interface OrderingQuestionState {
   userOrder: string[];
   statuses: Record<string, LessonQuestionProps<OrderingQuestion>["status"]>;
   correctIds: Record<string, boolean>;
+  trials: boolean[];
   correctAnswersCount: number;
 }
 export const Ordering = ({
   data,
-  checked,
+  points,
   onGrade,
 }: LessonQuestionProps<OrderingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const [
-    { selectedId, userOrder, statuses, correctIds, correctAnswersCount },
+    {
+      selectedId,
+      userOrder,
+      statuses,
+      correctIds,
+      trials,
+      correctAnswersCount,
+    },
     setState,
   ] = useState<OrderingQuestionState>({
     selectedId: null,
     userOrder: [],
     statuses: {},
     correctIds: {},
+    trials: [],
     correctAnswersCount: 0,
   });
 
@@ -61,6 +70,7 @@ export const Ordering = ({
           ...prev.statuses,
           [selectedId]: correct ? "correct" : "incorrect",
         },
+        trials: [...prev.trials, correct],
         correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
       }));
 
@@ -92,9 +102,16 @@ export const Ordering = ({
 
   useEffect(() => {
     if (correctAnswersCount === data.correctOrder.length) {
-      gradeQuestion(data, userOrder, onGrade);
+      gradeQuestion({
+        onGrade,
+        data,
+        trials,
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: data.correctOrder.length,
+      });
     }
-  }, [data, onGrade, userOrder, correctAnswersCount]);
+  }, [correctAnswersCount, data, onGrade, points, trials]);
 
   const { items } = useMemo(() => {
     return {

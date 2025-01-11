@@ -11,21 +11,27 @@ interface LessonFooterProps {
   answered: boolean;
   checked: boolean;
   status: LessonQuestionProps<unknown>["status"];
+  saved: boolean;
+  saving: boolean;
   questionIndex: number;
   questionExplanation?: string;
   hasExplanation?: boolean;
   handleOnCheck: () => void;
-  handleOnContinue: () => void;
+  handleOnContinue: (index: number) => void;
+  handleOnComplete: () => void;
 }
 
 export default function LessonFooter({
   answered,
   checked,
   status,
+  saved,
+  saving,
   questionIndex,
   questionExplanation,
   handleOnCheck,
   handleOnContinue,
+  handleOnComplete,
 }: LessonFooterProps) {
   return (
     <KeyboardProvider>
@@ -39,20 +45,30 @@ export default function LessonFooter({
           <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
             <div className="flex sm:flex-row flex-col gap-8 justify-end items-center">
               <div className="sm:w-auto w-full">
-                <ButtonGame
-                  className="w-full sm:w-40"
-                  disabled={!answered || checked}
-                  keyboardShortcut="Enter"
-                  onClick={handleOnCheck}
-                >
-                  Check
-                </ButtonGame>
+                {saved ? (
+                  <ButtonGame
+                    className="w-full sm:w-40"
+                    keyboardShortcut="Enter"
+                    onClick={handleOnComplete}
+                  >
+                    Continue
+                  </ButtonGame>
+                ) : (
+                  <ButtonGame
+                    className="w-full sm:w-40"
+                    disabled={saving || checked || !answered}
+                    keyboardShortcut="Enter"
+                    onClick={handleOnCheck}
+                  >
+                    {saving ? "..." : "Check"}
+                  </ButtonGame>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {checked && status !== "unanswered" && (
+        {checked && status !== "unanswered" && !saved && (
           <div
             className={cn(
               "absolute bottom-0 w-full border-t-2 border-transparent",
@@ -103,7 +119,7 @@ export default function LessonFooter({
                     className="w-full sm:w-40"
                     status={status}
                     keyboardShortcut="Enter"
-                    onClick={handleOnContinue}
+                    onClick={() => handleOnContinue(questionIndex + 1)}
                   >
                     Continue
                   </ButtonGame>

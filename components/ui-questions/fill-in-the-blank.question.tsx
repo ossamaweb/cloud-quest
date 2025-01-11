@@ -1,14 +1,15 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FillInTheBlankQuestion, LessonQuestionProps } from "@/lib/interfaces";
+import { LessonQuestionProps, FillInTheBlankQuestion } from "@/lib/interfaces";
 import { cn, gradeQuestion, validateBlankAnswer } from "@/lib/utils";
 import * as React from "react";
 
 export const FillInTheBlank = ({
+  title,
   data,
+  points,
   checked,
-  answered,
   onAnswer,
   onGrade,
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
@@ -72,9 +73,24 @@ export const FillInTheBlank = ({
   );
 
   React.useEffect(() => {
-    if (!checked) return;
-    gradeQuestion(data, value, onGrade);
-  }, [checked, data, onGrade, value]);
+    if (checked) {
+      const trials = data.blanks.map((blank) =>
+        validateBlankAnswer(
+          value[blank.id],
+          blank.correctAnswer,
+          blank.acceptableAnswers
+        )
+      );
+      gradeQuestion({
+        onGrade,
+        data,
+        trials,
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: data.blanks.length,
+      });
+    }
+  }, [checked, data, onGrade, points, value]);
 
   const autoFocusOnFirstInput = React.useCallback(() => {
     if (data.blanks.length) {
@@ -108,7 +124,7 @@ export const FillInTheBlank = ({
 
   const parts = React.useMemo(() => {
     // Split the text by the placeholder pattern
-    const arr = data.question.split(/(\{[0-9]+\})/g);
+    const arr = title.split(/(\{[0-9]+\})/g);
 
     const parts = arr.map(
       (
@@ -127,7 +143,7 @@ export const FillInTheBlank = ({
     );
 
     return parts;
-  }, [data.question]);
+  }, [title]);
 
   const renderInput = (index: number) => {
     const blank = data.blanks[index];

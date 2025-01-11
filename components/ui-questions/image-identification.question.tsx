@@ -4,14 +4,15 @@ import {
   LessonQuestionProps,
   ImageIdentificationQuestion,
 } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
-import { gradeQuestion } from "@/lib/utils";
+import { gradeQuestion, validateImageIdentificationAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 import Image from "next/image";
+import ButtonQuestion from "@/components/ui/button-question";
 
 export const ImageIdentification = ({
   data,
+  points,
   status,
   checked,
   onGrade,
@@ -21,9 +22,21 @@ export const ImageIdentification = ({
   const handleOnClick = useCallback(
     (optionId: string) => {
       setState({ selectedId: optionId });
-      gradeQuestion(data, optionId, onGrade);
+
+      const correct = validateImageIdentificationAnswer(
+        optionId,
+        data.correctOptionId
+      );
+      gradeQuestion({
+        onGrade,
+        data,
+        trials: [correct],
+        totalPoints: points,
+        autoCheck: false,
+        answersCount: 1,
+      });
     },
-    [data, onGrade]
+    [data, onGrade, points]
   );
 
   return (

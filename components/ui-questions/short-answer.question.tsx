@@ -1,12 +1,15 @@
 "use client";
 
 import { useAutoFocus } from "@/hooks/use-auto-focus";
+import { QuestionType } from "@/lib/graphql/API";
 import { LessonQuestionProps, ShortAnswerQuestion } from "@/lib/interfaces";
-import { gradeQuestion } from "@/lib/utils";
+import { gradeQuestion, validateShortAnswer } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 
 export const ShortAnswer = ({
+  id,
   data,
+  points,
   checked,
   onGrade,
   onAnswer,
@@ -27,27 +30,46 @@ export const ShortAnswer = ({
     return () => clearTimeout(debounceTimeout);
   }, [onAnswer, value]);
 
+  const handleOnGrade = useCallback(
+    (answer: string) => {
+      const correct = validateShortAnswer(
+        answer,
+        data.correctAnswer,
+        data.acceptableAnswers
+      );
+      gradeQuestion({
+        onGrade,
+        data,
+        trials: [correct],
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: 1,
+      });
+    },
+    [onGrade, data, points]
+  );
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       const hasValue = value.trim().length > 0;
       if (hasValue) {
-        gradeQuestion(data, value, onGrade);
+        handleOnGrade(value);
       }
     },
-    [data, value, onGrade]
+    [value, handleOnGrade]
   );
 
   useEffect(() => {
-    if (!checked) return;
-
-    gradeQuestion(data, value, onGrade);
-  }, [checked, data, onGrade, value]);
+    if (checked) {
+      handleOnGrade(value);
+    }
+  }, [checked, value, handleOnGrade]);
 
   return (
     <form
-      id={data.id}
-      name={data.id}
+      id={id ?? "shortAnswerForm"}
+      name={id ?? "shortAnswerForm"}
       onSubmit={handleSubmit}
       className="space-y-2"
     >

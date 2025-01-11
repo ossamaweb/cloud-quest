@@ -1,14 +1,15 @@
 "use client";
 
 import { LessonQuestionProps, TrueFalseQuestion } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useState } from "react";
-import { gradeQuestion } from "@/lib/utils";
+import { gradeQuestion, validateTrueOrFalseAnswer } from "@/lib/utils";
 import { CheckIcon, XIcon } from "lucide-react";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import ButtonQuestion from "../ui/button-question";
 
 export const TrueFalse = ({
   data,
+  points,
   status,
   checked,
   onGrade,
@@ -18,9 +19,21 @@ export const TrueFalse = ({
   const handleOnClick = useCallback(
     (selectedId: string) => {
       setState({ selectedId });
-      gradeQuestion(data, selectedId === "1", onGrade);
+      const correct = validateTrueOrFalseAnswer(
+        selectedId === "1",
+        data.correctAnswer
+      );
+
+      gradeQuestion({
+        onGrade,
+        data,
+        trials: [correct],
+        totalPoints: points,
+        autoCheck: false,
+        answersCount: 1,
+      });
     },
-    [data, onGrade]
+    [data, onGrade, points]
   );
 
   return (

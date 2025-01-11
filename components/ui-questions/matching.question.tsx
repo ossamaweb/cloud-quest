@@ -1,5 +1,4 @@
 import { LessonQuestionProps, MatchingQuestion } from "@/lib/interfaces";
-import ButtonQuestion from "../button-question";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AUTO_CHECK_DURATION,
@@ -7,6 +6,7 @@ import {
   validateMatchAnswer,
 } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
+import ButtonQuestion from "@/components/ui/button-question";
 
 interface MatchingQuestionState {
   selectedPair: [string | null, string | null];
@@ -14,16 +14,25 @@ interface MatchingQuestionState {
   statuses: Record<string, LessonQuestionProps<MatchingQuestion>["status"]>;
   correctIds: Record<string, boolean>;
   correctAnswersCount: number;
+  trials: boolean[];
 }
 
 export const Matching = ({
   data,
+  points,
   onGrade,
 }: LessonQuestionProps<MatchingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   const [
-    { selectedPair, pairings, statuses, correctIds, correctAnswersCount },
+    {
+      selectedPair,
+      pairings,
+      trials,
+      statuses,
+      correctIds,
+      correctAnswersCount,
+    },
     setState,
   ] = useState<MatchingQuestionState>({
     selectedPair: [null, null],
@@ -31,6 +40,7 @@ export const Matching = ({
     statuses: {},
     correctIds: {},
     correctAnswersCount: 0,
+    trials: [],
   });
 
   const handleOnClick = useCallback(
@@ -70,6 +80,7 @@ export const Matching = ({
           ...prev.pairings,
           ...(correct ? newPairing : {}),
         },
+        trials: [...prev.trials, correct],
         statuses: {
           ...prev.statuses,
           [term]: correct ? "correct" : "incorrect",
@@ -107,9 +118,16 @@ export const Matching = ({
 
   useEffect(() => {
     if (correctAnswersCount === Object.keys(data.correctPairings).length) {
-      gradeQuestion(data, pairings, onGrade);
+      gradeQuestion({
+        onGrade,
+        data,
+        trials,
+        totalPoints: points,
+        autoCheck: true,
+        answersCount: Object.keys(data.correctPairings).length,
+      });
     }
-  }, [data, onGrade, pairings, correctAnswersCount]);
+  }, [correctAnswersCount, data, onGrade, points, trials]);
 
   const { definitions, terms } = useMemo(() => {
     return {

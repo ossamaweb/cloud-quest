@@ -6,24 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sandbox": "npx ampx sandbox",
+    "codegen": "npx ampx generate graphql-client-code --app-id d15m5mz0uevgdr --branch feature/setup-data --out lib/graphql",
+    "seed": "npx tsx tools/amplify/seed.ts"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^6.5.5",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@tanstack/react-query": "^5.62.16",
     "aws-amplify": "^6.6.6",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
     "lucide-react": "^0.469.0",
     "next": "^15.1.3",
     "next-themes": "^0.4.4",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.4"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.5.1",
     "@aws-amplify/backend-cli": "^1.3.0",
+    "@tanstack/eslint-plugin-query": "^5.62.16",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
