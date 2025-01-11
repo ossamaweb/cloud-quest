@@ -68,11 +68,13 @@ export const validateShortAnswer = validateBlankAnswer;
 
 export function validateMatchAnswer(
   userAnswer: Record<string, string>,
-  correctPairings: Record<string, string>
+  correctPairings: Array<{ termId: string; definitionId: string }>
 ): boolean {
-  return Object.entries(userAnswer).every(
-    ([key, value]) => correctPairings[key] === value
-  );
+  return Object.entries(userAnswer).every(([key, value]) => {
+    return correctPairings.find(
+      (cp) => cp.termId === key && cp.definitionId === value
+    );
+  });
 }
 
 export function validateOrderingAnswer(

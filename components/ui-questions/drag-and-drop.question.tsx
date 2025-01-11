@@ -230,7 +230,10 @@ export const DragAndDrop = ({
         return;
       }
 
-      const correct = data.correctPairings[itemId] === categoryId;
+      const correct =
+        data.correctPairings.findIndex(
+          (cp) => cp.itemId === itemId && cp.categoryId === categoryId
+        ) > -1;
 
       if (correct) {
         setState((prev) => ({
@@ -296,14 +299,14 @@ export const DragAndDrop = ({
   }, []);
 
   useEffect(() => {
-    if (correctAnswersCount === Object.keys(data.correctPairings).length) {
+    if (correctAnswersCount === data.correctPairings.length) {
       gradeQuestion({
         onGrade,
         data,
         trials,
         totalPoints: points,
         autoCheck: true,
-        answersCount: Object.keys(data.correctPairings).length,
+        answersCount: data.correctPairings.length,
       });
     }
   }, [correctAnswersCount, data, onGrade, points, trials]);

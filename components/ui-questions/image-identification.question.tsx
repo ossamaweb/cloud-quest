@@ -43,7 +43,7 @@ export const ImageIdentification = ({
     <KeyboardProvider>
       <div className="flex sm:flex-row flex-col justify-center items-stretch sm:gap-8 gap-4">
         <div className="sm:flex-1 sm:h-auto h-64 flex items-center justify-center bg-input border-border border-2 rounded-md p-2">
-          {!!data.image.url && (
+          {data.image.url && data.image.url.startsWith("https://") ? (
             <figure className="relative rounded-md overflow-hidden">
               <Image
                 src={data.image.url}
@@ -55,6 +55,15 @@ export const ImageIdentification = ({
                 priority={true}
               />
             </figure>
+          ) : (
+            <div className="w-full h-full flex flex-col">
+              <div className="flex-1 flex items-center text-foreground/50">
+                {data.image.url}
+              </div>
+              <div className="text-foreground/30 italic text-sm">
+                Image unavailable for the moment.{" "}
+              </div>
+            </div>
           )}
         </div>
 

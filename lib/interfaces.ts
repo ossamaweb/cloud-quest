@@ -23,7 +23,7 @@ export interface MultipleChoiceQuestion extends BaseQuestion {
 export interface DragAndDropQuestion extends BaseQuestion {
   categories: QuestionOption[];
   items: QuestionOption[];
-  correctPairings: Record<ID, ID>; // itemId -> categoryId
+  correctPairings: Array<{ itemId: string; categoryId: string }>; // itemId -> categoryId
 }
 
 // A rubric in a ScenarioBasedQuestion is a scoring guide that lists specific criteria for evaluating the student's answer to a scenario-based question. Let me expand the ScenarioBasedQuestion interface with a more detailed rubric structure:
@@ -73,7 +73,7 @@ export interface FillInTheBlankQuestion extends BaseQuestion {
 export interface MatchingQuestion extends BaseQuestion {
   terms: QuestionOption[];
   definitions: QuestionOption[];
-  correctPairings: Record<ID, ID>; // termId -> definitionId
+  correctPairings: Array<{ termId: string; definitionId: string }>; // termId -> definitionId
 }
 
 export interface TrueFalseQuestion extends BaseQuestion {
