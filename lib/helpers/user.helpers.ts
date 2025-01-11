@@ -35,10 +35,11 @@ export async function setupNewUser(cognitoUser: {
     throw new Error("Provide a default course ID");
   }
   try {
+    const username = cognitoUser.email.split("@")?.[0] ?? cognitoUser.username;
     // Create User record
     const user = await client.models.User.create({
+      username,
       id: cognitoUser.userId,
-      username: cognitoUser.username,
       email: cognitoUser.email,
       status: "ACTIVE",
     });
