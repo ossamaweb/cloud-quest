@@ -126,7 +126,7 @@ export const Ordering = ({
           <div key={item.id}>
             <ButtonQuestion
               tabIndex={-1}
-              className="leading-5 h-16 text-sm"
+              className="leading-5 h-16 md:text-base text-sm"
               text={item.text}
               keyboardShortcut={String(index + 1)}
               passive={true}

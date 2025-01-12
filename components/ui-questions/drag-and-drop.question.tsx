@@ -5,7 +5,6 @@ import {
 } from "@/lib/interfaces";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AUTO_CHECK_DURATION, cn, gradeQuestion } from "@/lib/utils";
-import { QuestionType } from "@/lib/graphql/API";
 
 interface CategoryItemProps {
   id: string;
@@ -13,12 +12,13 @@ interface CategoryItemProps {
   handleDragOver: (e: React.DragEvent, categoryId: string) => void;
   handleDragLeave: (e: React.DragEvent) => void;
   handleDrop: (e: React.DragEvent, categoryId: string) => void;
-  droppedId: string;
+  droppedIds: string[] | undefined;
+  droppedId: string | null;
   draggingId: string | null;
   dragOverId: string | null;
   incorrect: boolean;
   correct: boolean;
-  itemData?: QuestionOption | undefined;
+  options: QuestionOption[];
 }
 
 const CategoryItem = ({
@@ -27,55 +27,61 @@ const CategoryItem = ({
   handleDragOver,
   handleDragLeave,
   handleDrop,
+  droppedIds,
   droppedId,
   draggingId,
   dragOverId,
   incorrect,
   correct,
-  itemData,
+  options,
 }: CategoryItemProps) => {
+  const droppedItems = useMemo(() => {
+    if (!droppedIds || droppedIds.length === 0) {
+      return [];
+    }
+    return options.filter(({ id }) => droppedIds.includes(id));
+  }, [droppedIds, options]);
+
   return (
     <div
       onDragOver={(e) => handleDragOver(e, id)}
       onDragLeave={handleDragLeave}
       onDrop={(e) => handleDrop(e, id)}
-      className="flex-1 select-none"
+      className="select-none"
     >
       <div
         className={cn(
           "transition-all duration-250 ease-in-out",
-          "scale-100 rounded-lg px-2 py-1 overflow-hidden h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
-          draggingId && !droppedId && "bg-blue-400/20 border-blue-400/50",
-          dragOverId === id && !droppedId && "scale-105",
+          "no-scrollbar overflow-auto scale-100 rounded-lg px-2 py-1 h-32 border-2 border-dashed border-border text-foreground/50 bg-muted/30",
+          draggingId && "bg-blue-400/20 border-blue-400/50",
+          dragOverId === id && "scale-105",
           correct &&
             "border-solid bg-zinc-50 dark:bg-zinc-900 border-green-500/50",
-          incorrect && "bg-red-500/20 border-red-500/50",
-          droppedId && !correct && "border-solid opacity-30"
+          incorrect && "bg-red-500/20 border-red-500/50"
         )}
       >
         <div className="leading-2 text-sm font-bold uppercase">{text}</div>
 
-        <div className="flex gap-2 mt-2">
-          {droppedId && itemData && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {droppedItems.map((itemData) => (
             <div
-              key={droppedId}
+              key={itemData.id}
               className={cn(
                 "motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-150"
               )}
             >
               <DraggableItem
-                // key={droppedId}
                 id={itemData.id}
                 text={itemData.text}
                 draggable={false}
-                incorrect={incorrect}
-                correct={correct}
+                incorrect={undefined}
+                correct={itemData.id === droppedId ? correct : undefined}
                 droppedId=""
                 handleDragStart={() => null}
                 handleDragEnd={() => null}
               />
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -87,8 +93,8 @@ interface DraggableItemProps {
   text: string;
   draggable: boolean;
   droppedId: string;
-  incorrect: boolean;
-  correct: boolean;
+  incorrect?: boolean;
+  correct?: boolean;
   className?: string;
   handleDragStart: (e: React.DragEvent, itemId: string) => void;
   handleDragEnd: () => void;
@@ -122,7 +128,7 @@ const DraggableItem = ({
   }, [handleDragEnd]);
 
   return (
-    <div className="bg-muted rounded-lg">
+    <div className="bg-muted rounded-lg w-fit">
       <div
         draggable={draggable}
         onDragStart={onDragStart}
@@ -152,7 +158,9 @@ interface DragAndDropQuestionState {
   correct: { categoryId: string; itemId: string };
   draggingId: string | null;
   dragOverId: string | null;
-  categoryItem: Record<string, string>;
+  droppedId: string | null;
+  categoryItems: Record<string, Array<string> | undefined>;
+
   trials: boolean[];
   correctAnswersCount: number;
 }
@@ -172,7 +180,8 @@ export const DragAndDrop = ({
       correct,
       draggingId,
       dragOverId,
-      categoryItem,
+      droppedId,
+      categoryItems,
       trials,
       correctAnswersCount,
     },
@@ -183,7 +192,8 @@ export const DragAndDrop = ({
     correct: { categoryId: "", itemId: "" },
     draggingId: null,
     dragOverId: null,
-    categoryItem: {},
+    droppedId: null,
+    categoryItems: {},
     trials: [],
     correctAnswersCount: 0,
   });
@@ -221,15 +231,6 @@ export const DragAndDrop = ({
 
       const itemId = e.dataTransfer.getData("text/plain");
 
-      // already dropped in
-      if (categoryItem[categoryId]) {
-        setState((prev) => ({
-          ...prev,
-          draggingId: null,
-        }));
-        return;
-      }
-
       const correct =
         data.correctPairings.findIndex(
           (cp) => cp.itemId === itemId && cp.categoryId === categoryId
@@ -242,9 +243,12 @@ export const DragAndDrop = ({
           correct: { categoryId, itemId },
           draggingId: null,
           dragOverId: null,
-          categoryItem: {
-            ...prev.categoryItem,
-            [categoryId]: itemId,
+          droppedId: itemId,
+          categoryItems: {
+            ...prev.categoryItems,
+            [categoryId]: prev.categoryItems[categoryId]
+              ? [...new Set([...prev.categoryItems[categoryId], itemId])]
+              : [itemId],
           },
           trials: [...prev.trials, true],
           correctAnswersCount: prev.correctAnswersCount + (correct ? 1 : 0),
@@ -268,7 +272,7 @@ export const DragAndDrop = ({
         }));
       }, AUTO_CHECK_DURATION);
     },
-    [categoryItem, data]
+    [data]
   );
 
   useEffect(() => {
@@ -311,19 +315,21 @@ export const DragAndDrop = ({
     }
   }, [correctAnswersCount, data, onGrade, points, trials]);
 
-  const { itemsLookup, categories, items } = useMemo(() => {
+  const { categories, items } = useMemo(() => {
     return {
       items: [...data.items].sort(() => Math.random() - 0.5),
       categories: [...data.categories].sort(() => Math.random() - 0.5),
-      itemsLookup: Object.fromEntries(
-        data.items.map((item) => [item.id, item])
-      ),
     };
   }, [data.categories, data.items]);
 
   return (
     <div className="flex flex-col justify-around sm:gap-16 gap-8">
-      <div className="gap-4 grid grid-cols-2 sm:grid-cols-4">
+      <div
+        className={cn(
+          "grid  gap-4",
+          categories.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4"
+        )}
+      >
         {categories.map((category) => (
           <CategoryItem
             key={category.id}
@@ -332,17 +338,18 @@ export const DragAndDrop = ({
             handleDragOver={handleDragOver}
             handleDragLeave={handleDragLeave}
             handleDrop={handleDrop}
-            droppedId={categoryItem[category.id]}
+            droppedIds={categoryItems[category.id]}
             draggingId={draggingId}
             dragOverId={dragOverId}
+            droppedId={droppedId}
             incorrect={incorrect.categoryId === category.id}
             correct={correct.categoryId === category.id}
-            itemData={itemsLookup[categoryItem[category.id]]}
+            options={data.items}
           />
         ))}
       </div>
 
-      <div className="flex justify-start items-center gap-4 flex-wrap">
+      <div className="flex justify-center items-center gap-4 flex-wrap">
         {items.map((item) => (
           <DraggableItem
             key={item.id}

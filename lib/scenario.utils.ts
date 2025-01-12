@@ -1,5 +1,13 @@
-import { QuestionType } from "./graphql/API";
+/*
+ * INCOMPLETE (Dismiss for now)
+ */
 import { BaseQuestion, ID } from "./interfaces";
+
+interface ScenarioBasedQuestion extends BaseQuestion {
+  scenario: string;
+  correctAnswer: string;
+  rubric?: RubricCriterion[];
+}
 
 // A rubric in a ScenarioBasedQuestion is a scoring guide that lists specific criteria for evaluating the student's answer to a scenario-based question. Let me expand the ScenarioBasedQuestion interface with a more detailed rubric structure:
 interface RubricCriterion {
@@ -25,14 +33,6 @@ interface RubricCriterion {
       description: string;
     };
   };
-}
-
-export interface ScenarioBasedQuestion extends BaseQuestion {
-  type: QuestionType.SCENARIO_BASED;
-  scenario: string;
-  correctAnswer: string;
-  rubric: RubricCriterion[];
-  totalPoints: number;
 }
 
 // Example usage:

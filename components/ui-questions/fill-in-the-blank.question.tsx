@@ -46,7 +46,7 @@ export const FillInTheBlank = ({
 
       setValue((prev) => ({
         ...prev,
-        [blankId]: content.replace(/\u200B/g, ""),
+        [blankId]: content,
       }));
     },
     []
@@ -182,7 +182,7 @@ export const FillInTheBlank = ({
           "transition-colors duration-150 ease-in-out"
         )}
         style={{ minWidth: `${blank.correctAnswer.length + 2}ch` }}
-      ></span>
+      />
     );
   };
 

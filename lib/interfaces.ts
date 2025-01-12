@@ -26,37 +26,6 @@ export interface DragAndDropQuestion extends BaseQuestion {
   correctPairings: Array<{ itemId: string; categoryId: string }>; // itemId -> categoryId
 }
 
-// A rubric in a ScenarioBasedQuestion is a scoring guide that lists specific criteria for evaluating the student's answer to a scenario-based question. Let me expand the ScenarioBasedQuestion interface with a more detailed rubric structure:
-interface RubricCriterion {
-  id: ID;
-  criterion: string;
-  points: number;
-  description: string;
-  performanceLevels: {
-    excellent: {
-      points: number;
-      description: string;
-    };
-    good: {
-      points: number;
-      description: string;
-    };
-    fair: {
-      points: number;
-      description: string;
-    };
-    poor: {
-      points: number;
-      description: string;
-    };
-  };
-}
-export interface ScenarioBasedQuestion extends BaseQuestion {
-  scenario: string;
-  correctAnswer: string;
-  rubric?: RubricCriterion[];
-}
-
 export interface ShortAnswerQuestion extends BaseQuestion {
   correctAnswer: string;
   acceptableAnswers?: string[]; // Alternative correct answers
@@ -98,7 +67,6 @@ export interface ImageIdentificationQuestion extends BaseQuestion {
 export type QuestionData =
   | MultipleChoiceQuestion
   | DragAndDropQuestion
-  | ScenarioBasedQuestion
   | ShortAnswerQuestion
   | FillInTheBlankQuestion
   | MatchingQuestion

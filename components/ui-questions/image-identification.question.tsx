@@ -77,7 +77,7 @@ export const ImageIdentification = ({
           {options.map((option, index) => (
             <div key={option.id}>
               <ButtonQuestion
-                className="leading-5 h-16 text-sm"
+                className="leading-5 h-16 md:text-base text-sm"
                 text={option.text}
                 keyboardShortcut={String(index + 1)}
                 selected={selectedId === option.id}
