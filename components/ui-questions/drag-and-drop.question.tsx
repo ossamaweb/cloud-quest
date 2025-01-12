@@ -129,7 +129,7 @@ const DraggableItem = ({
         onDragEnd={onDragEnd}
         className={cn(
           "transition-all duration-250 ease-in-out",
-          "truncate bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
+          "text-sm max-w-48  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
           correct &&
@@ -342,7 +342,7 @@ export const DragAndDrop = ({
         ))}
       </div>
 
-      <div className="flex justify-center items-end gap-4 flex-wrap">
+      <div className="flex justify-start items-center gap-4 flex-wrap">
         {items.map((item) => (
           <DraggableItem
             key={item.id}

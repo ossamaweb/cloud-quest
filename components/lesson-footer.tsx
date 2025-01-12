@@ -108,9 +108,7 @@ export default function LessonFooter({
                       {getQuestionEndMessage(status, questionIndex)}
                     </div>
                     {!!questionExplanation && (
-                      <div className="text-sm text-pretty">
-                        {questionExplanation}
-                      </div>
+                      <div className="text-pretty">{questionExplanation}</div>
                     )}
                   </div>
                 </div>

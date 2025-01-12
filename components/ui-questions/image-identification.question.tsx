@@ -4,7 +4,7 @@ import {
   LessonQuestionProps,
   ImageIdentificationQuestion,
 } from "@/lib/interfaces";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { gradeQuestion, validateImageIdentificationAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 import Image from "next/image";
@@ -39,6 +39,12 @@ export const ImageIdentification = ({
     [data, onGrade, points]
   );
 
+  const { options } = useMemo(() => {
+    return {
+      options: [...data.options].sort(() => Math.random() - 0.5),
+    };
+  }, [data.options]);
+
   return (
     <KeyboardProvider>
       <div className="flex sm:flex-row flex-col justify-center items-stretch sm:gap-8 gap-4">
@@ -68,10 +74,10 @@ export const ImageIdentification = ({
         </div>
 
         <div className="flex-1 grid grid-cols-1 gap-4">
-          {data.options.map((option, index) => (
+          {options.map((option, index) => (
             <div key={option.id}>
               <ButtonQuestion
-                className="leading-5 h-16"
+                className="leading-5 h-16 text-sm"
                 text={option.text}
                 keyboardShortcut={String(index + 1)}
                 selected={selectedId === option.id}
