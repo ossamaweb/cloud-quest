@@ -94,7 +94,7 @@ async function onGenerate() {
     const prompt = generateQuestionsPrompt({
       lessonId,
       lessonTitle: lesson.title,
-      lessonDescription: lesson.content,
+      lessonDescription: lesson.about,
       moduleId,
       moduleTitle: moduleData.title,
       moduleDescription: moduleData.description ?? "",

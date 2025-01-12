@@ -11,7 +11,7 @@ interface LessonNodeProps {
   id: string | null;
   slug: string;
   title: string;
-  content: string;
+  description: string;
   total: number;
   inverse: boolean;
   current?: boolean;
@@ -25,7 +25,7 @@ export default function LessonNode({
   index,
   slug,
   title,
-  content,
+  description,
   total,
   inverse = false,
   current = false,

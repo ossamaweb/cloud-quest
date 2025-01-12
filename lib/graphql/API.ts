@@ -52,7 +52,6 @@ export type User = {
   email: string,
   id: string,
   lessons?: ModelUserLessonCompletionConnection | null,
-  modules?: ModelUserModuleProgressConnection | null,
   owner?: string | null,
   profilePicture?: string | null,
   stats?: UserStats | null,
@@ -115,7 +114,6 @@ export type Module = {
   slug: string,
   title: string,
   updatedAt: string,
-  userProgress?: ModelUserModuleProgressConnection | null,
 };
 
 export enum ModuleDifficulty {
@@ -133,8 +131,9 @@ export type ModelLessonConnection = {
 
 export type Lesson = {
   __typename: "Lesson",
-  content: string,
+  about: string,
   createdAt: string,
+  description: string,
   id: string,
   module?: Module | null,
   moduleId?: string | null,
@@ -214,26 +213,6 @@ export type UserLessonCompletion = {
   lessonId?: string | null,
   owner?: string | null,
   points: number,
-  updatedAt: string,
-  user?: User | null,
-  userId?: string | null,
-};
-
-export type ModelUserModuleProgressConnection = {
-  __typename: "ModelUserModuleProgressConnection",
-  items:  Array<UserModuleProgress | null >,
-  nextToken?: string | null,
-};
-
-export type UserModuleProgress = {
-  __typename: "UserModuleProgress",
-  completionDate?: string | null,
-  createdAt: string,
-  id: string,
-  module?: Module | null,
-  moduleId?: string | null,
-  owner?: string | null,
-  startDate: string,
   updatedAt: string,
   user?: User | null,
   userId?: string | null,
@@ -396,9 +375,10 @@ export type ModelCourseConnection = {
 };
 
 export type ModelLessonFilterInput = {
+  about?: ModelStringInput | null,
   and?: Array< ModelLessonFilterInput | null > | null,
-  content?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   id?: ModelIDInput | null,
   moduleId?: ModelIDInput | null,
   not?: ModelLessonFilterInput | null,
@@ -508,20 +488,6 @@ export type ModelUserLessonCompletionFilterInput = {
   userId?: ModelIDInput | null,
 };
 
-export type ModelUserModuleProgressFilterInput = {
-  and?: Array< ModelUserModuleProgressFilterInput | null > | null,
-  completionDate?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  id?: ModelIDInput | null,
-  moduleId?: ModelIDInput | null,
-  not?: ModelUserModuleProgressFilterInput | null,
-  or?: Array< ModelUserModuleProgressFilterInput | null > | null,
-  owner?: ModelStringInput | null,
-  startDate?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  userId?: ModelIDInput | null,
-};
-
 export type ModelUserStatsFilterInput = {
   achievementsUnlocked?: ModelIntInput | null,
   and?: Array< ModelUserStatsFilterInput | null > | null,
@@ -616,9 +582,10 @@ export type CreateCourseInput = {
 };
 
 export type ModelLessonConditionInput = {
+  about?: ModelStringInput | null,
   and?: Array< ModelLessonConditionInput | null > | null,
-  content?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   moduleId?: ModelIDInput | null,
   not?: ModelLessonConditionInput | null,
   or?: Array< ModelLessonConditionInput | null > | null,
@@ -631,7 +598,8 @@ export type ModelLessonConditionInput = {
 };
 
 export type CreateLessonInput = {
-  content: string,
+  about: string,
+  description: string,
   id?: string | null,
   moduleId?: string | null,
   order: number,
@@ -780,27 +748,6 @@ export type CreateUserLessonCompletionInput = {
   userId?: string | null,
 };
 
-export type ModelUserModuleProgressConditionInput = {
-  and?: Array< ModelUserModuleProgressConditionInput | null > | null,
-  completionDate?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  moduleId?: ModelIDInput | null,
-  not?: ModelUserModuleProgressConditionInput | null,
-  or?: Array< ModelUserModuleProgressConditionInput | null > | null,
-  owner?: ModelStringInput | null,
-  startDate?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  userId?: ModelIDInput | null,
-};
-
-export type CreateUserModuleProgressInput = {
-  completionDate?: string | null,
-  id?: string | null,
-  moduleId?: string | null,
-  startDate: string,
-  userId?: string | null,
-};
-
 export type ModelUserStatsConditionInput = {
   achievementsUnlocked?: ModelIntInput | null,
   and?: Array< ModelUserStatsConditionInput | null > | null,
@@ -866,10 +813,6 @@ export type DeleteUserLessonCompletionInput = {
   id: string,
 };
 
-export type DeleteUserModuleProgressInput = {
-  id: string,
-};
-
 export type DeleteUserStatsInput = {
   id: string,
 };
@@ -892,7 +835,8 @@ export type UpdateCourseInput = {
 };
 
 export type UpdateLessonInput = {
-  content?: string | null,
+  about?: string | null,
+  description?: string | null,
   id: string,
   moduleId?: string | null,
   order?: number | null,
@@ -953,14 +897,6 @@ export type UpdateUserLessonCompletionInput = {
   id: string,
   lessonId?: string | null,
   points?: number | null,
-  userId?: string | null,
-};
-
-export type UpdateUserModuleProgressInput = {
-  completionDate?: string | null,
-  id: string,
-  moduleId?: string | null,
-  startDate?: string | null,
   userId?: string | null,
 };
 
@@ -1046,9 +982,10 @@ export type ModelSubscriptionCourseFilterInput = {
 };
 
 export type ModelSubscriptionLessonFilterInput = {
+  about?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionLessonFilterInput | null > | null,
-  content?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
   id?: ModelSubscriptionIDInput | null,
   moduleId?: ModelSubscriptionIDInput | null,
   or?: Array< ModelSubscriptionLessonFilterInput | null > | null,
@@ -1145,19 +1082,6 @@ export type ModelSubscriptionUserLessonCompletionFilterInput = {
   userId?: ModelSubscriptionIDInput | null,
 };
 
-export type ModelSubscriptionUserModuleProgressFilterInput = {
-  and?: Array< ModelSubscriptionUserModuleProgressFilterInput | null > | null,
-  completionDate?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  id?: ModelSubscriptionIDInput | null,
-  moduleId?: ModelSubscriptionIDInput | null,
-  or?: Array< ModelSubscriptionUserModuleProgressFilterInput | null > | null,
-  owner?: ModelStringInput | null,
-  startDate?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  userId?: ModelSubscriptionIDInput | null,
-};
-
 export type ModelSubscriptionUserStatsFilterInput = {
   achievementsUnlocked?: ModelSubscriptionIntInput | null,
   and?: Array< ModelSubscriptionUserStatsFilterInput | null > | null,
@@ -1231,8 +1155,9 @@ export type GetLessonQueryVariables = {
 export type GetLessonQuery = {
   getLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -1297,10 +1222,6 @@ export type GetModuleQuery = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -1316,8 +1237,9 @@ export type GetQuestionQuery = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -1360,10 +1282,6 @@ export type GetUserQuery = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -1482,8 +1400,9 @@ export type GetUserLessonCompletionQuery = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -1496,48 +1415,6 @@ export type GetUserLessonCompletionQuery = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type GetUserModuleProgressQueryVariables = {
-  id: string,
-};
-
-export type GetUserModuleProgressQuery = {
-  getUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -1679,8 +1556,9 @@ export type ListLessonBySlugQuery = {
     __typename: "ModelLessonConnection",
     items:  Array< {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -1707,8 +1585,9 @@ export type ListLessonsQuery = {
     __typename: "ModelLessonConnection",
     items:  Array< {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -1887,32 +1766,6 @@ export type ListUserLessonCompletionsQuery = {
   } | null,
 };
 
-export type ListUserModuleProgressesQueryVariables = {
-  filter?: ModelUserModuleProgressFilterInput | null,
-  id?: string | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListUserModuleProgressesQuery = {
-  listUserModuleProgresses?:  {
-    __typename: "ModelUserModuleProgressConnection",
-    items:  Array< {
-      __typename: "UserModuleProgress",
-      completionDate?: string | null,
-      createdAt: string,
-      id: string,
-      moduleId?: string | null,
-      owner?: string | null,
-      startDate: string,
-      updatedAt: string,
-      userId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type ListUserStatsQueryVariables = {
   filter?: ModelUserStatsFilterInput | null,
   id?: string | null,
@@ -2028,8 +1881,9 @@ export type CreateLessonMutationVariables = {
 export type CreateLessonMutation = {
   createLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -2095,10 +1949,6 @@ export type CreateModuleMutation = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -2115,8 +1965,9 @@ export type CreateQuestionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -2160,10 +2011,6 @@ export type CreateUserMutation = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -2285,8 +2132,9 @@ export type CreateUserLessonCompletionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -2299,49 +2147,6 @@ export type CreateUserLessonCompletionMutation = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type CreateUserModuleProgressMutationVariables = {
-  condition?: ModelUserModuleProgressConditionInput | null,
-  input: CreateUserModuleProgressInput,
-};
-
-export type CreateUserModuleProgressMutation = {
-  createUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -2451,8 +2256,9 @@ export type DeleteLessonMutationVariables = {
 export type DeleteLessonMutation = {
   deleteLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -2518,10 +2324,6 @@ export type DeleteModuleMutation = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -2538,8 +2340,9 @@ export type DeleteQuestionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -2583,10 +2386,6 @@ export type DeleteUserMutation = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -2708,8 +2507,9 @@ export type DeleteUserLessonCompletionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -2722,49 +2522,6 @@ export type DeleteUserLessonCompletionMutation = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type DeleteUserModuleProgressMutationVariables = {
-  condition?: ModelUserModuleProgressConditionInput | null,
-  input: DeleteUserModuleProgressInput,
-};
-
-export type DeleteUserModuleProgressMutation = {
-  deleteUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -2874,8 +2631,9 @@ export type UpdateLessonMutationVariables = {
 export type UpdateLessonMutation = {
   updateLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -2941,10 +2699,6 @@ export type UpdateModuleMutation = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -2961,8 +2715,9 @@ export type UpdateQuestionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3006,10 +2761,6 @@ export type UpdateUserMutation = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -3131,8 +2882,9 @@ export type UpdateUserLessonCompletionMutation = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3145,49 +2897,6 @@ export type UpdateUserLessonCompletionMutation = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type UpdateUserModuleProgressMutationVariables = {
-  condition?: ModelUserModuleProgressConditionInput | null,
-  input: UpdateUserModuleProgressInput,
-};
-
-export type UpdateUserModuleProgressMutation = {
-  updateUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -3297,8 +3006,9 @@ export type OnCreateLessonSubscriptionVariables = {
 export type OnCreateLessonSubscription = {
   onCreateLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -3364,10 +3074,6 @@ export type OnCreateModuleSubscription = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -3384,8 +3090,9 @@ export type OnCreateQuestionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3429,10 +3136,6 @@ export type OnCreateUserSubscription = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -3554,8 +3257,9 @@ export type OnCreateUserLessonCompletionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3568,49 +3272,6 @@ export type OnCreateUserLessonCompletionSubscription = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type OnCreateUserModuleProgressSubscriptionVariables = {
-  filter?: ModelSubscriptionUserModuleProgressFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnCreateUserModuleProgressSubscription = {
-  onCreateUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -3720,8 +3381,9 @@ export type OnDeleteLessonSubscriptionVariables = {
 export type OnDeleteLessonSubscription = {
   onDeleteLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -3787,10 +3449,6 @@ export type OnDeleteModuleSubscription = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -3807,8 +3465,9 @@ export type OnDeleteQuestionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3852,10 +3511,6 @@ export type OnDeleteUserSubscription = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -3977,8 +3632,9 @@ export type OnDeleteUserLessonCompletionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -3991,49 +3647,6 @@ export type OnDeleteUserLessonCompletionSubscription = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type OnDeleteUserModuleProgressSubscriptionVariables = {
-  filter?: ModelSubscriptionUserModuleProgressFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnDeleteUserModuleProgressSubscription = {
-  onDeleteUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",
@@ -4143,8 +3756,9 @@ export type OnUpdateLessonSubscriptionVariables = {
 export type OnUpdateLessonSubscription = {
   onUpdateLesson?:  {
     __typename: "Lesson",
-    content: string,
+    about: string,
     createdAt: string,
+    description: string,
     id: string,
     module?:  {
       __typename: "Module",
@@ -4210,10 +3824,6 @@ export type OnUpdateModuleSubscription = {
     slug: string,
     title: string,
     updatedAt: string,
-    userProgress?:  {
-      __typename: "ModelUserModuleProgressConnection",
-      nextToken?: string | null,
-    } | null,
   } | null,
 };
 
@@ -4230,8 +3840,9 @@ export type OnUpdateQuestionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -4275,10 +3886,6 @@ export type OnUpdateUserSubscription = {
     id: string,
     lessons?:  {
       __typename: "ModelUserLessonCompletionConnection",
-      nextToken?: string | null,
-    } | null,
-    modules?:  {
-      __typename: "ModelUserModuleProgressConnection",
       nextToken?: string | null,
     } | null,
     owner?: string | null,
@@ -4400,8 +4007,9 @@ export type OnUpdateUserLessonCompletionSubscription = {
     id: string,
     lesson?:  {
       __typename: "Lesson",
-      content: string,
+      about: string,
       createdAt: string,
+      description: string,
       id: string,
       moduleId?: string | null,
       order: number,
@@ -4414,49 +4022,6 @@ export type OnUpdateUserLessonCompletionSubscription = {
     lessonId?: string | null,
     owner?: string | null,
     points: number,
-    updatedAt: string,
-    user?:  {
-      __typename: "User",
-      createdAt: string,
-      email: string,
-      id: string,
-      owner?: string | null,
-      profilePicture?: string | null,
-      status?: UserStatus | null,
-      updatedAt: string,
-      username: string,
-    } | null,
-    userId?: string | null,
-  } | null,
-};
-
-export type OnUpdateUserModuleProgressSubscriptionVariables = {
-  filter?: ModelSubscriptionUserModuleProgressFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnUpdateUserModuleProgressSubscription = {
-  onUpdateUserModuleProgress?:  {
-    __typename: "UserModuleProgress",
-    completionDate?: string | null,
-    createdAt: string,
-    id: string,
-    module?:  {
-      __typename: "Module",
-      courseId?: string | null,
-      createdAt: string,
-      description?: string | null,
-      difficulty?: ModuleDifficulty | null,
-      id: string,
-      order: number,
-      owner?: string | null,
-      slug: string,
-      title: string,
-      updatedAt: string,
-    } | null,
-    moduleId?: string | null,
-    owner?: string | null,
-    startDate: string,
     updatedAt: string,
     user?:  {
       __typename: "User",

@@ -66,8 +66,9 @@ export const createLesson = /* GraphQL */ `mutation CreateLesson(
   $input: CreateLessonInput!
 ) {
   createLesson(condition: $condition, input: $input) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -134,10 +135,6 @@ export const createModule = /* GraphQL */ `mutation CreateModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -154,8 +151,9 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -200,10 +198,6 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -328,8 +322,9 @@ export const createUserLessonCompletion = /* GraphQL */ `mutation CreateUserLess
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -362,50 +357,6 @@ export const createUserLessonCompletion = /* GraphQL */ `mutation CreateUserLess
 ` as GeneratedMutation<
   APITypes.CreateUserLessonCompletionMutationVariables,
   APITypes.CreateUserLessonCompletionMutation
->;
-export const createUserModuleProgress = /* GraphQL */ `mutation CreateUserModuleProgress(
-  $condition: ModelUserModuleProgressConditionInput
-  $input: CreateUserModuleProgressInput!
-) {
-  createUserModuleProgress(condition: $condition, input: $input) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateUserModuleProgressMutationVariables,
-  APITypes.CreateUserModuleProgressMutation
 >;
 export const createUserStats = /* GraphQL */ `mutation CreateUserStats(
   $condition: ModelUserStatsConditionInput
@@ -500,8 +451,9 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
   $input: DeleteLessonInput!
 ) {
   deleteLesson(condition: $condition, input: $input) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -568,10 +520,6 @@ export const deleteModule = /* GraphQL */ `mutation DeleteModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -588,8 +536,9 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -634,10 +583,6 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -762,8 +707,9 @@ export const deleteUserLessonCompletion = /* GraphQL */ `mutation DeleteUserLess
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -796,50 +742,6 @@ export const deleteUserLessonCompletion = /* GraphQL */ `mutation DeleteUserLess
 ` as GeneratedMutation<
   APITypes.DeleteUserLessonCompletionMutationVariables,
   APITypes.DeleteUserLessonCompletionMutation
->;
-export const deleteUserModuleProgress = /* GraphQL */ `mutation DeleteUserModuleProgress(
-  $condition: ModelUserModuleProgressConditionInput
-  $input: DeleteUserModuleProgressInput!
-) {
-  deleteUserModuleProgress(condition: $condition, input: $input) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteUserModuleProgressMutationVariables,
-  APITypes.DeleteUserModuleProgressMutation
 >;
 export const deleteUserStats = /* GraphQL */ `mutation DeleteUserStats(
   $condition: ModelUserStatsConditionInput
@@ -934,8 +836,9 @@ export const updateLesson = /* GraphQL */ `mutation UpdateLesson(
   $input: UpdateLessonInput!
 ) {
   updateLesson(condition: $condition, input: $input) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -1002,10 +905,6 @@ export const updateModule = /* GraphQL */ `mutation UpdateModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -1022,8 +921,9 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -1068,10 +968,6 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -1196,8 +1092,9 @@ export const updateUserLessonCompletion = /* GraphQL */ `mutation UpdateUserLess
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -1230,50 +1127,6 @@ export const updateUserLessonCompletion = /* GraphQL */ `mutation UpdateUserLess
 ` as GeneratedMutation<
   APITypes.UpdateUserLessonCompletionMutationVariables,
   APITypes.UpdateUserLessonCompletionMutation
->;
-export const updateUserModuleProgress = /* GraphQL */ `mutation UpdateUserModuleProgress(
-  $condition: ModelUserModuleProgressConditionInput
-  $input: UpdateUserModuleProgressInput!
-) {
-  updateUserModuleProgress(condition: $condition, input: $input) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateUserModuleProgressMutationVariables,
-  APITypes.UpdateUserModuleProgressMutation
 >;
 export const updateUserStats = /* GraphQL */ `mutation UpdateUserStats(
   $condition: ModelUserStatsConditionInput
