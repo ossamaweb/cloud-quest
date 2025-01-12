@@ -10,7 +10,8 @@ export const lessonFixture: GetLesson = {
   title: "AWS Test",
   order: 1,
   moduleId: moduleFixture.id!,
-  content: "",
+  description: "",
+  about: "",
   type: "LESSON",
   questions: [
     // Fill in the Blank Question
@@ -99,8 +100,9 @@ export const lessonFixture: GetLesson = {
       lessonId: "lesson-001",
       type: QuestionType.DRAG_AND_DROP,
       difficulty: QuestionDifficulty.EASY,
-      version: 1,
+
       tags: null,
+      version: 1,
       owner: null,
       createdAt: "",
       updatedAt: "",
@@ -135,8 +137,9 @@ export const lessonFixture: GetLesson = {
       lessonId: "lesson-001",
       type: QuestionType.MATCHING,
       difficulty: QuestionDifficulty.EASY,
-      version: 1,
+
       tags: null,
+      version: 1,
       owner: null,
       createdAt: "",
       updatedAt: "",

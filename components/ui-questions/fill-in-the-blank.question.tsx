@@ -46,7 +46,7 @@ export const FillInTheBlank = ({
 
       setValue((prev) => ({
         ...prev,
-        [blankId]: content.replace(/\u200B/g, ""),
+        [blankId]: content,
       }));
     },
     []
@@ -178,14 +178,11 @@ export const FillInTheBlank = ({
           checked &&
             correct &&
             "border-green-500 dark:border-green-700 dark:text-green-500 text-green-700",
-          value[blank.id].length > 12 ? "inline pb-[2.6px]" : "inline-block",
+          "inline-block",
           "transition-colors duration-150 ease-in-out"
         )}
         style={{ minWidth: `${blank.correctAnswer.length + 2}ch` }}
-      >
-        {/* Zero-width space character as a workaround for some browser */}
-        {"\u200B"}
-      </span>
+      />
     );
   };
 

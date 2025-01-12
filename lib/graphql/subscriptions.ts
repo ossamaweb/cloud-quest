@@ -66,8 +66,9 @@ export const onCreateLesson = /* GraphQL */ `subscription OnCreateLesson(
   $owner: String
 ) {
   onCreateLesson(filter: $filter, owner: $owner) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -134,10 +135,6 @@ export const onCreateModule = /* GraphQL */ `subscription OnCreateModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -154,8 +151,9 @@ export const onCreateQuestion = /* GraphQL */ `subscription OnCreateQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -200,10 +198,6 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -328,8 +322,9 @@ export const onCreateUserLessonCompletion = /* GraphQL */ `subscription OnCreate
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -362,50 +357,6 @@ export const onCreateUserLessonCompletion = /* GraphQL */ `subscription OnCreate
 ` as GeneratedSubscription<
   APITypes.OnCreateUserLessonCompletionSubscriptionVariables,
   APITypes.OnCreateUserLessonCompletionSubscription
->;
-export const onCreateUserModuleProgress = /* GraphQL */ `subscription OnCreateUserModuleProgress(
-  $filter: ModelSubscriptionUserModuleProgressFilterInput
-  $owner: String
-) {
-  onCreateUserModuleProgress(filter: $filter, owner: $owner) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateUserModuleProgressSubscriptionVariables,
-  APITypes.OnCreateUserModuleProgressSubscription
 >;
 export const onCreateUserStats = /* GraphQL */ `subscription OnCreateUserStats(
   $filter: ModelSubscriptionUserStatsFilterInput
@@ -500,8 +451,9 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson(
   $owner: String
 ) {
   onDeleteLesson(filter: $filter, owner: $owner) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -568,10 +520,6 @@ export const onDeleteModule = /* GraphQL */ `subscription OnDeleteModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -588,8 +536,9 @@ export const onDeleteQuestion = /* GraphQL */ `subscription OnDeleteQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -634,10 +583,6 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -762,8 +707,9 @@ export const onDeleteUserLessonCompletion = /* GraphQL */ `subscription OnDelete
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -796,50 +742,6 @@ export const onDeleteUserLessonCompletion = /* GraphQL */ `subscription OnDelete
 ` as GeneratedSubscription<
   APITypes.OnDeleteUserLessonCompletionSubscriptionVariables,
   APITypes.OnDeleteUserLessonCompletionSubscription
->;
-export const onDeleteUserModuleProgress = /* GraphQL */ `subscription OnDeleteUserModuleProgress(
-  $filter: ModelSubscriptionUserModuleProgressFilterInput
-  $owner: String
-) {
-  onDeleteUserModuleProgress(filter: $filter, owner: $owner) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteUserModuleProgressSubscriptionVariables,
-  APITypes.OnDeleteUserModuleProgressSubscription
 >;
 export const onDeleteUserStats = /* GraphQL */ `subscription OnDeleteUserStats(
   $filter: ModelSubscriptionUserStatsFilterInput
@@ -934,8 +836,9 @@ export const onUpdateLesson = /* GraphQL */ `subscription OnUpdateLesson(
   $owner: String
 ) {
   onUpdateLesson(filter: $filter, owner: $owner) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -1002,10 +905,6 @@ export const onUpdateModule = /* GraphQL */ `subscription OnUpdateModule(
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -1022,8 +921,9 @@ export const onUpdateQuestion = /* GraphQL */ `subscription OnUpdateQuestion(
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -1068,10 +968,6 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -1196,8 +1092,9 @@ export const onUpdateUserLessonCompletion = /* GraphQL */ `subscription OnUpdate
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -1230,50 +1127,6 @@ export const onUpdateUserLessonCompletion = /* GraphQL */ `subscription OnUpdate
 ` as GeneratedSubscription<
   APITypes.OnUpdateUserLessonCompletionSubscriptionVariables,
   APITypes.OnUpdateUserLessonCompletionSubscription
->;
-export const onUpdateUserModuleProgress = /* GraphQL */ `subscription OnUpdateUserModuleProgress(
-  $filter: ModelSubscriptionUserModuleProgressFilterInput
-  $owner: String
-) {
-  onUpdateUserModuleProgress(filter: $filter, owner: $owner) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateUserModuleProgressSubscriptionVariables,
-  APITypes.OnUpdateUserModuleProgressSubscription
 >;
 export const onUpdateUserStats = /* GraphQL */ `subscription OnUpdateUserStats(
   $filter: ModelSubscriptionUserStatsFilterInput

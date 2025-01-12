@@ -9,14 +9,12 @@ import {
   MultipleChoiceQuestion,
   OrderingQuestion,
   QuestionData,
-  ScenarioBasedQuestion,
   ShortAnswerQuestion,
   TrueFalseQuestion,
 } from "@/lib/interfaces";
 import * as React from "react";
 import { MultipleChoice } from "@/components/ui-questions/multiple-choice.question";
 import { DragAndDrop } from "@/components/ui-questions/drag-and-drop.question";
-import { ScenarioBased } from "@/components/ui-questions/scenario-based.question";
 import { ImageIdentification } from "@/components/ui-questions/image-identification.question";
 import { Matching } from "@/components/ui-questions/matching.question";
 import { Ordering } from "@/components/ui-questions/ordering.question";
@@ -55,7 +53,7 @@ export default function LessonQuestion(
         <QuestionHeaderRenderer type={props.type} />
 
         <div className="flex-1 flex flex-col items-stretch justify-center">
-          <div className="sm:space-y-8 space-y-4">
+          <div className="space-y-8">
             <QuestionTitleRenderer type={props.type} title={props.title} />
             <QuestionOptionsRenderer {...props} data={parsedData} />
           </div>
@@ -97,11 +95,7 @@ function QuestionHeaderRenderer({
     return null;
   }
 
-  return (
-    <h2 className="font-bold sm:text-2xl text-xl text-foreground">
-      {pageTitle}
-    </h2>
-  );
+  return <h2 className="font-bold text-xl text-foreground">{pageTitle}</h2>;
 }
 
 function QuestionTitleRenderer({
@@ -123,8 +117,6 @@ function QuestionOptionsRenderer({
       return <MultipleChoice data={data as MultipleChoiceQuestion} {...rest} />;
     case QuestionType.DRAG_AND_DROP:
       return <DragAndDrop data={data as DragAndDropQuestion} {...rest} />;
-    case QuestionType.SCENARIO_BASED:
-      return <ScenarioBased data={data as ScenarioBasedQuestion} {...rest} />;
     case QuestionType.SHORT_ANSWER:
       return <ShortAnswer data={data as ShortAnswerQuestion} {...rest} />;
     case QuestionType.FILL_IN_THE_BLANK:

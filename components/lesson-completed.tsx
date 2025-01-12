@@ -15,7 +15,7 @@ export default function LessonCompleted({
   duration,
 }: LessonCompletedProps) {
   return (
-    <div className="w-full h-full flex justify-center items-end">
+    <div className="w-full h-full flex justify-center items-end sm:pb-12 pb-6">
       <div className="flex flex-col justify-center items-center gap-8">
         <div className="flex items-center justify-center">
           <div className="text-amber-500 motion-safe:animate-pulse">
@@ -24,7 +24,7 @@ export default function LessonCompleted({
         </div>
         <h3 className="text-2xl text-amber-500 font-bold">Lesson Completed!</h3>
 
-        <div className={"grid grid-cols-3 gap-4"}>
+        <div className="grid grid-cols-3 gap-4">
           <div className="motion-safe:delay-500 motion-safe:fill-mode-backwards motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom motion-safe:duration-500">
             <div className="bg-blue-500 border-blue-500 flex flex-col items-stretch justify-center overflow-hidden h-28 w-28 border-2 rounded-md">
               <div className="text-zinc-100 uppercase p-1 text-center font-bold text-xs">

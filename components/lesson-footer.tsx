@@ -42,7 +42,7 @@ export default function LessonFooter({
             checked && "pointer-events-none"
           )}
         >
-          <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
+          <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-8 py-6">
             <div className="flex sm:flex-row flex-col gap-8 justify-end items-center">
               <div className="sm:w-auto w-full">
                 {saved ? (
@@ -79,7 +79,7 @@ export default function LessonFooter({
                 : "bg-green-200 dark:bg-zinc-900"
             )}
           >
-            <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
+            <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-8 py-6">
               <div className="flex sm:flex-row flex-col sm:gap-8 gap-4 justify-between sm:items-center items-start">
                 <div
                   className={cn(
@@ -108,7 +108,7 @@ export default function LessonFooter({
                       {getQuestionEndMessage(status, questionIndex)}
                     </div>
                     {!!questionExplanation && (
-                      <div className="text-sm text-pretty">
+                      <div className="text-pretty text-sm sm:text-base">
                         {questionExplanation}
                       </div>
                     )}

@@ -54,8 +54,9 @@ export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
 ` as GeneratedQuery<APITypes.GetCourseQueryVariables, APITypes.GetCourseQuery>;
 export const getLesson = /* GraphQL */ `query GetLesson($id: ID!) {
   getLesson(id: $id) {
-    content
+    about
     createdAt
+    description
     id
     module {
       courseId
@@ -116,10 +117,6 @@ export const getModule = /* GraphQL */ `query GetModule($id: ID!) {
     slug
     title
     updatedAt
-    userProgress {
-      nextToken
-      __typename
-    }
     __typename
   }
 }
@@ -130,8 +127,9 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!) {
     difficulty
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -173,10 +171,6 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     email
     id
     lessons {
-      nextToken
-      __typename
-    }
-    modules {
       nextToken
       __typename
     }
@@ -289,8 +283,9 @@ export const getUserLessonCompletion = /* GraphQL */ `query GetUserLessonComplet
     duration
     id
     lesson {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -323,47 +318,6 @@ export const getUserLessonCompletion = /* GraphQL */ `query GetUserLessonComplet
 ` as GeneratedQuery<
   APITypes.GetUserLessonCompletionQueryVariables,
   APITypes.GetUserLessonCompletionQuery
->;
-export const getUserModuleProgress = /* GraphQL */ `query GetUserModuleProgress($id: ID!) {
-  getUserModuleProgress(id: $id) {
-    completionDate
-    createdAt
-    id
-    module {
-      courseId
-      createdAt
-      description
-      difficulty
-      id
-      order
-      owner
-      slug
-      title
-      updatedAt
-      __typename
-    }
-    moduleId
-    owner
-    startDate
-    updatedAt
-    user {
-      createdAt
-      email
-      id
-      owner
-      profilePicture
-      status
-      updatedAt
-      username
-      __typename
-    }
-    userId
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetUserModuleProgressQueryVariables,
-  APITypes.GetUserModuleProgressQuery
 >;
 export const getUserStats = /* GraphQL */ `query GetUserStats($id: ID!) {
   getUserStats(id: $id) {
@@ -512,8 +466,9 @@ export const listLessonBySlug = /* GraphQL */ `query ListLessonBySlug(
     sortDirection: $sortDirection
   ) {
     items {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -547,8 +502,9 @@ export const listLessons = /* GraphQL */ `query ListLessons(
     sortDirection: $sortDirection
   ) {
     items {
-      content
+      about
       createdAt
+      description
       id
       moduleId
       order
@@ -773,39 +729,6 @@ export const listUserLessonCompletions = /* GraphQL */ `query ListUserLessonComp
 ` as GeneratedQuery<
   APITypes.ListUserLessonCompletionsQueryVariables,
   APITypes.ListUserLessonCompletionsQuery
->;
-export const listUserModuleProgresses = /* GraphQL */ `query ListUserModuleProgresses(
-  $filter: ModelUserModuleProgressFilterInput
-  $id: ID
-  $limit: Int
-  $nextToken: String
-  $sortDirection: ModelSortDirection
-) {
-  listUserModuleProgresses(
-    filter: $filter
-    id: $id
-    limit: $limit
-    nextToken: $nextToken
-    sortDirection: $sortDirection
-  ) {
-    items {
-      completionDate
-      createdAt
-      id
-      moduleId
-      owner
-      startDate
-      updatedAt
-      userId
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListUserModuleProgressesQueryVariables,
-  APITypes.ListUserModuleProgressesQuery
 >;
 export const listUserStats = /* GraphQL */ `query ListUserStats(
   $filter: ModelUserStatsFilterInput

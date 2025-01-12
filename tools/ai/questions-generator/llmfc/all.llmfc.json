@@ -1,0 +1,851 @@
+[
+  {
+    "name": "create_multiple_choice_question",
+    "description": "Creates a multiple choice question for AWS learning content",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order/sequence number of the question"
+        },
+        "question": {
+          "type": "string",
+          "description": "The actual question text"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the option"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Text content of the option"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              }
+            },
+            "correctOptionId": {
+              "type": "string",
+              "description": "ID of the correct answer option"
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Explanation for the correct answer"
+            }
+          },
+          "required": [
+            "options",
+            "correctOptionId",
+            "explanation"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "MULTIPLE_CHOICE"
+          ],
+          "description": "Type of question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_true_false_question",
+    "description": "Creates a true/false question with an explanation for the correct answer",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The statement to be evaluated as true or false"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "correctAnswer": {
+              "type": "boolean",
+              "description": "The correct answer (true or false)"
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Explanation of why the answer is correct"
+            }
+          },
+          "required": [
+            "correctAnswer"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "TRUE_FALSE"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_fill_in_blank_question",
+    "description": "Creates a fill-in-the-blank question with multiple blanks to be filled",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "Question text with placeholders marked as {1}, {2}, etc. for blanks"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "blanks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the blank"
+                  },
+                  "correctAnswer": {
+                    "type": "string",
+                    "description": "The primary correct answer for the blank"
+                  },
+                  "acceptableAnswers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Array of alternative acceptable answers"
+                  }
+                },
+                "required": [
+                  "id",
+                  "correctAnswer",
+                  "acceptableAnswers"
+                ]
+              }
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Optional explanation for the correct answers"
+            }
+          },
+          "required": [
+            "blanks"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "FILL_IN_THE_BLANK"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_short_answer_question",
+    "description": "Creates a short answer question that accepts brief responses (maximum 30 characters) using exact string matching for validation",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question text. Should be designed to elicit a very brief response (e.g., acronym, single term, short name)"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "correctAnswer": {
+              "type": "string",
+              "description": "The primary correct answer. Must be 30 characters or less for reliable matching"
+            },
+            "acceptableAnswers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Alternative acceptable answers, each 30 characters or less. Include common variations, abbreviations, or slight differences in spacing"
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Optional explanation for the correct answer"
+            }
+          },
+          "required": [
+            "correctAnswer",
+            "acceptableAnswers"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SHORT_ANSWER"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_drag_drop_question",
+    "description": "Creates a drag and drop question",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The main question text"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Category identifier"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Category name"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              }
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Item identifier"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Item name"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              }
+            },
+            "correctPairings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "categoryId": {
+                    "type": "string",
+                    "description": "Category identifier"
+                  },
+                  "itemId": {
+                    "type": "string",
+                    "description": "Item identifier"
+                  }
+                },
+                "required": [
+                  "categoryId",
+                  "itemId"
+                ]
+              }
+            }
+          },
+          "required": [
+            "categories",
+            "items",
+            "correctPairings"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "DRAG_AND_DROP"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_matching_question",
+    "description": "Creates a matching question where terms need to be paired with their correct short definitions",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The main question text"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "terms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the term"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "The term to be matched"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              },
+              "description": "Array of terms to be matched"
+            },
+            "definitions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the short definition"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "The short definition to be matched"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              },
+              "description": "Array of short definitions to be matched with terms"
+            },
+            "correctPairings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "termId": {
+                    "type": "string",
+                    "description": "Term identifier"
+                  },
+                  "definitionId": {
+                    "type": "string",
+                    "description": "Definition identifier"
+                  }
+                },
+                "required": [
+                  "termId",
+                  "definitionId"
+                ]
+              }
+            }
+          },
+          "required": [
+            "terms",
+            "definitions",
+            "correctPairings"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "MATCHING"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_ordering_question",
+    "description": "Creates a question where items need to be arranged in the correct sequential order",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question text asking to arrange items in correct order"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for each step/item"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Description of the step or item to be ordered"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              },
+              "description": "Array of items to be arranged in order. The minimum items is 3 and the maximum is 4."
+            },
+            "correctOrder": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of item IDs in their correct sequential order. Must match IDs from items array. The minimum items is 3 and the maximum is 4."
+            }
+          },
+          "required": [
+            "items",
+            "correctOrder"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ORDERING"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  },
+  {
+    "name": "create_image_identification_question",
+    "description": "Creates an image identification question where users select the correct answer based on an image",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Order of the question in the lesson"
+        },
+        "question": {
+          "type": "string",
+          "description": "The main question text"
+        },
+        "questionData": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "Describe the image content and context that should be displayed. Include key visual elements, diagrams, or architectural components that are relevant to the question. Example: 'A diagram showing data flowing from multiple sources through AWS Kinesis for real-time processing'"
+                },
+                "altText": {
+                  "type": "string",
+                  "description": "Alternative text description of the image"
+                }
+              },
+              "required": [
+                "url",
+                "altText"
+              ]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the option"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Text content of the option"
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ]
+              },
+              "description": "Array of possible answer options"
+            },
+            "correctOptionId": {
+              "type": "string",
+              "description": "ID of the correct option"
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Optional explanation for the correct answer"
+            }
+          },
+          "required": [
+            "image",
+            "options",
+            "correctOptionId"
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer"
+        },
+        "lessonId": {
+          "type": "string",
+          "description": "Identifier of the associated lesson"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "IMAGE_IDENTIFICATION"
+          ],
+          "description": "Type of the question"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "description": "Difficulty level of the question"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags associated with the question"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "question",
+        "questionData",
+        "points",
+        "lessonId",
+        "type",
+        "difficulty"
+      ]
+    }
+  }
+]

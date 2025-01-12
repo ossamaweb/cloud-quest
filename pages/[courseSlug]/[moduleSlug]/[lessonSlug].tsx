@@ -9,8 +9,6 @@ import {
   CreateUserLessonCompletionInput,
   useCreateLessonCompletionMutation,
 } from "@/hooks/use-create-lesson-completion-mutation";
-
-import { lessonFixture } from "@/lib/lesson.fixtures";
 import useCurrentUserQuery from "@/hooks/use-current-user-query";
 
 export default function Lesson() {
@@ -88,7 +86,7 @@ export default function Lesson() {
     <main>
       <LessonMain
         id={lesson.id}
-        questions={lessonFixture.questions}
+        questions={lesson.questions}
         saved={saved}
         onComplete={handleOnComplete}
         onSave={handleOnSave}

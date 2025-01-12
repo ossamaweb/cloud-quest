@@ -10,24 +10,40 @@ import questionsSeedData from "./seed-data/005_questions.seed";
 import { setupNewUser } from "@/lib/helpers/user.helpers";
 import * as readline from "readline";
 
-export async function seedData({ userId, username, signInDetails }: AuthUser) {
-  // 1. Create default Course
-  const course = await client.models.Course.create(coursesSeedData[0]);
+export async function seedData(
+  defaultCourseId: string | undefined,
+  createDefaultCourse: boolean,
+  cognitoUser: AuthUser | null
+) {
+  const defaultCourse = coursesSeedData.find(
+    ({ id }) => id === defaultCourseId
+  );
 
-  if (!course.data?.id) {
-    throw new Error("Failed to create course record");
+  if (!defaultCourse) {
+    throw new Error("default course not found.");
   }
 
-  console.log("1. course created.", { id: course.data.id });
+  if (createDefaultCourse) {
+    // 1. Create default Course
+    const course = await client.models.Course.create(defaultCourse);
 
-  // 2. Create User with UserStats and UserCourseEnrollment
-  const user = await setupNewUser({
-    userId,
-    username,
-    email: signInDetails?.loginId ?? username,
-  });
+    if (!course.data?.id) {
+      throw new Error("Failed to create course record");
+    }
 
-  console.log("2. user created.", { id: user.data?.id });
+    console.log("1. course created.", { id: course.data.id });
+  }
+
+  if (cognitoUser) {
+    // 2. Create User with UserStats and UserCourseEnrollment
+    const user = await setupNewUser({
+      userId: cognitoUser.userId,
+      username: cognitoUser.username,
+      email: cognitoUser.signInDetails?.loginId ?? cognitoUser.username,
+    });
+
+    console.log("2. user created.", { id: user.data?.id });
+  }
 
   // 2. Create Achievements
   // const achievement = await client.models.Achievement.create({
@@ -47,7 +63,7 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
       description: moduleData.description,
       order: moduleData.order,
       difficulty: moduleData.difficulty,
-      courseId: course.data.id,
+      courseId: defaultCourseId,
     });
   }
 
@@ -59,7 +75,8 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
       id: lessonData.id,
       slug: lessonData.slug,
       title: lessonData.title,
-      content: lessonData.content,
+      description: lessonData.description,
+      about: lessonData.about,
       order: lessonData.order,
       type: lessonData.type,
       moduleId: lessonData.moduleId,
@@ -69,16 +86,16 @@ export async function seedData({ userId, username, signInDetails }: AuthUser) {
   console.log("4. lessons created.", { count: lessonsSeedData.length });
 
   // 10. Create Questions for the lesson
-  for (const questionData of questionsSeedData) {
-    await client.models.Question.create(questionData);
+  for (const questionSeedData of questionsSeedData) {
+    await client.models.Question.create({
+      ...questionSeedData,
+      questionData: JSON.stringify(questionSeedData.questionData),
+    });
   }
 
   console.log("5. questions created.", { count: questionsSeedData.length });
 
-  return {
-    user,
-    course,
-  };
+  return true;
 }
 
 async function tempSeed({ userId, username, signInDetails }: AuthUser) {
@@ -88,7 +105,8 @@ async function tempSeed({ userId, username, signInDetails }: AuthUser) {
       id: lessonData.id,
       slug: lessonData.slug,
       title: lessonData.title,
-      content: lessonData.content,
+      description: lessonData.description,
+      about: lessonData.about,
       order: lessonData.order,
       type: lessonData.type,
       moduleId: lessonData.moduleId,
@@ -148,7 +166,11 @@ async function main() {
 
     // After successful sign in proceed with seeding
     console.log("Starting data seeding...");
-    const seededData = await seedData(cognitoUser);
+    const seededData = await seedData(
+      process.env.DEFAULT_COURSE_ID,
+      true,
+      null
+    );
 
     console.log("Data seeding completed successfully:", seededData);
   } catch (error) {

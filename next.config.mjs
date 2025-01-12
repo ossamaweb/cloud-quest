@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  env: {
+    DEFAULT_COURSE_ID: process.env.DEFAULT_COURSE_ID
+  }
 };
 
 

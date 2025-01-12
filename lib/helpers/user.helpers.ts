@@ -30,7 +30,7 @@ export async function setupNewUser(cognitoUser: {
   username: string;
   email: string;
 }) {
-  const defaultCourseId = coursesSeedData[0].id;
+  const defaultCourseId = process.env.DEFAULT_COURSE_ID;
   if (!defaultCourseId) {
     throw new Error("Provide a default course ID");
   }
