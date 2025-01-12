@@ -15,7 +15,6 @@ import {
 import * as React from "react";
 import { MultipleChoice } from "@/components/ui-questions/multiple-choice.question";
 import { DragAndDrop } from "@/components/ui-questions/drag-and-drop.question";
-import { ScenarioBased } from "@/components/ui-questions/scenario-based.question";
 import { ImageIdentification } from "@/components/ui-questions/image-identification.question";
 import { Matching } from "@/components/ui-questions/matching.question";
 import { Ordering } from "@/components/ui-questions/ordering.question";
