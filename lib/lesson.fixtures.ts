@@ -10,7 +10,8 @@ export const lessonFixture: GetLesson = {
   title: "AWS Test",
   order: 1,
   moduleId: moduleFixture.id!,
-  content: "",
+  description: "",
+  about: "",
   type: "LESSON",
   questions: [
     // Fill in the Blank Question

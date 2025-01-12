@@ -2,7 +2,7 @@
 
 A modern, interactive, and gamified learning platform inspired by [Duolingo](https://www.duolingo.com), built with Next.js and AWS Amplify. Cloud Quest transforms cloud computing education into an engaging journey through interactive quizzes, rewards, and game-like progression systems.
 
-Cloud Quest is built as a participation in the [AWS Game Builder Challenge](https://devpost.com/submit-to/22661-aws-game-builder-challenge), showcasing innovative approaches to cloud education through gamification.
+Cloud Quest is built as a participation in the [AWS Game Builder Challenge](https://awsdevchallenge.devpost.com/), showcasing innovative approaches to cloud education through gamification.
 
 ## Features
 
