@@ -11,7 +11,7 @@ import { setupNewUser } from "@/lib/helpers/user.helpers";
 import * as readline from "readline";
 
 export async function seedData(
-  defaultCourseId: string,
+  defaultCourseId: string | undefined,
   createDefaultCourse: boolean,
   cognitoUser: AuthUser | null
 ) {
@@ -105,7 +105,8 @@ async function tempSeed({ userId, username, signInDetails }: AuthUser) {
       id: lessonData.id,
       slug: lessonData.slug,
       title: lessonData.title,
-      content: lessonData.content,
+      description: lessonData.description,
+      about: lessonData.about,
       order: lessonData.order,
       type: lessonData.type,
       moduleId: lessonData.moduleId,
@@ -165,7 +166,11 @@ async function main() {
 
     // After successful sign in proceed with seeding
     console.log("Starting data seeding...");
-    const seededData = await seedData("aws-fundamentals", true, null);
+    const seededData = await seedData(
+      process.env.DEFAULT_COURSE_ID,
+      true,
+      null
+    );
 
     console.log("Data seeding completed successfully:", seededData);
   } catch (error) {
