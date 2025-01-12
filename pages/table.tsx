@@ -1,4 +1,4 @@
-// pages/lessons-table.tsx
+import modulesSeedData from "@/tools/amplify/seed-data/003_modules.seed";
 import lessonsSeedData from "@/tools/amplify/seed-data/004_lessons.seed";
 import { NextPage } from "next";
 
@@ -12,44 +12,58 @@ interface Lesson {
 }
 
 const LessonsTable: NextPage = () => {
-  console.log(lessonsSeedData.filter((l) => l.type === "PRACTICE"));
+  // useEffect(() => {
+  //   modulesSeedData.forEach((modData) => {
+  //     const prompt = generateLessonsPrompt({
+  //       moduleId: modData.id!,
+  //       moduleTitle: modData.title,
+  //       moduleDecription: modData.description ?? "",
+  //     });
 
+  //     console.log("**** PROMPT ****", modData.id!);
+  //     console.log(prompt);
+  //     console.log(`\n\n\n`);
+  //   });
+  // }, []);
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Lessons Table</h1>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginTop: "20px",
-        }}
-      >
-        <thead>
-          <tr style={{ backgroundColor: "#f4f4f4" }}>
-            <th style={tableHeaderStyle}>Module ID</th>
-            <th style={tableHeaderStyle}>Lesson Order</th>
-            <th style={tableHeaderStyle}>Title</th>
-            <th style={tableHeaderStyle}>Content</th>
-            <th style={tableHeaderStyle}>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lessonsSeedData.map((lesson, index) => (
-            <tr
-              key={index}
+    <div className="space-y-12 p-12">
+      {modulesSeedData.map((moduleData) => {
+        return (
+          <div className="space-y-6" key={moduleData.id}>
+            <h1 className="text-xl">{moduleData.title}</h1>
+            <h2 className="text-yellow-300">{moduleData.id}</h2>
+            <p>{moduleData.description}</p>
+            <table
               style={{
-                borderBottom: "1px solid #ddd",
+                width: "100%",
+                borderCollapse: "collapse",
+                marginTop: "20px",
               }}
             >
-              <td style={tableCellStyle}>{lesson.moduleId}</td>
-              <td style={tableCellStyle}>{lesson.order}</td>
-              <td style={tableCellStyle}>{lesson.title}</td>
-              <td style={tableCellStyle}>{lesson.content}</td>
-              <td style={tableCellStyle}>{lesson.type}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              <tbody>
+                {lessonsSeedData
+                  .filter((lesson) => lesson.moduleId === moduleData.id)
+                  .map((lesson, index) => (
+                    <tr
+                      key={index}
+                      style={{
+                        borderBottom: "1px solid #ddd",
+                      }}
+                    >
+                      <td style={tableCellStyle}>{lesson.id}</td>
+                      <td style={tableCellStyle}>{lesson.order}</td>
+                      <td style={tableCellStyle}>{lesson.title}</td>
+                      <td style={tableCellStyle}>
+                        <div className="font-medium">{lesson.description}</div>
+                        <div className="text-sm">{lesson.about}</div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -5,7 +5,7 @@ import {
 } from "@google/generative-ai";
 import { FunctionCallingMode } from "@google/generative-ai/server";
 import { functionDeclarations } from "./function-delerations";
-import generateQuestionsPrompt from "./prompt-generator";
+import { generateQuestionsPrompt } from "./prompt-generator";
 import { GetLesson } from "@/lib/types";
 import fs from "node:fs";
 import lessonsSeedData from "@/tools/amplify/seed-data/004_lessons.seed";
