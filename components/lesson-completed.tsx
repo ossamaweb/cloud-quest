@@ -26,7 +26,7 @@ export default function LessonCompleted({
     <div className="w-full h-full flex justify-center items-end sm:pb-12 pb-6">
       <div className="flex flex-col justify-center items-center gap-8">
         <div className="flex items-center justify-center">
-          <div className="text-amber-500 motion-safe:animate-spin motion-safe:repeat-[2]">
+          <div className="text-amber-500 motion-safe:animate-spin motion-safe:repeat-1">
             {repeated ? (
               <RefreshCcwDotIcon className="w-32 h-32" />
             ) : (

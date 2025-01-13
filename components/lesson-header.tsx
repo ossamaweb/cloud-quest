@@ -6,14 +6,11 @@ import Button from "./ui/button";
 import ProgressBar from "./ui/progress-bar";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import ButtonGame from "./ui/button-game";
 import { useRouter } from "next/router";

@@ -14,6 +14,13 @@ import LessonStreak from "./lesson-streak";
 import { NavigationGuardProvider } from "next-navigation-guard";
 
 interface LessonMainState {
+  data: {
+    questions: GetLesson["questions"];
+    questionsSize: number;
+    previousMistakes: GetLesson["questions"];
+    previousMistakesSize: number;
+    totalQuestions: number;
+  };
   questionState: {
     answered: boolean;
     checked: boolean;
@@ -37,8 +44,18 @@ interface LessonMainState {
   };
 }
 
-function LessonMainInitialState(repeated: boolean): LessonMainState {
+function LessonMainInitialState(
+  questions: GetLesson["questions"],
+  repeated: boolean
+): LessonMainState {
   return {
+    data: {
+      questions: questions.sort((a, b) => (a.order || 0) - (b.order || 0)),
+      questionsSize: questions.length,
+      previousMistakes: [],
+      previousMistakesSize: 0,
+      totalQuestions: questions.length,
+    },
     questionState: {
       answered: false,
       checked: false,
@@ -85,67 +102,76 @@ export default function LessonMain({
   onComplete,
   onSave,
 }: LessonMainProps) {
-  const [{ questionState, lessonState, lessonStats }, setState] =
-    React.useState<LessonMainState>(LessonMainInitialState(repeated));
+  const [{ data, questionState, lessonState, lessonStats }, setState] =
+    React.useState<LessonMainState>(
+      LessonMainInitialState(questions, repeated)
+    );
 
   const durationsRef = React.useRef<
     Record<string, { start: number; end: number; duration: number }>
   >({});
 
-  const { questionsSize, sortedQuestions } = React.useMemo(() => {
-    return {
-      sortedQuestions: questions.sort(
-        (a, b) => (a.order || 0) - (b.order || 0)
-      ),
-      questionsSize: questions.length,
-    };
-  }, [questions]);
-
   const handleOnGrade = React.useCallback<
     LessonQuestionProps<unknown>["onGrade"]
-  >(
-    (props) => {
-      setState((prev) => {
-        const { lessonState, lessonStats, questionState } = prev;
+  >((props) => {
+    setState((prev) => {
+      const { lessonState, lessonStats, questionState } = prev;
+      let prevData = prev.data;
 
-        const questionIndex = questionState.index + 1;
+      const questionIndex = questionState.index + 1;
 
-        const progress = props.autoCheck
-          ? (100 * questionIndex) / questionsSize
+      const progress =
+        props.autoCheck && props.correct
+          ? (100 * questionIndex) / prevData.totalQuestions
           : lessonState.progress;
 
-        const weightedAccuracy = lessonStats.weightedAccuracy + props.accuracy;
-        const answersCount = lessonStats.answersCount + props.answersCount;
-        const accuracy = Math.floor(weightedAccuracy / answersCount);
-        const questionPoints = lessonState.repeated
-          ? Math.round(props.points * LESSON_REPEATED_POINTS_RATIO)
-          : props.points;
+      const weightedAccuracy = lessonStats.weightedAccuracy + props.accuracy;
+      const answersCount = lessonStats.answersCount + props.answersCount;
+      const accuracy = Math.floor(weightedAccuracy / answersCount);
+      const questionPoints = lessonState.repeated
+        ? Math.round(props.points * LESSON_REPEATED_POINTS_RATIO)
+        : props.points;
 
-        return {
-          ...prev,
-          questionState: {
-            ...questionState,
-            answered: true,
-            checked: props.autoCheck,
-            status: props.correct ? "correct" : "incorrect",
-            explanation: props.data.explanation,
-          },
-          lessonState: {
-            ...lessonState,
-            progress,
-          },
-          lessonStats: {
-            ...lessonStats,
-            points: Math.floor(lessonStats.points + questionPoints),
-            accuracy: Math.max(0, Math.min(100, accuracy)),
-            answersCount,
-            weightedAccuracy,
-          },
-        };
-      });
-    },
-    [questionsSize]
-  );
+      // Handle previous mistakes
+      // for (ShortAnswer, FillInTheBlank, MC, TrueFalse, ImageID)
+      if (!props.correct) {
+        const mistaken = [...prevData.questions, ...prevData.previousMistakes][
+          questionState.index
+        ];
+        if (mistaken) {
+          prevData = {
+            ...prevData,
+            previousMistakes: [...prevData.previousMistakes, mistaken],
+            previousMistakesSize: prevData.previousMistakesSize + 1,
+            totalQuestions: prevData.totalQuestions + 1,
+          };
+        }
+      }
+
+      return {
+        ...prev,
+        data: prevData,
+        questionState: {
+          ...questionState,
+          answered: true,
+          checked: props.autoCheck,
+          status: props.correct ? "correct" : "incorrect",
+          explanation: props.data.explanation,
+        },
+        lessonState: {
+          ...lessonState,
+          progress,
+        },
+        lessonStats: {
+          ...lessonStats,
+          points: Math.floor(lessonStats.points + questionPoints),
+          accuracy: Math.max(0, Math.min(100, accuracy)),
+          answersCount,
+          weightedAccuracy,
+        },
+      };
+    });
+  }, []);
 
   const handleOnAnswer = React.useCallback((answered: boolean) => {
     setState((prev) => ({
@@ -162,14 +188,17 @@ export default function LessonMain({
       ...prev,
       lessonState: {
         ...prev.lessonState,
-        progress: (100 * (prev.questionState.index + 1)) / questionsSize,
+        progress:
+          prev.questionState.status === "correct"
+            ? (100 * (prev.questionState.index + 1)) / data.totalQuestions
+            : prev.lessonState.progress,
       },
       questionState: {
         ...prev.questionState,
         checked: true,
       },
     }));
-  }, [questionsSize]);
+  }, [data.totalQuestions]);
 
   const handleOnSave = React.useCallback(
     (totalDuration: number) => {
@@ -188,7 +217,7 @@ export default function LessonMain({
 
   const handleOnContinue = React.useCallback(
     (nextQuestionIndex: number) => {
-      const finalQuestion = nextQuestionIndex >= questionsSize;
+      const finalQuestion = nextQuestionIndex >= data.totalQuestions;
       let totalDuration = 0;
       if (finalQuestion) {
         totalDuration = Object.keys(durationsRef.current)
@@ -222,7 +251,7 @@ export default function LessonMain({
         };
       });
     },
-    [handleOnSave, questionsSize]
+    [handleOnSave, data.totalQuestions]
   );
 
   const handleOnComplete = React.useCallback(() => {
@@ -276,12 +305,14 @@ export default function LessonMain({
       },
       questionState: {
         ...prev.questionState,
-        index: Math.min(prev.questionState.index + 1, questionsSize + 1), // move to completed tab
+        index: Math.min(prev.questionState.index + 1, data.totalQuestions + 1), // move to completed tab
         checked: false,
         answered: false,
       },
     }));
-  }, [questionsSize, saved]);
+  }, [data.totalQuestions, saved]);
+
+  console.log({ data });
 
   return (
     <NavigationGuardProvider>
@@ -299,9 +330,9 @@ export default function LessonMain({
                 className="w-full h-full"
                 onValueChange={(e) => console.log("onValueChange", e)}
               >
-                {sortedQuestions.map((item, index) => (
+                {data.questions.map((item, index) => (
                   <TabsContent
-                    key={item.id}
+                    key={`${item.id}-${index}`}
                     value={String(index)}
                     tabIndex={-1}
                     className={cn(
@@ -325,9 +356,38 @@ export default function LessonMain({
                     />
                   </TabsContent>
                 ))}
+
+                {data.previousMistakes.map((item, index) => (
+                  <TabsContent
+                    key={`${item.id}-${index}-mistake`}
+                    value={String(data.questionsSize + index)}
+                    tabIndex={-1}
+                    className={cn(
+                      "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
+                      index > 0 &&
+                        "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
+                    )}
+                  >
+                    <LessonQuestion
+                      id={item.id}
+                      title={item.question}
+                      previousMistake={true}
+                      type={item.type}
+                      points={item.points}
+                      difficulty={item.difficulty}
+                      data={item.questionData}
+                      answered={questionState.answered}
+                      checked={questionState.checked}
+                      status={questionState.status}
+                      onGrade={handleOnGrade}
+                      onAnswer={handleOnAnswer}
+                    />
+                  </TabsContent>
+                ))}
+
                 <TabsContent
                   key="lessonCompleted"
-                  value={String(questionsSize)}
+                  value={String(data.totalQuestions)}
                   tabIndex={-1}
                   className={cn(
                     "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
@@ -343,7 +403,7 @@ export default function LessonMain({
                 </TabsContent>
                 <TabsContent
                   key="lessonStreak"
-                  value={String(questionsSize + 1)}
+                  value={String(data.totalQuestions + 1)}
                   tabIndex={-1}
                   className={cn(
                     "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",

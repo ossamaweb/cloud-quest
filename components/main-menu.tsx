@@ -33,7 +33,7 @@ export default function MainMenu({
             <span className="lg:inline-block hidden">Learn</span>
           </Button>
         </li>
-        <li>
+        {/* <li>
           <Button
             active={false}
             className="lg:w-full text-left py-3 px-4 space-x-4"
@@ -41,7 +41,7 @@ export default function MainMenu({
             <UserIcon />
             <span className="lg:inline-block hidden">Profile</span>
           </Button>
-        </li>
+        </li> */}
         <li>
           <Button
             active={false}
@@ -51,7 +51,7 @@ export default function MainMenu({
             <span className="lg:inline-block hidden">Settings</span>
           </Button>
         </li>
-        <li>
+        {/* <li>
           <Button
             onClick={() => signOut()}
             active={false}
@@ -60,7 +60,7 @@ export default function MainMenu({
             <LogOutIcon />
             <span className="lg:inline-block hidden">Logout</span>
           </Button>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );
