@@ -3,7 +3,7 @@
 import { cn, getQuestionEndMessage } from "@/lib/utils";
 import { XIcon, CheckIcon, EllipsisIcon } from "lucide-react";
 import * as React from "react";
-import ButtonGame from "./ui/button-game";
+import { ButtonGameKeyboard } from "./ui/button-game";
 import { LessonQuestionProps } from "@/lib/interfaces";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 
@@ -46,16 +46,16 @@ export default function LessonFooter({
             <div className="flex sm:flex-row flex-col gap-8 justify-end items-center">
               <div className="sm:w-auto w-full">
                 {saved ? (
-                  <ButtonGame
+                  <ButtonGameKeyboard
                     className="w-full sm:w-40"
                     keyboardShortcut="Enter"
                     status="correct"
                     onClick={handleOnComplete}
                   >
                     Continue
-                  </ButtonGame>
+                  </ButtonGameKeyboard>
                 ) : (
-                  <ButtonGame
+                  <ButtonGameKeyboard
                     className="w-full sm:w-40"
                     disabled={saving || checked || !answered}
                     status={
@@ -71,7 +71,7 @@ export default function LessonFooter({
                     ) : (
                       "Check"
                     )}
-                  </ButtonGame>
+                  </ButtonGameKeyboard>
                 )}
               </div>
             </div>
@@ -125,14 +125,14 @@ export default function LessonFooter({
                   </div>
                 </div>
                 <div className="sm:w-auto w-full">
-                  <ButtonGame
+                  <ButtonGameKeyboard
                     className="w-full sm:w-40"
                     status={status}
                     keyboardShortcut="Enter"
                     onClick={() => handleOnContinue(questionIndex + 1)}
                   >
                     Continue
-                  </ButtonGame>
+                  </ButtonGameKeyboard>
                 </div>
               </div>
             </div>

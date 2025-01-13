@@ -11,6 +11,30 @@ interface ButtonGameProps extends ButtonProps {
   status?: LessonQuestionProps<unknown>["status"];
   onClick?: () => void;
 }
+
+export function ButtonGameKeyboard(props: ButtonGameProps) {
+  const { registerShortcut, unregisterShortcut } = useKeyboard();
+
+  React.useEffect(() => {
+    if (props.keyboardShortcut && !props.disabled && props.onClick) {
+      registerShortcut(props.keyboardShortcut, props.onClick);
+      return () => {
+        if (props.keyboardShortcut) {
+          unregisterShortcut(props.keyboardShortcut);
+        }
+      };
+    }
+  }, [
+    props.disabled,
+    props.keyboardShortcut,
+    props.onClick,
+    registerShortcut,
+    unregisterShortcut,
+  ]);
+
+  return <ButtonGame {...props} />;
+}
+
 export default function ButtonGame({
   children,
   className,
@@ -19,23 +43,8 @@ export default function ButtonGame({
   onClick,
   ...rest
 }: ButtonGameProps) {
-  const { registerShortcut, unregisterShortcut } = useKeyboard();
-
-  React.useEffect(() => {
-    if (keyboardShortcut && !rest.disabled && onClick) {
-      registerShortcut(keyboardShortcut, onClick);
-      return () => unregisterShortcut(keyboardShortcut);
-    }
-  }, [
-    keyboardShortcut,
-    rest.disabled,
-    onClick,
-    registerShortcut,
-    unregisterShortcut,
-  ]);
-
   return (
-    <div className="relative rounded-md">
+    <div className="relative w-auto rounded-md">
       {/* Bottom layer for 3D effect */}
       <div
         className={cn(
@@ -50,7 +59,7 @@ export default function ButtonGame({
         tabIndex={keyboardShortcut ? -1 : rest.tabIndex}
         onClick={onClick}
         className={cn(
-          "relative border-0 text-background inline-flex items-center justify-center select-none",
+          "relative w-full border-0 text-background inline-flex items-center justify-center select-none",
           "enabled:cursor-pointer enabled:active:translate-y-1",
           "enabled:transition-all enabled:duration-100 disabled:bg-muted disabled:text-muted-foreground",
           "bg-gray-50 enabled:hover:bg-gray-100",

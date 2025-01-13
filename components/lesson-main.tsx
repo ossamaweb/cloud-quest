@@ -11,6 +11,7 @@ import { GetLesson } from "@/lib/types";
 import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
 import { LESSON_REPEATED_POINTS_RATIO } from "@/lib/config";
 import LessonStreak from "./lesson-streak";
+import { NavigationGuardProvider } from "next-navigation-guard";
 
 interface LessonMainState {
   questionState: {
@@ -283,90 +284,94 @@ export default function LessonMain({
   }, [questionsSize, saved]);
 
   return (
-    <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
-      <div className="relative flex-1 flex flex-col justify-between">
-        {!lessonState.saved && <LessonHeader progress={lessonState.progress} />}
+    <NavigationGuardProvider>
+      <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
+        <div className="relative flex-1 flex flex-col justify-between">
+          {!lessonState.saved && (
+            <LessonHeader progress={lessonState.progress} />
+          )}
 
-        <div className="flex-1">
-          <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
-            <Tabs
-              value={String(questionState.index)}
-              activationMode="manual"
-              className="w-full h-full"
-              onValueChange={(e) => console.log("onValueChange", e)}
-            >
-              {sortedQuestions.map((item, index) => (
+          <div className="flex-1">
+            <div className="max-w-2xl mx-auto h-full sm:px-6 px-4 sm:pb-12 pb-6">
+              <Tabs
+                value={String(questionState.index)}
+                activationMode="manual"
+                className="w-full h-full"
+                onValueChange={(e) => console.log("onValueChange", e)}
+              >
+                {sortedQuestions.map((item, index) => (
+                  <TabsContent
+                    key={item.id}
+                    value={String(index)}
+                    tabIndex={-1}
+                    className={cn(
+                      "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
+                      index > 0 &&
+                        "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
+                    )}
+                  >
+                    <LessonQuestion
+                      id={item.id}
+                      title={item.question}
+                      type={item.type}
+                      points={item.points}
+                      difficulty={item.difficulty}
+                      data={item.questionData}
+                      answered={questionState.answered}
+                      checked={questionState.checked}
+                      status={questionState.status}
+                      onGrade={handleOnGrade}
+                      onAnswer={handleOnAnswer}
+                    />
+                  </TabsContent>
+                ))}
                 <TabsContent
-                  key={item.id}
-                  value={String(index)}
+                  key="lessonCompleted"
+                  value={String(questionsSize)}
                   tabIndex={-1}
                   className={cn(
                     "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
-                    index > 0 &&
-                      "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
+                    "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
                   )}
                 >
-                  <LessonQuestion
-                    id={item.id}
-                    title={item.question}
-                    type={item.type}
-                    points={item.points}
-                    difficulty={item.difficulty}
-                    data={item.questionData}
-                    answered={questionState.answered}
-                    checked={questionState.checked}
-                    status={questionState.status}
-                    onGrade={handleOnGrade}
-                    onAnswer={handleOnAnswer}
+                  <LessonCompleted
+                    points={lessonStats.points}
+                    accuracy={lessonStats.accuracy}
+                    duration={lessonStats.duration}
+                    repeated={lessonState.repeated}
                   />
                 </TabsContent>
-              ))}
-              <TabsContent
-                key="lessonCompleted"
-                value={String(questionsSize)}
-                tabIndex={-1}
-                className={cn(
-                  "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
-                  "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-1/4 motion-safe:duration-500"
-                )}
-              >
-                <LessonCompleted
-                  points={lessonStats.points}
-                  accuracy={lessonStats.accuracy}
-                  duration={lessonStats.duration}
-                  repeated={lessonState.repeated}
-                />
-              </TabsContent>
-              <TabsContent
-                key="lessonStreak"
-                value={String(questionsSize + 1)}
-                tabIndex={-1}
-                className={cn(
-                  "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
-                  "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1/4 motion-safe:duration-500"
-                )}
-              >
-                {lessonState.showStreak && (
-                  <LessonStreak count={newStreakCount} />
-                )}
-              </TabsContent>
-            </Tabs>
+                <TabsContent
+                  key="lessonStreak"
+                  value={String(questionsSize + 1)}
+                  tabIndex={-1}
+                  className={cn(
+                    "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
+                    "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1/4 motion-safe:duration-500"
+                  )}
+                >
+                  {lessonState.showStreak && (
+                    <LessonStreak count={newStreakCount} />
+                  )}
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
-      </div>
 
-      <LessonFooter
-        answered={questionState.answered}
-        checked={questionState.checked}
-        status={questionState.status}
-        questionIndex={questionState.index}
-        questionExplanation={questionState.explanation}
-        saved={lessonState.saved}
-        saving={lessonState.saving}
-        handleOnCheck={handleOnCheck}
-        handleOnContinue={handleOnContinue}
-        handleOnComplete={handleOnComplete}
-      />
-    </div>
+        <LessonFooter
+          answered={questionState.answered}
+          checked={questionState.checked}
+          status={questionState.status}
+          questionIndex={questionState.index}
+          questionExplanation={questionState.explanation}
+          saved={lessonState.saved}
+          saving={lessonState.saving}
+          handleOnCheck={handleOnCheck}
+          handleOnContinue={handleOnContinue}
+          handleOnComplete={handleOnComplete}
+        />
+      </div>
+    </NavigationGuardProvider>
   );
 }
