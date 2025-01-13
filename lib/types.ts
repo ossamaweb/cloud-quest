@@ -44,6 +44,7 @@ export const getLessonSelectionSet = [
   "type",
   "moduleId",
   "questions.*",
+  "userCompletions.*",
 ] as const;
 export type GetLessonSelectionSet = typeof getLessonSelectionSet;
 export type GetLesson = SelectionSet<

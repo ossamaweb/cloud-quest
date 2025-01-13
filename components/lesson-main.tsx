@@ -9,6 +9,8 @@ import { LessonQuestionProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
 import { GetLesson } from "@/lib/types";
 import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
+import { LESSON_REPEATED_POINTS_RATIO } from "@/lib/config";
+import LessonStreak from "./lesson-streak";
 
 interface LessonMainState {
   questionState: {
@@ -22,6 +24,8 @@ interface LessonMainState {
     progress: number;
     saving: boolean;
     saved: boolean;
+    repeated: boolean;
+    showStreak: boolean;
   };
   lessonStats: {
     duration: number;
@@ -32,32 +36,38 @@ interface LessonMainState {
   };
 }
 
-const LessonMainInitialState: LessonMainState = {
-  questionState: {
-    answered: false,
-    checked: false,
-    status: "unanswered",
-    index: 0,
-    explanation: undefined,
-  },
-  lessonState: {
-    progress: 0,
-    saving: false,
-    saved: false,
-  },
-  lessonStats: {
-    duration: 0,
-    points: 0,
-    accuracy: 0,
-    weightedAccuracy: 0,
-    answersCount: 0,
-  },
-};
+function LessonMainInitialState(repeated: boolean): LessonMainState {
+  return {
+    questionState: {
+      answered: false,
+      checked: false,
+      status: "unanswered",
+      index: 0,
+      explanation: undefined,
+    },
+    lessonState: {
+      progress: 0,
+      saving: false,
+      saved: false,
+      showStreak: false,
+      repeated,
+    },
+    lessonStats: {
+      duration: 0,
+      points: 0,
+      accuracy: 0,
+      weightedAccuracy: 0,
+      answersCount: 0,
+    },
+  };
+}
 
 interface LessonMainProps {
   id: string | null;
   questions: GetLesson["questions"];
+  repeated: boolean;
   saved: boolean;
+  newStreakCount: number;
   onComplete: () => void;
   onSave: (
     data: Pick<
@@ -69,11 +79,13 @@ interface LessonMainProps {
 export default function LessonMain({
   questions,
   saved,
+  repeated,
+  newStreakCount,
   onComplete,
   onSave,
 }: LessonMainProps) {
   const [{ questionState, lessonState, lessonStats }, setState] =
-    React.useState<LessonMainState>(LessonMainInitialState);
+    React.useState<LessonMainState>(LessonMainInitialState(repeated));
 
   const durationsRef = React.useRef<
     Record<string, { start: number; end: number; duration: number }>
@@ -104,6 +116,9 @@ export default function LessonMain({
         const weightedAccuracy = lessonStats.weightedAccuracy + props.accuracy;
         const answersCount = lessonStats.answersCount + props.answersCount;
         const accuracy = Math.floor(weightedAccuracy / answersCount);
+        const questionPoints = lessonState.repeated
+          ? Math.round(props.points * LESSON_REPEATED_POINTS_RATIO)
+          : props.points;
 
         return {
           ...prev,
@@ -120,7 +135,7 @@ export default function LessonMain({
           },
           lessonStats: {
             ...lessonStats,
-            points: Math.floor(lessonStats.points + props.points),
+            points: Math.floor(lessonStats.points + questionPoints),
             accuracy: Math.max(0, Math.min(100, accuracy)),
             answersCount,
             weightedAccuracy,
@@ -209,7 +224,28 @@ export default function LessonMain({
     [handleOnSave, questionsSize]
   );
 
+  const handleOnComplete = React.useCallback(() => {
+    if (newStreakCount && !lessonState.showStreak) {
+      setState((prev) => ({
+        ...prev,
+        questionState: {
+          ...prev.questionState,
+          index: prev.questionState.index + 1, // move to streak tab
+        },
+        lessonState: {
+          ...prev.lessonState,
+          showStreak: true,
+        },
+      }));
+
+      return;
+    }
+
+    onComplete();
+  }, [lessonState.showStreak, newStreakCount, onComplete]);
+
   React.useEffect(() => {
+    // Handles quiz duration
     if (questionState.checked) {
       const endTime = new Date().getTime();
       durationsRef.current[questionState.index] = {
@@ -226,22 +262,24 @@ export default function LessonMain({
   }, [questionState.index, questionState.checked]);
 
   React.useEffect(() => {
-    if (saved) {
-      setState((prev) => ({
-        ...prev,
-        lessonState: {
-          ...prev.lessonState,
-          saving: false,
-          saved: true,
-        },
-        questionState: {
-          ...prev.questionState,
-          index: Math.min(prev.questionState.index + 1, questionsSize + 1),
-          checked: false,
-          answered: false,
-        },
-      }));
+    // handles post saving to DB
+    if (!saved) {
+      return;
     }
+    setState((prev) => ({
+      ...prev,
+      lessonState: {
+        ...prev.lessonState,
+        saving: false,
+        saved: true,
+      },
+      questionState: {
+        ...prev.questionState,
+        index: Math.min(prev.questionState.index + 1, questionsSize + 1), // move to completed tab
+        checked: false,
+        answered: false,
+      },
+    }));
   }, [questionsSize, saved]);
 
   return (
@@ -283,7 +321,6 @@ export default function LessonMain({
                   />
                 </TabsContent>
               ))}
-
               <TabsContent
                 key="lessonCompleted"
                 value={String(questionsSize)}
@@ -297,7 +334,21 @@ export default function LessonMain({
                   points={lessonStats.points}
                   accuracy={lessonStats.accuracy}
                   duration={lessonStats.duration}
+                  repeated={lessonState.repeated}
                 />
+              </TabsContent>
+              <TabsContent
+                key="lessonStreak"
+                value={String(questionsSize + 1)}
+                tabIndex={-1}
+                className={cn(
+                  "mt-0 w-full h-full outline-none focus-visible:ring-0 focus:ring-0",
+                  "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1/4 motion-safe:duration-500"
+                )}
+              >
+                {lessonState.showStreak && (
+                  <LessonStreak count={newStreakCount} />
+                )}
               </TabsContent>
             </Tabs>
           </div>
@@ -314,7 +365,7 @@ export default function LessonMain({
         saving={lessonState.saving}
         handleOnCheck={handleOnCheck}
         handleOnContinue={handleOnContinue}
-        handleOnComplete={onComplete}
+        handleOnComplete={handleOnComplete}
       />
     </div>
   );

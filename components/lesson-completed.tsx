@@ -1,28 +1,47 @@
 "use client";
 import * as React from "react";
-import { StarIcon, TargetIcon, ThumbsUpIcon, TimerIcon } from "lucide-react";
+import {
+  CircleCheckBigIcon,
+  RefreshCcwDotIcon,
+  StarIcon,
+  TargetIcon,
+  TimerIcon,
+} from "lucide-react";
 import { formatTimeWithHours } from "@/lib/utils";
 
 interface LessonCompletedProps {
   points: number;
   accuracy: number;
   duration: number;
+  repeated: boolean;
 }
 
 export default function LessonCompleted({
   points,
   accuracy,
   duration,
+  repeated,
 }: LessonCompletedProps) {
   return (
     <div className="w-full h-full flex justify-center items-end sm:pb-12 pb-6">
       <div className="flex flex-col justify-center items-center gap-8">
         <div className="flex items-center justify-center">
-          <div className="text-amber-500 motion-safe:animate-pulse">
-            <ThumbsUpIcon className="w-32 h-32" />
+          <div className="text-amber-500 motion-safe:animate-spin motion-safe:repeat-[2]">
+            {repeated ? (
+              <RefreshCcwDotIcon className="w-32 h-32" />
+            ) : (
+              <CircleCheckBigIcon className="w-32 h-32" />
+            )}
           </div>
         </div>
-        <h3 className="text-2xl text-amber-500 font-bold">Lesson Completed!</h3>
+        <div className="space-y-2 flex flex-col items-center justify-center">
+          <h3 className="text-2xl text-amber-500 font-bold">
+            {repeated ? "Lesson Reviewed!" : "Lesson Completed!"}
+          </h3>
+          <p className="text-lg font-medium">
+            {repeated ? "Practice makes perfect." : "Good job"}
+          </p>
+        </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div className="motion-safe:delay-500 motion-safe:fill-mode-backwards motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom motion-safe:duration-500">

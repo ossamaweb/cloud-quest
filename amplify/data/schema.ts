@@ -22,6 +22,7 @@ export const schema = a.schema({
       user: a.belongsTo("User", "userId"),
       points: a.integer().default(0),
       streak: a.integer().default(0),
+      lastStreakAt: a.datetime(),
       longestStreak: a.integer().default(0),
       lessonsCompleted: a.integer().default(0),
       modulesCompleted: a.integer().default(0),

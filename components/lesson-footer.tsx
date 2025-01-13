@@ -1,7 +1,7 @@
 "use client";
 
 import { cn, getQuestionEndMessage } from "@/lib/utils";
-import { XIcon, CheckIcon } from "lucide-react";
+import { XIcon, CheckIcon, EllipsisIcon } from "lucide-react";
 import * as React from "react";
 import ButtonGame from "./ui/button-game";
 import { LessonQuestionProps } from "@/lib/interfaces";
@@ -60,7 +60,13 @@ export default function LessonFooter({
                     keyboardShortcut="Enter"
                     onClick={handleOnCheck}
                   >
-                    {saving ? "..." : "Check"}
+                    {saving ? (
+                      <span className="animate-ping">
+                        <EllipsisIcon />
+                      </span>
+                    ) : (
+                      "Check"
+                    )}
                   </ButtonGame>
                 )}
               </div>

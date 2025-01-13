@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import { ZapIcon, StarIcon } from "lucide-react";
+import { FlameIcon, StarIcon } from "lucide-react";
 import Button from "./ui/button";
 import { UserWithStats } from "@/lib/types";
 
@@ -24,7 +24,7 @@ export default function UserMenu({
       </li>
       <li>
         <Button className="text-amber-300 font-bold">
-          <ZapIcon fill="currentColor" />
+          <FlameIcon fill="currentColor" />
           <span>{currentUser.stats?.streak}</span>
         </Button>
       </li>

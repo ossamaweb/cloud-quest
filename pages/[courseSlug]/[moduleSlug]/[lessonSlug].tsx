@@ -20,7 +20,14 @@ export default function Lesson() {
   const { mutate } = useCreateLessonCompletionMutation(
     (router.query?.courseSlug ?? null) as string | null
   );
-  const [saved, setSaved] = React.useState(false);
+
+  const [{ saved, newStreakCount }, setState] = React.useState<{
+    saved: boolean;
+    newStreakCount: number;
+  }>({
+    saved: false,
+    newStreakCount: 0,
+  });
 
   const handleOnComplete = React.useCallback(() => {
     router.push(`/`);
@@ -47,24 +54,24 @@ export default function Lesson() {
         lessonOrder: lesson.order,
         lessonSlug: lesson.slug,
         moduleId: lesson.moduleId,
-        currentUser: currentUserQuery.currentUser,
+        repeated: lesson.userCompletions.length > 0,
       };
 
       mutate(input, {
         onSuccess: (data) => {
           console.log("Lesson completion created:", data);
-          setSaved(true);
+          setState({ saved: true, newStreakCount: data.newStreakCount });
         },
         onError: (error) => {
           console.error("Failed to create lesson completion:", error);
-          setSaved(true);
+          setState({ saved: true, newStreakCount: 0 });
         },
       });
     },
-    [currentUserQuery.currentUser, lesson, mutate]
+    [currentUserQuery?.currentUser?.id, lesson, mutate]
   );
 
-  if (isError) {
+  if (currentUserQuery.isError) {
     return <div>Error loading user: {error?.message}</div>;
   }
 
@@ -88,6 +95,8 @@ export default function Lesson() {
         id={lesson.id}
         questions={lesson.questions}
         saved={saved}
+        repeated={lesson.userCompletions.length > 0}
+        newStreakCount={newStreakCount}
         onComplete={handleOnComplete}
         onSave={handleOnSave}
       />
