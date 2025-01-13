@@ -16,7 +16,7 @@ export const KeyboardProvider = ({
 
   const keyHandler = React.useCallback((event: KeyboardEvent) => {
     if (
-      event.target instanceof HTMLInputElement ||
+      // event.target instanceof HTMLInputElement ||
       event.target instanceof HTMLTextAreaElement
     ) {
       return;
