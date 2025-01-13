@@ -59,7 +59,6 @@ export default function Lesson() {
 
       mutate(input, {
         onSuccess: (data) => {
-          console.log("Lesson completion created:", data);
           setState({ saved: true, newStreakCount: data.newStreakCount });
         },
         onError: (error) => {

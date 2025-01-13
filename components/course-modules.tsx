@@ -39,8 +39,6 @@ export default function CourseModules({
     );
   }
 
-  console.log({ userModules });
-
   return (
     <div className="space-y-16 mb-16">
       {userModules?.map((userModule, index) => (

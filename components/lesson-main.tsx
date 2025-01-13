@@ -312,8 +312,6 @@ export default function LessonMain({
     }));
   }, [data.totalQuestions, saved]);
 
-  console.log({ data });
-
   return (
     <NavigationGuardProvider>
       <div className="fixed w-full h-full flex flex-col overflow-y-scroll overflow-x-hidden">
@@ -328,7 +326,6 @@ export default function LessonMain({
                 value={String(questionState.index)}
                 activationMode="manual"
                 className="w-full h-full"
-                onValueChange={(e) => console.log("onValueChange", e)}
               >
                 {data.questions.map((item, index) => (
                   <TabsContent

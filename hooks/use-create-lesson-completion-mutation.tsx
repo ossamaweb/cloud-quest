@@ -77,8 +77,6 @@ async function updateUserStatsAfterLessonCompletion(
       : previous.lastStreakAt, // Keep previous time if same day
   };
 
-  console.log({ previous, current });
-
   const updateUserStats = await client.models.UserStats.update({
     id: stats.id,
     lessonsCompleted: current.lessonsCompleted,
@@ -116,12 +114,10 @@ export function useCreateLessonCompletionMutation(courseSlug: string | null) {
     mutationFn: async (input: CreateUserLessonCompletionInput) => {
       try {
         const completion = await createUserLessonCompletion(input);
-        console.log({ completion });
 
         const postCompletion = await updateUserStatsAfterLessonCompletion(
           input
         );
-        console.log({ postCompletion });
 
         // wait for refetching to complete then return data
         await Promise.all([

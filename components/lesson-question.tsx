@@ -36,7 +36,6 @@ export default function LessonQuestion(
 
     try {
       const parsedData = JSON.parse(props.data as string) as QuestionData;
-      console.log({ parsedData });
       return parsedData;
     } catch (err) {
       console.error("Failed to parse question data:", err);
