@@ -9,6 +9,7 @@ import BottomBar from "@/components/bottom-bar";
 import UserMenu from "@/components/user-menu";
 import CourseModules from "@/components/course-modules";
 import useCurrentUserQuery from "@/hooks/use-current-user-query";
+import SidebarLeaderboard from "@/components/sidebar-leaderboard";
 
 export default function Dashboard() {
   const { currentUser, isError, error } = useCurrentUserQuery();
@@ -37,6 +38,7 @@ export default function Dashboard() {
         </MainContent>
         <SidebarRight>
           <UserMenu currentUser={currentUser} />
+          <SidebarLeaderboard currentUserId={currentUser.id} />
         </SidebarRight>
       </div>
       <BottomBar />
