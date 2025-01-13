@@ -49,6 +49,7 @@ export default function LessonFooter({
                   <ButtonGame
                     className="w-full sm:w-40"
                     keyboardShortcut="Enter"
+                    status="correct"
                     onClick={handleOnComplete}
                   >
                     Continue
@@ -57,6 +58,9 @@ export default function LessonFooter({
                   <ButtonGame
                     className="w-full sm:w-40"
                     disabled={saving || checked || !answered}
+                    status={
+                      saving || checked || !answered ? undefined : "correct"
+                    }
                     keyboardShortcut="Enter"
                     onClick={handleOnCheck}
                   >
