@@ -48,16 +48,15 @@ export default function SidebarLeaderboard({
     }
 
     // Ranked users
-    // const rankedUsers = getLeaderboard.map(
-    //   (user, index): LeaderboardInterface => ({
-    //     rank: index + 1,
-    //     userId: user.id ?? "NONE",
-    //     username: user.username,
-    //     points: user.stats?.points ?? 0,
-    //   })
-    // );
+    const rankedUsers = getLeaderboard.map(
+      (user, index): LeaderboardInterface => ({
+        rank: index + 1,
+        userId: user.id ?? "NONE",
+        username: user.username,
+        points: user.stats?.points ?? 0,
+      })
+    );
 
-    const rankedUsers = [...leaderboardPlaceholderData];
     // Top 5 users
     const topFive = rankedUsers.slice(0, 5);
 
@@ -114,7 +113,7 @@ export default function SidebarLeaderboard({
             key={userId}
             className={cn(
               "flex items-center justify-start gap-4 truncate py-2 px-4 ",
-              userId === currentUserId && "bg-primary/10"
+              userId === currentUserId && "bg-primary/10 font-medium"
             )}
           >
             {userId === "separator" ? (

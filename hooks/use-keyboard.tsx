@@ -25,6 +25,7 @@ export const KeyboardProvider = ({
     const callback = shortcuts.current.get(event.key);
 
     if (callback) {
+      event.preventDefault();
       callback();
     }
   }, []);

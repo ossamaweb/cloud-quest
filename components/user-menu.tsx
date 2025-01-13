@@ -23,7 +23,7 @@ export default function UserMenu({
         </Button>
       </li>
       <li>
-        <Button className="text-amber-300 font-bold">
+        <Button className="text-amber-500 font-bold">
           <FlameIcon fill="currentColor" />
           <span>{currentUser.stats?.streak}</span>
         </Button>
