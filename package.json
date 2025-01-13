@@ -28,8 +28,7 @@
     "react-dom": "^18",
     "react-error-boundary": "^5.0.0",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
-    "uuid": "^11.0.4"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.5.1",
