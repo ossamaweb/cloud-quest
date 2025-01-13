@@ -15,6 +15,18 @@ export default function UserMenu({
   className = "",
   currentUser,
 }: UserMenuProps) {
+  const streakCount = React.useMemo(() => {
+    if (!currentUser.stats.lastStreakAt) {
+      return currentUser.stats?.streak;
+    }
+    const lastStreak = new Date(currentUser.stats.lastStreakAt);
+    const now = new Date();
+    const diff = now.getTime() - lastStreak.getTime();
+
+    const isWithin24Hours = diff < 24 * 60 * 60 * 1000;
+    return isWithin24Hours ? currentUser.stats?.streak : 0; // reset streak if more than 24 hours has passed
+  }, [currentUser.stats?.lastStreakAt, currentUser.stats?.streak]);
+
   return (
     <ul className={cn("space-x-2 w-full flex justify-between", className)}>
       <li>
@@ -25,7 +37,7 @@ export default function UserMenu({
       <li>
         <Button className="text-amber-500 font-bold">
           <FlameIcon fill="currentColor" />
-          <span>{currentUser.stats?.streak}</span>
+          <span>{streakCount}</span>
         </Button>
       </li>
       <li>
