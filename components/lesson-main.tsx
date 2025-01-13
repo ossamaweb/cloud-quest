@@ -6,10 +6,9 @@ import LessonCompleted from "@/components/lesson-completed";
 import LessonHeader from "@/components/lesson-header";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LessonQuestionProps } from "@/lib/interfaces";
-import { cn } from "@/lib/utils";
+import { cn, getRepeatedLessonPoints } from "@/lib/utils";
 import { GetLesson } from "@/lib/types";
 import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
-import { LESSON_REPEATED_POINTS_RATIO } from "@/lib/config";
 import LessonStreak from "./lesson-streak";
 import { NavigationGuardProvider } from "next-navigation-guard";
 
@@ -129,7 +128,7 @@ export default function LessonMain({
       const answersCount = lessonStats.answersCount + props.answersCount;
       const accuracy = Math.floor(weightedAccuracy / answersCount);
       const questionPoints = lessonState.repeated
-        ? Math.round(props.points * LESSON_REPEATED_POINTS_RATIO)
+        ? getRepeatedLessonPoints(props.points)
         : props.points;
 
       // Handle previous mistakes

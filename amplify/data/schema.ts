@@ -25,7 +25,6 @@ export const schema = a.schema({
       lastStreakAt: a.datetime(),
       longestStreak: a.integer().default(0),
       lessonsCompleted: a.integer().default(0),
-      modulesCompleted: a.integer().default(0),
       coursesCompleted: a.integer().default(0),
       achievementsUnlocked: a.integer().default(0),
     })
@@ -112,6 +111,7 @@ export const schema = a.schema({
       about: a.string().required(),
       order: a.integer().required(),
       type: a.enum(["LESSON", "PRACTICE"]),
+      points: a.integer().required(),
       moduleId: a.id(),
       module: a.belongsTo("Module", "moduleId"),
       questions: a.hasMany("Question", "lessonId"),

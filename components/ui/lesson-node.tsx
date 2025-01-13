@@ -1,6 +1,10 @@
 "use client";
 
-import { cn, getLessonNodeTranslation } from "@/lib/utils";
+import {
+  cn,
+  getLessonNodeTranslation,
+  getRepeatedLessonPoints,
+} from "@/lib/utils";
 import * as React from "react";
 import { CheckIcon, Star } from "lucide-react";
 import IconCloud from "./icon-cloud";
@@ -15,6 +19,7 @@ interface LessonNodeProps {
   slug: string;
   title: string;
   description: string;
+  points: number;
   total: number;
   inverse: boolean;
   current?: boolean;
@@ -29,15 +34,19 @@ export default function LessonNode({
   slug,
   title,
   description,
+  points,
   total,
   inverse = false,
   current = false,
   completed = false,
   onClick,
 }: LessonNodeProps) {
-  const translationStyle = React.useMemo(() => {
-    return getLessonNodeTranslation(index, total, inverse);
-  }, [index, inverse, total]);
+  const { translationStyle, adjustedPoints } = React.useMemo(() => {
+    return {
+      adjustedPoints: completed ? getRepeatedLessonPoints(points) : points,
+      translationStyle: getLessonNodeTranslation(index, total, inverse),
+    };
+  }, [completed, index, inverse, points, total]);
 
   const handleOnClick = React.useCallback(() => {
     if (current || completed) {
@@ -118,7 +127,11 @@ export default function LessonNode({
               onClick={handleOnClick}
               disabled={!completed && !current}
             >
-              {completed ? "Practice" : current ? "Start" : "Locked"}
+              {completed
+                ? `Practice +${adjustedPoints} XP`
+                : current
+                ? `Start +${adjustedPoints} XP`
+                : "Locked"}
             </ButtonGame>
           </div>
         </div>

@@ -83,6 +83,7 @@ export default function CourseModule({
             slug={lesson.slug}
             title={lesson.title}
             description={lesson.description}
+            points={lesson.points}
             index={nodeIndex}
             inverse={moduleIndex % 2 !== 0}
             total={lessonsSize}

@@ -86,6 +86,7 @@ export const onCreateLesson = /* GraphQL */ `subscription OnCreateLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -158,6 +159,7 @@ export const onCreateQuestion = /* GraphQL */ `subscription OnCreateQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -208,9 +210,9 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -329,6 +331,7 @@ export const onCreateUserLessonCompletion = /* GraphQL */ `subscription OnCreate
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -367,9 +370,9 @@ export const onCreateUserStats = /* GraphQL */ `subscription OnCreateUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak
@@ -471,6 +474,7 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -543,6 +547,7 @@ export const onDeleteQuestion = /* GraphQL */ `subscription OnDeleteQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -593,9 +598,9 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -714,6 +719,7 @@ export const onDeleteUserLessonCompletion = /* GraphQL */ `subscription OnDelete
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -752,9 +758,9 @@ export const onDeleteUserStats = /* GraphQL */ `subscription OnDeleteUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak
@@ -856,6 +862,7 @@ export const onUpdateLesson = /* GraphQL */ `subscription OnUpdateLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -928,6 +935,7 @@ export const onUpdateQuestion = /* GraphQL */ `subscription OnUpdateQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -978,9 +986,9 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -1099,6 +1107,7 @@ export const onUpdateUserLessonCompletion = /* GraphQL */ `subscription OnUpdate
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -1137,9 +1146,9 @@ export const onUpdateUserStats = /* GraphQL */ `subscription OnUpdateUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak

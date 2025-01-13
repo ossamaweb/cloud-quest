@@ -55,7 +55,6 @@ export async function setupNewUser(cognitoUser: {
       streak: 0,
       longestStreak: 0,
       lessonsCompleted: 0,
-      modulesCompleted: 0,
       coursesCompleted: 0,
       achievementsUnlocked: 0,
     });
