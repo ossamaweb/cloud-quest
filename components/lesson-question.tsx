@@ -23,6 +23,7 @@ import { TrueFalse } from "@/components/ui-questions/true-false.question";
 import { FillInTheBlank } from "@/components/ui-questions/fill-in-the-blank.question";
 import { cn } from "@/lib/utils";
 import { QuestionType } from "@/lib/graphql/API";
+import { Repeat2Icon } from "lucide-react";
 
 export default function LessonQuestion(
   props: LessonQuestionProps<string | number | boolean | object>
@@ -35,7 +36,6 @@ export default function LessonQuestion(
 
     try {
       const parsedData = JSON.parse(props.data as string) as QuestionData;
-      console.log({ parsedData });
       return parsedData;
     } catch (err) {
       console.error("Failed to parse question data:", err);
@@ -50,8 +50,15 @@ export default function LessonQuestion(
   return (
     <div className={cn("w-full h-full", props.className)}>
       <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
-        <QuestionHeaderRenderer type={props.type} />
-
+        <div className="space-y-1">
+          {!!props.previousMistake && (
+            <div className="flex items-center space-x-2 dark:text-red-500 text-red-600">
+              <Repeat2Icon className="w-5 h-5" />
+              <p className="font-bold">Previous Mistake</p>
+            </div>
+          )}
+          <QuestionHeaderRenderer type={props.type} />
+        </div>
         <div className="flex-1 flex flex-col items-stretch justify-center">
           <div className="space-y-8">
             <QuestionTitleRenderer type={props.type} title={props.title} />

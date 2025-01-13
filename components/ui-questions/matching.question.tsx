@@ -144,7 +144,7 @@ export const Matching = ({
             <div key={term.id}>
               <ButtonQuestion
                 tabIndex={-1}
-                className="leading-5 h-16 text-sm"
+                className="leading-5 h-16 md:text-base text-sm"
                 passive={true}
                 text={term.text}
                 keyboardShortcut={String(index + 1)}
@@ -162,7 +162,7 @@ export const Matching = ({
             <div key={def.id}>
               <ButtonQuestion
                 tabIndex={-1}
-                className="leading-5 h-16 text-sm"
+                className="leading-5 h-16 md:text-base text-sm"
                 text={def.text}
                 passive={true}
                 keyboardShortcut={String(terms.length + index + 1)}

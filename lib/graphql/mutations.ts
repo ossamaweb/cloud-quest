@@ -86,6 +86,7 @@ export const createLesson = /* GraphQL */ `mutation CreateLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -158,6 +159,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -208,9 +210,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -329,6 +331,7 @@ export const createUserLessonCompletion = /* GraphQL */ `mutation CreateUserLess
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -367,9 +370,9 @@ export const createUserStats = /* GraphQL */ `mutation CreateUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak
@@ -471,6 +474,7 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -543,6 +547,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -593,9 +598,9 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -714,6 +719,7 @@ export const deleteUserLessonCompletion = /* GraphQL */ `mutation DeleteUserLess
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -752,9 +758,9 @@ export const deleteUserStats = /* GraphQL */ `mutation DeleteUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak
@@ -856,6 +862,7 @@ export const updateLesson = /* GraphQL */ `mutation UpdateLesson(
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -928,6 +935,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -978,9 +986,9 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -1099,6 +1107,7 @@ export const updateUserLessonCompletion = /* GraphQL */ `mutation UpdateUserLess
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -1137,9 +1146,9 @@ export const updateUserStats = /* GraphQL */ `mutation UpdateUserStats(
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak

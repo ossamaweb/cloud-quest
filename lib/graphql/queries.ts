@@ -74,6 +74,7 @@ export const getLesson = /* GraphQL */ `query GetLesson($id: ID!) {
     moduleId
     order
     owner
+    points
     questions {
       nextToken
       __typename
@@ -134,6 +135,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!) {
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -181,9 +183,9 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak
@@ -290,6 +292,7 @@ export const getUserLessonCompletion = /* GraphQL */ `query GetUserLessonComplet
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -325,9 +328,9 @@ export const getUserStats = /* GraphQL */ `query GetUserStats($id: ID!) {
     coursesCompleted
     createdAt
     id
+    lastStreakAt
     lessonsCompleted
     longestStreak
-    modulesCompleted
     owner
     points
     streak
@@ -473,6 +476,7 @@ export const listLessonBySlug = /* GraphQL */ `query ListLessonBySlug(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -509,6 +513,7 @@ export const listLessons = /* GraphQL */ `query ListLessons(
       moduleId
       order
       owner
+      points
       slug
       title
       type
@@ -749,9 +754,9 @@ export const listUserStats = /* GraphQL */ `query ListUserStats(
       coursesCompleted
       createdAt
       id
+      lastStreakAt
       lessonsCompleted
       longestStreak
-      modulesCompleted
       owner
       points
       streak

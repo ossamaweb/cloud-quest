@@ -49,16 +49,16 @@ export const ShortAnswer = ({
     [onGrade, data, points]
   );
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const hasValue = value.trim().length > 0;
-      if (hasValue) {
-        handleOnGrade(value);
-      }
-    },
-    [value, handleOnGrade]
-  );
+  // const handleSubmit = useCallback(
+  //   (e: React.FormEvent) => {
+  //     e.preventDefault();
+  //     const hasValue = value.trim().length > 0;
+  //     if (hasValue) {
+  //       handleOnGrade(value, true);
+  //     }
+  //   },
+  //   [value, handleOnGrade]
+  // );
 
   useEffect(() => {
     if (checked) {
@@ -67,10 +67,10 @@ export const ShortAnswer = ({
   }, [checked, value, handleOnGrade]);
 
   return (
-    <form
-      id={id ?? "shortAnswerForm"}
-      name={id ?? "shortAnswerForm"}
-      onSubmit={handleSubmit}
+    <div
+      // id={id ?? "shortAnswerForm"}
+      // name={id ?? "shortAnswerForm"}
+      // onSubmit={handleSubmit}
       className="space-y-2"
     >
       <input
@@ -83,7 +83,7 @@ export const ShortAnswer = ({
         className="w-full p-2 bg-input border-2 border-border rounded-sm outline-none placeholder:text-foreground/20"
         placeholder="Type your answer"
       />
-      <input type="submit" hidden={true} />
-    </form>
+      {/* <input type="submit" hidden={true} /> */}
+    </div>
   );
 };

@@ -17,6 +17,20 @@ export type UserWithStats = SelectionSet<
   CurrentUserSelectionSet
 >;
 
+export const getLeaderboardSelectionSet = [
+  "id",
+  "username",
+  "profilePicture",
+  "stats.points",
+  "stats.streak",
+  "stats.lessonsCompleted",
+] as const;
+export type GetLeaderboardSelectionSet = typeof getLeaderboardSelectionSet;
+export type GetLeaderboard = SelectionSet<
+  Schema["User"]["type"],
+  GetLeaderboardSelectionSet
+>;
+
 export const listModulesSelectionSet = [
   "id",
   "slug",
@@ -44,6 +58,7 @@ export const getLessonSelectionSet = [
   "type",
   "moduleId",
   "questions.*",
+  "userCompletions.*",
 ] as const;
 export type GetLessonSelectionSet = typeof getLessonSelectionSet;
 export type GetLesson = SelectionSet<

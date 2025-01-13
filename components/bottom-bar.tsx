@@ -5,30 +5,21 @@ import * as React from "react";
 
 interface BottomBarProps {
   className?: string;
+  children?: React.ReactNode;
 }
 
-export default function BottomBar({ className = "" }: BottomBarProps) {
+export default function BottomBar({
+  className = "",
+  children,
+}: BottomBarProps) {
   return (
     <div
       className={cn(
-        "h-16 sm:hidden bg-background border-t border-input px-4 flex items-center justify-between",
+        "sticky bottom-0 h-16 sm:hidden bg-background border-t border-input px-4 flex items-center justify-between",
         className
       )}
     >
-      <div className="text-sm text-muted-foreground">
-        © 2024 Your Company. All rights reserved.
-      </div>
-      <nav className="flex space-x-4 text-sm">
-        <a href="#" className="hover:text-primary">
-          Privacy
-        </a>
-        <a href="#" className="hover:text-primary">
-          Terms
-        </a>
-        <a href="#" className="hover:text-primary">
-          Help
-        </a>
-      </nav>
+      {children}
     </div>
   );
 }

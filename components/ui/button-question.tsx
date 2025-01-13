@@ -114,7 +114,9 @@ export default function ButtonQuestion({
           </span>
         )}
         {!!text && (
-          <span className="flex-1 text-center line-clamp-2">{text}</span>
+          <span className="flex-1 text-center line-clamp-2" title={text}>
+            {text}
+          </span>
         )}
         {children}
       </button>

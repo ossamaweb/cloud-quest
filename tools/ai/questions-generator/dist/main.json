@@ -617,7 +617,7 @@
                 },
                 {
                     "id": "item3",
-                    "text": "You manage applications, data, OS, runtime, middleware, and servers."
+                    "text": "You manage nothing."
                 },
                 {
                     "id": "item4",
@@ -627,19 +627,19 @@
             "correctPairings": [
                 {
                     "itemId": "item1",
-                    "categoryId": "cat2"
+                    "categoryId": "cat1"
                 },
                 {
                     "itemId": "item2",
-                    "categoryId": "cat3"
+                    "categoryId": "cat2"
                 },
                 {
                     "itemId": "item3",
-                    "categoryId": "cat4"
+                    "categoryId": "cat3"
                 },
                 {
                     "itemId": "item4",
-                    "categoryId": "cat1"
+                    "categoryId": "cat4"
                 }
             ]
         },
@@ -28659,7 +28659,7 @@
                 },
                 {
                     "id": "mc7-opt4",
-                    "text": "All of the above."
+                    "text": "All of the options."
                 }
             ],
             "correctOptionId": "mc7-opt4",

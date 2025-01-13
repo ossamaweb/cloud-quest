@@ -9,8 +9,13 @@ import BottomBar from "@/components/bottom-bar";
 import UserMenu from "@/components/user-menu";
 import CourseModules from "@/components/course-modules";
 import useCurrentUserQuery from "@/hooks/use-current-user-query";
+import SidebarLeaderboard from "@/components/sidebar-leaderboard";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MetaTags from "@/components/meta-tags";
+import MainMenu from "@/components/main-menu";
 
 export default function Dashboard() {
+  const isMobile = useIsMobile();
   const { currentUser, isError, error } = useCurrentUserQuery();
 
   if (isError) {
@@ -22,24 +27,38 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col">
-      <TopBar>
-        <UserMenu currentUser={currentUser} />
-      </TopBar>
-      <div className="flex flex-1">
-        <SidebarLeft />
-        <MainContent>
-          <CourseModules
-            userId={currentUser.id}
-            courseId={currentUser.courses[0]?.courseId}
-            courseSlug={currentUser.courses[0]?.course?.slug}
-          />
-        </MainContent>
-        <SidebarRight>
-          <UserMenu currentUser={currentUser} />
-        </SidebarRight>
+    <>
+      <MetaTags />
+      <div className="flex flex-col">
+        {isMobile && (
+          <TopBar className="sticky top-0 z-50">
+            <UserMenu currentUser={currentUser} />
+          </TopBar>
+        )}
+
+        <div className="flex flex-1">
+          <SidebarLeft>
+            <MainMenu className="md:block flex justify-center" />
+          </SidebarLeft>
+          <MainContent>
+            <CourseModules
+              userId={currentUser.id}
+              courseId={currentUser.courses[0]?.courseId}
+              courseSlug={currentUser.courses[0]?.course?.slug}
+            />
+          </MainContent>
+          {!isMobile && (
+            <SidebarRight>
+              <UserMenu currentUser={currentUser} />
+              <SidebarLeaderboard currentUserId={currentUser.id} />
+            </SidebarRight>
+          )}
+        </div>
+
+        <BottomBar>
+          <MainMenu horizontal={true} />
+        </BottomBar>
       </div>
-      <BottomBar />
-    </div>
+    </>
   );
 }

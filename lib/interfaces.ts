@@ -78,6 +78,7 @@ export interface LessonQuestionProps<T> {
   className?: string;
   id: string | null;
   title: string;
+  previousMistake?: boolean;
   type: keyof typeof QuestionType | null;
   points: number;
   difficulty: keyof typeof QuestionDifficulty | null;

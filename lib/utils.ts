@@ -156,3 +156,7 @@ export function formatTimeWithHours(totalSeconds: number): string {
   }
   return `${paddedMinutes}:${paddedSeconds}`;
 }
+
+export function getRepeatedLessonPoints(points: number): number {
+  return Math.round(points * 0.25); // 25% of original points for lesson review
+}

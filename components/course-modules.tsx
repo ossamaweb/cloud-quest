@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useListModulesQuery } from "@/hooks/use-list-modules-query";
 import CourseModule from "./course-module";
-import { UserWithStats } from "@/lib/types";
 
 interface CourseModulesProps {
   className?: string;
@@ -33,10 +32,12 @@ export default function CourseModules({
   }
 
   if (!userModules) {
-    return <div>loading...</div>;
+    return (
+      <div className="h-screen w-full flex items-center justify-center">
+        <p className="text-muted-foreground">loading...</p>
+      </div>
+    );
   }
-
-  console.log({ userModules });
 
   return (
     <div className="space-y-16 mb-16">
