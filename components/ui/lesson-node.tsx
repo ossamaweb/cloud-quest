@@ -69,17 +69,18 @@ export default function LessonNode({
           />
           <IconCloud
             className={cn(
-              "absolute text-primary group-hover:translate-y-1 group-hover:-translate-x-0.5 transition-transform duration-100",
+              "absolute text-primary group-active:translate-y-1.5 group-active:-translate-x-1 transition-transform duration-100",
               completed || current
-                ? "text-primary"
+                ? "text-primary group-hover:translate-y-0.5 group-hover:-translate-x-0.5"
                 : "text-zinc-300 dark:text-zinc-700"
             )}
           />
         </div>
         <div
           className={cn(
-            "relative mt-2  group-hover:translate-y-1 group-hover:-translate-x-0.5 transition-transform duration-100",
-            (completed || current) && "text-primary-foreground",
+            "relative mt-2 group-active:translate-y-1.5 group-active:-translate-x-1 transition-transform duration-100",
+            (completed || current) &&
+              "group-hover:translate-y-0.5 group-hover:-translate-x-0.5 text-primary-foreground",
             !completed && "text-zinc-400 dark:text-zinc-800",
             current && "text-zinc-200 dark:text-zinc-900"
           )}

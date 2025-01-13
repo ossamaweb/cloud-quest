@@ -32,7 +32,11 @@ export default function CourseModules({
   }
 
   if (!userModules) {
-    return <div>loading...</div>;
+    return (
+      <div className="h-screen w-full flex items-center justify-center">
+        <p className="text-muted-foreground">loading...</p>
+      </div>
+    );
   }
 
   console.log({ userModules });
