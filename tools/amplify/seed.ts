@@ -79,6 +79,7 @@ export async function seedData(
       about: lessonData.about,
       order: lessonData.order,
       type: lessonData.type,
+      points: lessonData.points,
       moduleId: lessonData.moduleId,
     });
   }
@@ -94,26 +95,6 @@ export async function seedData(
   }
 
   console.log("5. questions created.", { count: questionsSeedData.length });
-
-  return true;
-}
-
-async function tempSeed({ userId, username, signInDetails }: AuthUser) {
-  // 9. Create Lessons
-  for (const lessonData of lessonsSeedData) {
-    await client.models.Lesson.create({
-      id: lessonData.id,
-      slug: lessonData.slug,
-      title: lessonData.title,
-      description: lessonData.description,
-      about: lessonData.about,
-      order: lessonData.order,
-      type: lessonData.type,
-      moduleId: lessonData.moduleId,
-    });
-  }
-
-  console.log("4. lessons created.", { count: lessonsSeedData.length });
 
   return true;
 }

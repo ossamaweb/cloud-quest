@@ -13,6 +13,7 @@ export const lessonFixture: GetLesson = {
   description: "",
   about: "",
   type: "LESSON",
+  userCompletions: [],
   questions: [
     // Fill in the Blank Question
     {
