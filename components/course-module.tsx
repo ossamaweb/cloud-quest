@@ -23,11 +23,7 @@ export default function CourseModule({
 }: CourseModuleProps) {
   const router = useRouter();
   const handleOnModuleNodeClick = React.useCallback(
-    (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      lessonSlug: string
-    ) => {
-      event.preventDefault();
+    (lessonSlug: string) => {
       router.push(`/${courseSlug}/${data.slug}/${lessonSlug}`);
     },
     [courseSlug, data.slug, router]
@@ -74,7 +70,7 @@ export default function CourseModule({
 
       <div className="relative text-center">
         <div className="absolute top-1/2 h-0.5 w-full bg-border rounded-md" />
-        <h2 className="relative px-4 inline-block text-lg bg-background font-bold text-muted-foreground/50 text-center">
+        <h2 className="relative px-4 inline-block text-lg bg-background font-bold text-muted-foreground/80 text-center">
           {data.title}
         </h2>
       </div>

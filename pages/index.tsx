@@ -38,7 +38,7 @@ export default function Dashboard() {
 
         <div className="flex flex-1">
           <SidebarLeft>
-            <MainMenu />
+            <MainMenu className="md:block flex justify-center" />
           </SidebarLeft>
           <MainContent>
             <CourseModules

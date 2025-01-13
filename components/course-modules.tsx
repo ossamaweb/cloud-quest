@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useListModulesQuery } from "@/hooks/use-list-modules-query";
 import CourseModule from "./course-module";
-import { UserWithStats } from "@/lib/types";
 
 interface CourseModulesProps {
   className?: string;
