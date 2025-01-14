@@ -1,9 +1,9 @@
 "use client";
 
 import { cn, getQuestionEndMessage } from "@/lib/utils";
-import { XIcon, CheckIcon } from "lucide-react";
+import { XIcon, CheckIcon, EllipsisIcon } from "lucide-react";
 import * as React from "react";
-import ButtonGame from "./ui/button-game";
+import { ButtonGameKeyboard } from "./ui/button-game";
 import { LessonQuestionProps } from "@/lib/interfaces";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 
@@ -11,21 +11,27 @@ interface LessonFooterProps {
   answered: boolean;
   checked: boolean;
   status: LessonQuestionProps<unknown>["status"];
+  saved: boolean;
+  saving: boolean;
   questionIndex: number;
   questionExplanation?: string;
   hasExplanation?: boolean;
   handleOnCheck: () => void;
-  handleOnContinue: () => void;
+  handleOnContinue: (index: number) => void;
+  handleOnComplete: () => void;
 }
 
 export default function LessonFooter({
   answered,
   checked,
   status,
+  saved,
+  saving,
   questionIndex,
   questionExplanation,
   handleOnCheck,
   handleOnContinue,
+  handleOnComplete,
 }: LessonFooterProps) {
   return (
     <KeyboardProvider>
@@ -36,23 +42,43 @@ export default function LessonFooter({
             checked && "pointer-events-none"
           )}
         >
-          <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
+          <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-8 py-6">
             <div className="flex sm:flex-row flex-col gap-8 justify-end items-center">
               <div className="sm:w-auto w-full">
-                <ButtonGame
-                  className="w-full sm:w-40"
-                  disabled={!answered || checked}
-                  keyboardShortcut="Enter"
-                  onClick={handleOnCheck}
-                >
-                  Check
-                </ButtonGame>
+                {saved ? (
+                  <ButtonGameKeyboard
+                    className="w-full sm:w-40"
+                    keyboardShortcut="Enter"
+                    status="correct"
+                    onClick={handleOnComplete}
+                  >
+                    Continue
+                  </ButtonGameKeyboard>
+                ) : (
+                  <ButtonGameKeyboard
+                    className="w-full sm:w-40"
+                    disabled={saving || checked || !answered}
+                    status={
+                      saving || checked || !answered ? undefined : "correct"
+                    }
+                    keyboardShortcut="Enter"
+                    onClick={handleOnCheck}
+                  >
+                    {saving ? (
+                      <span className="animate-ping">
+                        <EllipsisIcon />
+                      </span>
+                    ) : (
+                      "Check"
+                    )}
+                  </ButtonGameKeyboard>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {checked && status !== "unanswered" && (
+        {checked && status !== "unanswered" && !saved && (
           <div
             className={cn(
               "absolute bottom-0 w-full border-t-2 border-transparent",
@@ -63,7 +89,7 @@ export default function LessonFooter({
                 : "bg-green-200 dark:bg-zinc-900"
             )}
           >
-            <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-12 py-6">
+            <div className="max-w-4xl mx-auto sm:px-8 px-4 sm:py-8 py-6">
               <div className="flex sm:flex-row flex-col sm:gap-8 gap-4 justify-between sm:items-center items-start">
                 <div
                   className={cn(
@@ -92,21 +118,21 @@ export default function LessonFooter({
                       {getQuestionEndMessage(status, questionIndex)}
                     </div>
                     {!!questionExplanation && (
-                      <div className="text-sm text-pretty">
+                      <div className="text-pretty text-sm sm:text-base">
                         {questionExplanation}
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="sm:w-auto w-full">
-                  <ButtonGame
+                  <ButtonGameKeyboard
                     className="w-full sm:w-40"
                     status={status}
                     keyboardShortcut="Enter"
-                    onClick={handleOnContinue}
+                    onClick={() => handleOnContinue(questionIndex + 1)}
                   >
                     Continue
-                  </ButtonGame>
+                  </ButtonGameKeyboard>
                 </div>
               </div>
             </div>

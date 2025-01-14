@@ -1,4 +1,5 @@
-import { defineAuth, secret } from "@aws-amplify/backend";
+import "dotenv/config";
+import { defineAuth } from "@aws-amplify/backend";
 
 /**
  * Define and configure your auth resource

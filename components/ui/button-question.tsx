@@ -51,8 +51,12 @@ export default function ButtonQuestion({
       className={cn(
         "relative bg-background rounded-sm",
         selected && "motion-safe:animate-answer-scale-in",
-        status === "incorrect" && "motion-safe:animate-answer-scale-in-2",
-        status === "correct" && "motion-safe:animate-answer-scale-in-2"
+        passive &&
+          status === "incorrect" &&
+          "motion-safe:animate-answer-scale-in-2",
+        passive &&
+          status === "correct" &&
+          "motion-safe:animate-answer-scale-in-2"
       )}
     >
       {/* Bottom layer for 3D effect */}
@@ -110,7 +114,9 @@ export default function ButtonQuestion({
           </span>
         )}
         {!!text && (
-          <span className="flex-1 text-center line-clamp-2">{text}</span>
+          <span className="flex-1 text-center line-clamp-2" title={text}>
+            {text}
+          </span>
         )}
         {children}
       </button>

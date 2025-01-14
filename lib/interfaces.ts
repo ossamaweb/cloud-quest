@@ -1,4 +1,4 @@
-import { QUESTION_TYPE } from "./enums";
+import { QuestionDifficulty, QuestionType } from "./graphql/API";
 
 // Common types
 export type ID = string;
@@ -11,68 +11,27 @@ export interface QuestionOption {
 }
 
 export interface BaseQuestion {
-  id: ID;
-  type: QUESTION_TYPE;
-  question: string;
   explanation?: string;
-  points?: number;
 }
 
 // Specific question type interfaces
 export interface MultipleChoiceQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.MULTIPLE_CHOICE;
   options: QuestionOption[];
   correctOptionId: ID;
 }
 
 export interface DragAndDropQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.DRAG_AND_DROP;
   categories: QuestionOption[];
   items: QuestionOption[];
-  correctPairings: Record<ID, ID>; // itemId -> categoryId
-}
-
-// A rubric in a ScenarioBasedQuestion is a scoring guide that lists specific criteria for evaluating the student's answer to a scenario-based question. Let me expand the ScenarioBasedQuestion interface with a more detailed rubric structure:
-interface RubricCriterion {
-  id: ID;
-  criterion: string;
-  points: number;
-  description: string;
-  performanceLevels: {
-    excellent: {
-      points: number;
-      description: string;
-    };
-    good: {
-      points: number;
-      description: string;
-    };
-    fair: {
-      points: number;
-      description: string;
-    };
-    poor: {
-      points: number;
-      description: string;
-    };
-  };
-}
-export interface ScenarioBasedQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.SCENARIO_BASED;
-  scenario: string;
-  correctAnswer: string;
-  rubric?: RubricCriterion[];
+  correctPairings: Array<{ itemId: string; categoryId: string }>; // itemId -> categoryId
 }
 
 export interface ShortAnswerQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.SHORT_ANSWER;
   correctAnswer: string;
   acceptableAnswers?: string[]; // Alternative correct answers
-  caseSensitive?: boolean;
 }
 
 export interface FillInTheBlankQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.FILL_IN_THE_BLANK;
   blanks: {
     id: ID;
     correctAnswer: string;
@@ -81,25 +40,21 @@ export interface FillInTheBlankQuestion extends BaseQuestion {
 }
 
 export interface MatchingQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.MATCHING;
   terms: QuestionOption[];
   definitions: QuestionOption[];
-  correctPairings: Record<ID, ID>; // termId -> definitionId
+  correctPairings: Array<{ termId: string; definitionId: string }>; // termId -> definitionId
 }
 
 export interface TrueFalseQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.TRUE_FALSE;
   correctAnswer: boolean;
 }
 
 export interface OrderingQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.ORDERING;
   items: QuestionOption[];
   correctOrder: ID[]; // Array of item IDs in correct order
 }
 
 export interface ImageIdentificationQuestion extends BaseQuestion {
-  type: QUESTION_TYPE.IMAGE_IDENTIFICATION;
   image: {
     url: string;
     altText: string;
@@ -109,10 +64,9 @@ export interface ImageIdentificationQuestion extends BaseQuestion {
 }
 
 // Union type for all question types
-export type Question =
+export type QuestionData =
   | MultipleChoiceQuestion
   | DragAndDropQuestion
-  | ScenarioBasedQuestion
   | ShortAnswerQuestion
   | FillInTheBlankQuestion
   | MatchingQuestion
@@ -121,16 +75,30 @@ export type Question =
   | ImageIdentificationQuestion;
 
 export interface LessonQuestionProps<T> {
+  className?: string;
+  id: string | null;
+  title: string;
+  previousMistake?: boolean;
+  type: keyof typeof QuestionType | null;
+  points: number;
+  difficulty: keyof typeof QuestionDifficulty | null;
   data: T;
   answered: boolean;
   checked: boolean;
   status: "unanswered" | "correct" | "incorrect";
-  onGrade: (
-    correct: boolean,
-    points: number,
-    autoCheck: boolean,
-    data: Question
-  ) => void;
   onAnswer: (answered: boolean) => void;
-  className?: string;
+  onGrade: ({
+    correct,
+    points,
+    accuracy,
+    autoCheck,
+    data,
+  }: {
+    correct: boolean;
+    points: number;
+    accuracy: number;
+    answersCount: number;
+    autoCheck: boolean;
+    data: QuestionData;
+  }) => void;
 }

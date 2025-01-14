@@ -1,0 +1,30 @@
+{
+ 
+  "title": "Lesson",
+  "type": "object",
+  "required": ["slug", "title", "content", "order"],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["LESSON", "PRACTICE"]
+    },
+    "moduleId": {
+      "type": "string"
+    }
+  }
+}

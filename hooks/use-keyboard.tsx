@@ -1,4 +1,3 @@
-// KeyboardContext.tsx
 import React, { createContext, useContext, useEffect } from "react";
 
 type KeyboardContextType = {
@@ -17,7 +16,7 @@ export const KeyboardProvider = ({
 
   const keyHandler = React.useCallback((event: KeyboardEvent) => {
     if (
-      event.target instanceof HTMLInputElement ||
+      // event.target instanceof HTMLInputElement ||
       event.target instanceof HTMLTextAreaElement
     ) {
       return;
@@ -26,6 +25,7 @@ export const KeyboardProvider = ({
     const callback = shortcuts.current.get(event.key);
 
     if (callback) {
+      event.preventDefault();
       callback();
     }
   }, []);

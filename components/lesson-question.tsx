@@ -1,29 +1,68 @@
 "use client";
 
-import { QUESTION_TYPE } from "@/lib/enums";
-import { LessonQuestionProps, Question } from "@/lib/interfaces";
+import {
+  DragAndDropQuestion,
+  FillInTheBlankQuestion,
+  ImageIdentificationQuestion,
+  LessonQuestionProps,
+  MatchingQuestion,
+  MultipleChoiceQuestion,
+  OrderingQuestion,
+  QuestionData,
+  ShortAnswerQuestion,
+  TrueFalseQuestion,
+} from "@/lib/interfaces";
 import * as React from "react";
-import { MultipleChoice } from "./ui/question/multiple-choice.question";
-import { DragAndDrop } from "./ui/question/drag-and-drop.question";
-import { ScenarioBased } from "./ui/question/scenario-based.question";
-import { ImageIdentification } from "./ui/question/image-identification.question";
-import { Matching } from "./ui/question/matching.question";
-import { Ordering } from "./ui/question/ordering.question";
-import { ShortAnswer } from "./ui/question/short-answer.question";
-import { TrueFalse } from "./ui/question/true-false.question";
-import { FillInTheBlank } from "./ui/question/fill-in-the-blank.question";
+import { MultipleChoice } from "@/components/ui-questions/multiple-choice.question";
+import { DragAndDrop } from "@/components/ui-questions/drag-and-drop.question";
+import { ImageIdentification } from "@/components/ui-questions/image-identification.question";
+import { Matching } from "@/components/ui-questions/matching.question";
+import { Ordering } from "@/components/ui-questions/ordering.question";
+import { ShortAnswer } from "@/components/ui-questions/short-answer.question";
+import { TrueFalse } from "@/components/ui-questions/true-false.question";
+import { FillInTheBlank } from "@/components/ui-questions/fill-in-the-blank.question";
 import { cn } from "@/lib/utils";
+import { QuestionType } from "@/lib/graphql/API";
+import { Repeat2Icon } from "lucide-react";
 
-export default function LessonQuestion(props: LessonQuestionProps<Question>) {
+export default function LessonQuestion(
+  props: LessonQuestionProps<string | number | boolean | object>
+) {
+  const parsedData = React.useMemo(() => {
+    if (!props.data || typeof props.data !== "string") {
+      console.error("Question data not found");
+      return null;
+    }
+
+    try {
+      const parsedData = JSON.parse(props.data as string) as QuestionData;
+      return parsedData;
+    } catch (err) {
+      console.error("Failed to parse question data:", err);
+      return null;
+    }
+  }, [props.data]);
+
+  if (!parsedData) {
+    return <div>Failed to parse question data!</div>;
+  }
+
   return (
     <div className={cn("w-full h-full", props.className)}>
       <div className="flex flex-col justify-between sm:gap-8 gap-4 w-full h-full">
-        <QuestionHeaderRenderer type={props.data.type} />
-
+        <div className="space-y-1">
+          {!!props.previousMistake && (
+            <div className="flex items-center space-x-2 dark:text-red-500 text-red-600">
+              <Repeat2Icon className="w-5 h-5" />
+              <p className="font-bold">Previous Mistake</p>
+            </div>
+          )}
+          <QuestionHeaderRenderer type={props.type} />
+        </div>
         <div className="flex-1 flex flex-col items-stretch justify-center">
-          <div className="sm:space-y-8 space-y-4">
-            <QuestionTitleRenderer {...props} />
-            <QuestionOptionsRenderer {...props} />
+          <div className="space-y-8">
+            <QuestionTitleRenderer type={props.type} title={props.title} />
+            <QuestionOptionsRenderer {...props} data={parsedData} />
           </div>
         </div>
       </div>
@@ -33,28 +72,26 @@ export default function LessonQuestion(props: LessonQuestionProps<Question>) {
 
 function QuestionHeaderRenderer({
   type,
-}: {
-  type: QUESTION_TYPE;
-}): React.ReactNode {
+}: Pick<LessonQuestionProps<QuestionData>, "type">): React.ReactNode {
   const pageTitle = React.useMemo(() => {
     switch (type) {
-      case QUESTION_TYPE.MULTIPLE_CHOICE:
+      case QuestionType.MULTIPLE_CHOICE:
         return "Select the correct option";
-      case QUESTION_TYPE.DRAG_AND_DROP:
+      case QuestionType.DRAG_AND_DROP:
         return "Drag and drop to correct positions";
-      case QUESTION_TYPE.SCENARIO_BASED:
+      case QuestionType.SCENARIO_BASED:
         return "Solve the following scenario";
-      case QUESTION_TYPE.SHORT_ANSWER:
+      case QuestionType.SHORT_ANSWER:
         return "Type your answer";
-      case QUESTION_TYPE.FILL_IN_THE_BLANK:
+      case QuestionType.FILL_IN_THE_BLANK:
         return "Fill in the blank";
-      case QUESTION_TYPE.MATCHING:
+      case QuestionType.MATCHING:
         return "Select the matching pairs";
-      case QUESTION_TYPE.TRUE_FALSE:
+      case QuestionType.TRUE_FALSE:
         return "True or false";
-      case QUESTION_TYPE.ORDERING:
+      case QuestionType.ORDERING:
         return "Select in order";
-      case QUESTION_TYPE.IMAGE_IDENTIFICATION:
+      case QuestionType.IMAGE_IDENTIFICATION:
         return null;
       default:
         return "Answer the following question";
@@ -65,45 +102,45 @@ function QuestionHeaderRenderer({
     return null;
   }
 
-  return (
-    <h2 className="font-bold sm:text-2xl text-xl text-foreground">
-      {pageTitle}
-    </h2>
-  );
+  return <h2 className="font-bold text-xl text-foreground">{pageTitle}</h2>;
 }
 
 function QuestionTitleRenderer({
-  data,
-}: LessonQuestionProps<Question>): React.ReactNode {
-  if (data.type === QUESTION_TYPE.FILL_IN_THE_BLANK) {
+  type,
+  title,
+}: Pick<LessonQuestionProps<QuestionData>, "type" | "title">): React.ReactNode {
+  if (type === QuestionType.FILL_IN_THE_BLANK) {
     return null;
   }
-  return <h3 className="sm:text-lg text-base font-medium">{data.question}</h3>;
+  return <h3 className="sm:text-lg text-base font-medium">{title}</h3>;
 }
 
 function QuestionOptionsRenderer({
   data,
   ...rest
-}: LessonQuestionProps<Question>): React.ReactNode {
-  switch (data.type) {
-    case QUESTION_TYPE.MULTIPLE_CHOICE:
-      return <MultipleChoice data={data} {...rest} />;
-    case QUESTION_TYPE.DRAG_AND_DROP:
-      return <DragAndDrop data={data} {...rest} />;
-    case QUESTION_TYPE.SCENARIO_BASED:
-      return <ScenarioBased data={data} {...rest} />;
-    case QUESTION_TYPE.SHORT_ANSWER:
-      return <ShortAnswer data={data} {...rest} />;
-    case QUESTION_TYPE.FILL_IN_THE_BLANK:
-      return <FillInTheBlank data={data} {...rest} />;
-    case QUESTION_TYPE.MATCHING:
-      return <Matching data={data} {...rest} />;
-    case QUESTION_TYPE.TRUE_FALSE:
-      return <TrueFalse data={data} {...rest} />;
-    case QUESTION_TYPE.ORDERING:
-      return <Ordering data={data} {...rest} />;
-    case QUESTION_TYPE.IMAGE_IDENTIFICATION:
-      return <ImageIdentification data={data} {...rest} />;
+}: LessonQuestionProps<QuestionData>): React.ReactNode {
+  switch (rest.type) {
+    case QuestionType.MULTIPLE_CHOICE:
+      return <MultipleChoice data={data as MultipleChoiceQuestion} {...rest} />;
+    case QuestionType.DRAG_AND_DROP:
+      return <DragAndDrop data={data as DragAndDropQuestion} {...rest} />;
+    case QuestionType.SHORT_ANSWER:
+      return <ShortAnswer data={data as ShortAnswerQuestion} {...rest} />;
+    case QuestionType.FILL_IN_THE_BLANK:
+      return <FillInTheBlank data={data as FillInTheBlankQuestion} {...rest} />;
+    case QuestionType.MATCHING:
+      return <Matching data={data as MatchingQuestion} {...rest} />;
+    case QuestionType.TRUE_FALSE:
+      return <TrueFalse data={data as TrueFalseQuestion} {...rest} />;
+    case QuestionType.ORDERING:
+      return <Ordering data={data as OrderingQuestion} {...rest} />;
+    case QuestionType.IMAGE_IDENTIFICATION:
+      return (
+        <ImageIdentification
+          data={data as ImageIdentificationQuestion}
+          {...rest}
+        />
+      );
     default:
       return <div>Unsupported question type</div>;
   }
