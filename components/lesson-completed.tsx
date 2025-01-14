@@ -7,7 +7,7 @@ import {
   TargetIcon,
   TimerIcon,
 } from "lucide-react";
-import { formatTimeWithHours } from "@/lib/utils";
+import { calcuateLessonFinalPoints, formatTimeWithHours } from "@/lib/utils";
 
 interface LessonCompletedProps {
   points: number;
@@ -51,7 +51,9 @@ export default function LessonCompleted({
               </div>
               <div className="flex-1 flex items-center justify-center space-x-2 text-blue-500 bg-background rounded-md ">
                 <StarIcon fill="currentColor" />
-                <span className="text-lg font-bold">{points}</span>
+                <span className="text-lg font-bold">
+                  {calcuateLessonFinalPoints(points, repeated)}
+                </span>
               </div>
             </div>
           </div>

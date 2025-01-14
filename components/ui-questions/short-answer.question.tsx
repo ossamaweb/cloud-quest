@@ -11,6 +11,7 @@ export const ShortAnswer = ({
   data,
   points,
   checked,
+  previousMistake,
   onGrade,
   onAnswer,
 }: LessonQuestionProps<ShortAnswerQuestion>) => {
@@ -40,13 +41,14 @@ export const ShortAnswer = ({
       gradeQuestion({
         onGrade,
         data,
+        previousMistake,
         trials: [correct],
         totalPoints: points,
-        autoCheck: true,
+        autoCheck: false,
         answersCount: 1,
       });
     },
-    [onGrade, data, points]
+    [onGrade, data, points, previousMistake]
   );
 
   // const handleSubmit = useCallback(

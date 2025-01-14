@@ -20,6 +20,7 @@ interface MatchingQuestionState {
 export const Matching = ({
   data,
   points,
+  previousMistake,
   onGrade,
 }: LessonQuestionProps<MatchingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -122,12 +123,13 @@ export const Matching = ({
         onGrade,
         data,
         trials,
+        previousMistake,
         totalPoints: points,
         autoCheck: true,
         answersCount: Object.keys(data.correctPairings).length,
       });
     }
-  }, [correctAnswersCount, data, onGrade, points, trials]);
+  }, [correctAnswersCount, data, onGrade, points, trials, previousMistake]);
 
   const { definitions, terms } = useMemo(() => {
     return {

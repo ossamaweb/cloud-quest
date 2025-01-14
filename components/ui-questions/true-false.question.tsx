@@ -12,6 +12,7 @@ export const TrueFalse = ({
   points,
   status,
   checked,
+  previousMistake,
   onGrade,
 }: LessonQuestionProps<TrueFalseQuestion>) => {
   const [{ selectedId }, setState] = useState({ selectedId: "" });
@@ -27,13 +28,14 @@ export const TrueFalse = ({
       gradeQuestion({
         onGrade,
         data,
+        previousMistake,
         trials: [correct],
         totalPoints: points,
         autoCheck: false,
         answersCount: 1,
       });
     },
-    [data, onGrade, points]
+    [data, onGrade, points, previousMistake]
   );
 
   return (

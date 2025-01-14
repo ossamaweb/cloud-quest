@@ -15,6 +15,7 @@ export const ImageIdentification = ({
   points,
   status,
   checked,
+  previousMistake,
   onGrade,
 }: LessonQuestionProps<ImageIdentificationQuestion>) => {
   const [{ selectedId }, setState] = useState({ selectedId: "" });
@@ -30,13 +31,14 @@ export const ImageIdentification = ({
       gradeQuestion({
         onGrade,
         data,
+        previousMistake,
         trials: [correct],
         totalPoints: points,
         autoCheck: false,
         answersCount: 1,
       });
     },
-    [data, onGrade, points]
+    [data, onGrade, points, previousMistake]
   );
 
   const { options } = useMemo(() => {

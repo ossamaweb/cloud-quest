@@ -19,6 +19,7 @@ interface OrderingQuestionState {
 export const Ordering = ({
   data,
   points,
+  previousMistake,
   onGrade,
 }: LessonQuestionProps<OrderingQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -106,12 +107,13 @@ export const Ordering = ({
         onGrade,
         data,
         trials,
+        previousMistake,
         totalPoints: points,
         autoCheck: true,
         answersCount: data.correctOrder.length,
       });
     }
-  }, [correctAnswersCount, data, onGrade, points, trials]);
+  }, [correctAnswersCount, data, onGrade, points, trials, previousMistake]);
 
   const { items } = useMemo(() => {
     return {
