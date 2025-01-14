@@ -92,3 +92,13 @@
   width: 0;
   height: 0;
 }
+
+[data-amplify-router] {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+[data-amplify-authenticator] {
+  position: fixed;
+  inset: 0;
+}
+

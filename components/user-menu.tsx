@@ -35,10 +35,8 @@ export default function UserMenu({
     <ul className={cn("space-x-2 w-full flex justify-between", className)}>
       <li>
         <Popover>
-          <PopoverTrigger>
-            <Button className="text-primary font-bold">
-              {currentUser.courses[0]?.course?.title.slice(0, 3)}
-            </Button>
+          <PopoverTrigger className="inline-flex items-center justify-start space-x-1 uppercase tracking-wide rounded-md border-2 border-transparent px-4 py-2 cursor-pointer transition-colors duration-150 text-primary font-bold hover:bg-accent">
+            {currentUser.courses[0]?.course?.title.slice(0, 3)}
           </PopoverTrigger>
           <PopoverContent>
             <div className="cursor-default">
@@ -54,11 +52,9 @@ export default function UserMenu({
       </li>
       <li>
         <Popover>
-          <PopoverTrigger>
-            <Button className="text-amber-500 font-bold">
-              <FlameIcon fill="currentColor" />
-              <span>{streakCount}</span>
-            </Button>
+          <PopoverTrigger className="inline-flex items-center justify-start space-x-1 uppercase tracking-wide rounded-md border-2 border-transparent px-4 py-2 cursor-pointer transition-colors duration-150  hover:bg-accent text-amber-500 font-bold">
+            <FlameIcon fill="currentColor" />
+            <span>{streakCount}</span>
           </PopoverTrigger>
           <PopoverContent>
             <div className="cursor-default">
@@ -72,11 +68,9 @@ export default function UserMenu({
       </li>
       <li>
         <Popover>
-          <PopoverTrigger>
-            <Button className="text-blue-500 font-bold">
-              <StarIcon fill="currentColor" />
-              <span>{currentUser.stats?.points ?? 0}</span>
-            </Button>
+          <PopoverTrigger className="inline-flex items-center justify-start space-x-1 uppercase tracking-wide rounded-md border-2 border-transparent px-4 py-2 cursor-pointer transition-colors duration-150 hover:bg-accent text-blue-500 font-bold">
+            <StarIcon fill="currentColor" />
+            <span>{currentUser.stats?.points ?? 0}</span>
           </PopoverTrigger>
           <PopoverContent>
             <div className="cursor-default">

@@ -58,7 +58,6 @@ export default function LessonNode({
     <Popover>
       <PopoverTrigger
         id={current ? "currentLessonNode" : undefined}
-        title={title}
         style={translationStyle}
         className={cn(
           "relative text-left group flex items-center justify-center w-24 h-24",

@@ -135,7 +135,7 @@ const DraggableItem = ({
         onDragEnd={onDragEnd}
         className={cn(
           "transition-all duration-250 ease-in-out",
-          "text-sm max-w-48  bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
+          "text-sm sm:max-w-48 max-w-40   bg-background border-2 border-b-4 border-border rounded-lg px-4 py-2 select-none",
           isDragging ? "opacity-0" : "bg-background",
           draggable && "cursor-move",
           correct &&

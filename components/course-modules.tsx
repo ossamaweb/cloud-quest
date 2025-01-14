@@ -33,8 +33,16 @@ export default function CourseModules({
 
   if (!userModules) {
     return (
-      <div className="h-screen w-full flex items-center justify-center">
+      <div className="h-[80vh] w-full flex items-center justify-center">
         <p className="text-muted-foreground">loading...</p>
+      </div>
+    );
+  }
+
+  if (userModules.length === 0) {
+    return (
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <p className="text-muted-foreground">No module found</p>
       </div>
     );
   }

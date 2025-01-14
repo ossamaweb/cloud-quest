@@ -51,7 +51,7 @@ export default function MainMenu({
             <span className="lg:inline-block hidden">Settings</span>
           </Button>
         </li>
-        {/* <li>
+        <li>
           <Button
             onClick={() => signOut()}
             active={false}
@@ -60,7 +60,7 @@ export default function MainMenu({
             <LogOutIcon />
             <span className="lg:inline-block hidden">Logout</span>
           </Button>
-        </li> */}
+        </li>
       </ul>
     </nav>
   );

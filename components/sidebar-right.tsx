@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as React from "react";
+import ThemeToggle from "./theme-toggle";
 
 interface SidebarRightProps {
   className?: string;
@@ -26,7 +27,7 @@ export default function SidebarRight({
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} CloudQuest. All rights reserved.
           </div>
-          <div className="space-x-4 text-sm uppercase">
+          <div className="space-x-4 flex justify-center items-center text-sm uppercase">
             <a
               href="https://github.com/ossamaweb/cloud-quest"
               target="_blank"
@@ -43,6 +44,9 @@ export default function SidebarRight({
             >
               X/Twitter
             </a>
+            <div>
+              <ThemeToggle />
+            </div>
           </div>
           <div className="text-sm text-muted-foreground">
             Game was created for the{" "}
