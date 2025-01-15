@@ -8,6 +8,7 @@ import {
   TimerIcon,
 } from "lucide-react";
 import { calcuateLessonFinalPoints, formatTimeWithHours } from "@/lib/utils";
+import { useSound } from "@/hooks/use-sound";
 
 interface LessonCompletedProps {
   points: number;
@@ -22,6 +23,13 @@ export default function LessonCompleted({
   duration,
   repeated,
 }: LessonCompletedProps) {
+  const { playGameComplete } = useSound();
+
+  React.useEffect(() => {
+    playGameComplete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="w-full h-full flex justify-center items-end sm:pb-12 pb-6">
       <div className="flex flex-col justify-center items-center gap-8">

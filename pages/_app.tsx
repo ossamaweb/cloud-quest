@@ -9,6 +9,7 @@ import ErrorFallback from "@/components/error-fallback";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
 import "@/styles/app.css";
+import { SoundProvider } from "@/hooks/use-sound";
 
 Amplify.configure(outputs);
 const queryClient = new QueryClient();
@@ -41,7 +42,9 @@ export default function App({ Component, pageProps }: AppProps) {
             }
           `}</style>
           <Authenticator components={components}>
-            <Component {...pageProps} />
+            <SoundProvider>
+              <Component {...pageProps} />
+            </SoundProvider>
           </Authenticator>
         </ThemeProvider>
       </QueryClientProvider>

@@ -15,6 +15,7 @@ import { GetLesson } from "@/lib/types";
 import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
 import LessonStreak from "./lesson-streak";
 import { NavigationGuardProvider } from "next-navigation-guard";
+import { useSound } from "@/hooks/use-sound";
 
 interface LessonMainState {
   data: {
@@ -111,6 +112,7 @@ export default function LessonMain({
   onComplete,
   onSave,
 }: LessonMainProps) {
+  const { playCorrect, playIncorrect } = useSound();
   const [{ data, questionState, lessonState, lessonStats }, setState] =
     React.useState<LessonMainState>(
       LessonMainInitialState(questions, repeated)
@@ -166,7 +168,7 @@ export default function LessonMain({
 
       const progress =
         prev.questionState.status === "correct"
-          ? (100 * (prev.questionState.index + 1)) / data.totalQuestions
+          ? (100 * (prev.questionState.index + 1)) / prev.data.totalQuestions
           : prev.lessonState.progress;
 
       const state: LessonMainState = {
@@ -191,7 +193,7 @@ export default function LessonMain({
 
       return state;
     });
-  }, [data.totalQuestions]);
+  }, []);
 
   const handleOnCheck = React.useCallback(() => {
     setState((prev) => ({
@@ -353,6 +355,16 @@ export default function LessonMain({
       },
     }));
   }, [data.totalQuestions, saved]);
+
+  React.useEffect(() => {
+    if (!questionState.checked) return;
+    if (questionState.status === "correct") {
+      playCorrect();
+    }
+    if (questionState.status === "incorrect") {
+      playIncorrect();
+    }
+  }, [questionState.checked, playCorrect, playIncorrect, questionState.status]);
 
   return (
     <NavigationGuardProvider>
