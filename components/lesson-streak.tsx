@@ -1,12 +1,19 @@
 "use client";
 import * as React from "react";
 import { FlameIcon } from "lucide-react";
+import { useSound } from "@/hooks/use-sound";
 
 interface LessonStreakProps {
   count: number;
 }
 
 export default function LessonStreak({ count }: LessonStreakProps) {
+  const { playStreak } = useSound();
+
+  React.useEffect(() => {
+    playStreak();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="w-full h-full flex justify-center items-end sm:pb-12 pb-6">
       <div className="flex flex-col justify-center items-center gap-8">

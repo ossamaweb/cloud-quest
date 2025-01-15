@@ -1,7 +1,7 @@
 "use client";
 
 import { LessonQuestionProps, MultipleChoiceQuestion } from "@/lib/interfaces";
-import { useCallback, useMemo, useState } from "react";
+import * as React from "react";
 import { gradeQuestion, validateMultipleChoiceAnswer } from "@/lib/utils";
 import { KeyboardProvider } from "@/hooks/use-keyboard";
 import ButtonQuestion from "../ui/button-question";
@@ -11,14 +11,15 @@ export const MultipleChoice = ({
   points,
   status,
   checked,
+  previousMistake,
   onGrade,
+  onAnswer,
 }: LessonQuestionProps<MultipleChoiceQuestion>) => {
-  const [{ selectedId }, setState] = useState({ selectedId: "" });
+  const [{ selectedId }, setState] = React.useState({ selectedId: "" });
 
-  const handleOnClick = useCallback(
+  const handleOnClick = React.useCallback(
     (optionId: string) => {
       setState({ selectedId: optionId });
-
       const correct = validateMultipleChoiceAnswer(
         optionId,
         data.correctOptionId
@@ -27,16 +28,17 @@ export const MultipleChoice = ({
       gradeQuestion({
         onGrade,
         data,
+        previousMistake,
         trials: [correct],
         totalPoints: points,
         autoCheck: false,
         answersCount: 1,
       });
     },
-    [data, onGrade, points]
+    [data, onGrade, points, previousMistake]
   );
 
-  const { options } = useMemo(() => {
+  const { options } = React.useMemo(() => {
     return {
       options: [...data.options].sort(() => Math.random() - 0.5),
     };

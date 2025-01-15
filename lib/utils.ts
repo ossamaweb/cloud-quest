@@ -93,6 +93,7 @@ export function gradeQuestion({
   totalPoints,
   autoCheck,
   data,
+  previousMistake,
   onGrade,
 }: {
   trials: boolean[];
@@ -100,18 +101,23 @@ export function gradeQuestion({
   totalPoints: number;
   autoCheck: boolean;
   data: QuestionData;
+  previousMistake: boolean | undefined;
   onGrade: LessonQuestionProps<unknown>["onGrade"];
 }): void {
   const correctTrials = trials.filter((correct) => correct);
   const accuracy = (correctTrials.length / trials.length) * 100;
+  const weightedAccuracy = accuracy * answersCount;
   const correct = correctTrials.length === answersCount;
+  const accuratePoints = (totalPoints * accuracy) / 100;
+
+  // Grade Only Correct Attempt
   onGrade({
     correct,
-    points: (totalPoints * accuracy) / 100,
-    accuracy: accuracy * answersCount,
-    answersCount,
     autoCheck,
     data,
+    points: previousMistake ? 0 : accuratePoints,
+    answersCount: previousMistake ? 0 : answersCount,
+    accuracy: previousMistake ? 0 : weightedAccuracy,
   });
 }
 
@@ -159,4 +165,12 @@ export function formatTimeWithHours(totalSeconds: number): string {
 
 export function getRepeatedLessonPoints(points: number): number {
   return Math.round(points * 0.25); // 25% of original points for lesson review
+}
+
+export function calcuateLessonFinalPoints(
+  points: number,
+  repeated: boolean
+): number {
+  const finalpoints = Math.round(points);
+  return repeated ? getRepeatedLessonPoints(finalpoints) : finalpoints;
 }

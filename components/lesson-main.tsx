@@ -6,11 +6,16 @@ import LessonCompleted from "@/components/lesson-completed";
 import LessonHeader from "@/components/lesson-header";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LessonQuestionProps } from "@/lib/interfaces";
-import { cn, getRepeatedLessonPoints } from "@/lib/utils";
+import {
+  calcuateLessonFinalPoints,
+  cn,
+  getRepeatedLessonPoints,
+} from "@/lib/utils";
 import { GetLesson } from "@/lib/types";
 import { CreateUserLessonCompletionInput } from "@/hooks/use-create-lesson-completion-mutation";
 import LessonStreak from "./lesson-streak";
 import { NavigationGuardProvider } from "next-navigation-guard";
+import { useSound } from "@/hooks/use-sound";
 
 interface LessonMainState {
   data: {
@@ -26,6 +31,9 @@ interface LessonMainState {
     status: LessonQuestionProps<unknown>["status"];
     index: number;
     explanation?: string;
+    accuratePoints: number;
+    accuracy: number;
+    answersCount: number;
   };
   lessonState: {
     progress: number;
@@ -36,7 +44,7 @@ interface LessonMainState {
   };
   lessonStats: {
     duration: number;
-    points: number;
+    accuratePoints: number;
     accuracy: number;
     weightedAccuracy: number;
     answersCount: number;
@@ -61,6 +69,9 @@ function LessonMainInitialState(
       status: "unanswered",
       index: 0,
       explanation: undefined,
+      accuratePoints: 0,
+      accuracy: 0,
+      answersCount: 0,
     },
     lessonState: {
       progress: 0,
@@ -71,7 +82,7 @@ function LessonMainInitialState(
     },
     lessonStats: {
       duration: 0,
-      points: 0,
+      accuratePoints: 0,
       accuracy: 0,
       weightedAccuracy: 0,
       answersCount: 0,
@@ -101,6 +112,7 @@ export default function LessonMain({
   onComplete,
   onSave,
 }: LessonMainProps) {
+  const { playCorrect, playIncorrect } = useSound();
   const [{ data, questionState, lessonState, lessonStats }, setState] =
     React.useState<LessonMainState>(
       LessonMainInitialState(questions, repeated)
@@ -109,68 +121,6 @@ export default function LessonMain({
   const durationsRef = React.useRef<
     Record<string, { start: number; end: number; duration: number }>
   >({});
-
-  const handleOnGrade = React.useCallback<
-    LessonQuestionProps<unknown>["onGrade"]
-  >((props) => {
-    setState((prev) => {
-      const { lessonState, lessonStats, questionState } = prev;
-      let prevData = prev.data;
-
-      const questionIndex = questionState.index + 1;
-
-      const progress =
-        props.autoCheck && props.correct
-          ? (100 * questionIndex) / prevData.totalQuestions
-          : lessonState.progress;
-
-      const weightedAccuracy = lessonStats.weightedAccuracy + props.accuracy;
-      const answersCount = lessonStats.answersCount + props.answersCount;
-      const accuracy = Math.floor(weightedAccuracy / answersCount);
-      const questionPoints = lessonState.repeated
-        ? getRepeatedLessonPoints(props.points)
-        : props.points;
-
-      // Handle previous mistakes
-      // for (ShortAnswer, FillInTheBlank, MC, TrueFalse, ImageID)
-      if (!props.correct) {
-        const mistaken = [...prevData.questions, ...prevData.previousMistakes][
-          questionState.index
-        ];
-        if (mistaken) {
-          prevData = {
-            ...prevData,
-            previousMistakes: [...prevData.previousMistakes, mistaken],
-            previousMistakesSize: prevData.previousMistakesSize + 1,
-            totalQuestions: prevData.totalQuestions + 1,
-          };
-        }
-      }
-
-      return {
-        ...prev,
-        data: prevData,
-        questionState: {
-          ...questionState,
-          answered: true,
-          checked: props.autoCheck,
-          status: props.correct ? "correct" : "incorrect",
-          explanation: props.data.explanation,
-        },
-        lessonState: {
-          ...lessonState,
-          progress,
-        },
-        lessonStats: {
-          ...lessonStats,
-          points: Math.floor(lessonStats.points + questionPoints),
-          accuracy: Math.max(0, Math.min(100, accuracy)),
-          answersCount,
-          weightedAccuracy,
-        },
-      };
-    });
-  }, []);
 
   const handleOnAnswer = React.useCallback((answered: boolean) => {
     setState((prev) => ({
@@ -182,36 +132,129 @@ export default function LessonMain({
     }));
   }, []);
 
+  const onPostCheck = React.useCallback(() => {
+    setState((prev) => {
+      const { lessonState, lessonStats, questionState } = prev;
+
+      const correct = questionState.status === "correct";
+
+      const accuratePoints =
+        lessonStats.accuratePoints + questionState.accuratePoints;
+      const weightedAccuracy =
+        lessonStats.weightedAccuracy + questionState.accuracy;
+      const answersCount =
+        lessonStats.answersCount + questionState.answersCount;
+
+      const accuracy = Math.floor(weightedAccuracy / answersCount);
+
+      // Handle previous mistakes
+      // for (ShortAnswer, FillInTheBlank, MC, TrueFalse, ImageID)
+      let prevData = prev.data;
+      if (!correct) {
+        const mistakenQuestion = [
+          ...prevData.questions,
+          ...prevData.previousMistakes,
+        ][questionState.index];
+
+        if (mistakenQuestion) {
+          prevData = {
+            ...prevData,
+            previousMistakes: [...prevData.previousMistakes, mistakenQuestion],
+            previousMistakesSize: prevData.previousMistakesSize + 1,
+            totalQuestions: prevData.totalQuestions + 1,
+          };
+        }
+      }
+
+      const progress =
+        prev.questionState.status === "correct"
+          ? (100 * (prev.questionState.index + 1)) / prev.data.totalQuestions
+          : prev.lessonState.progress;
+
+      const state: LessonMainState = {
+        ...prev,
+        data: prevData,
+        lessonState: {
+          ...lessonState,
+          progress,
+        },
+        questionState: {
+          ...prev.questionState,
+          checked: true,
+        },
+        lessonStats: {
+          ...lessonStats,
+          accuratePoints,
+          answersCount,
+          weightedAccuracy,
+          accuracy: Math.max(0, Math.min(100, accuracy)),
+        },
+      };
+
+      return state;
+    });
+  }, []);
+
   const handleOnCheck = React.useCallback(() => {
     setState((prev) => ({
       ...prev,
-      lessonState: {
-        ...prev.lessonState,
-        progress:
-          prev.questionState.status === "correct"
-            ? (100 * (prev.questionState.index + 1)) / data.totalQuestions
-            : prev.lessonState.progress,
-      },
       questionState: {
         ...prev.questionState,
         checked: true,
       },
     }));
-  }, [data.totalQuestions]);
+
+    requestAnimationFrame(() => onPostCheck());
+  }, [onPostCheck]);
+
+  const handleOnGrade = React.useCallback<
+    LessonQuestionProps<unknown>["onGrade"]
+  >(
+    (questionProps) => {
+      setState((prev) => {
+        return {
+          ...prev,
+          questionState: {
+            ...prev.questionState,
+            answered: true,
+            status: questionProps.correct ? "correct" : "incorrect",
+            explanation: questionProps.data.explanation,
+            accuratePoints: questionProps.points,
+            accuracy: questionProps.accuracy,
+            answersCount: questionProps.answersCount,
+          },
+        };
+      });
+
+      if (questionProps.autoCheck) {
+        requestAnimationFrame(() => onPostCheck());
+      }
+    },
+    [onPostCheck]
+  );
 
   const handleOnSave = React.useCallback(
     (totalDuration: number) => {
       if (!lessonState.saved) {
         onSave({
           accuracy: lessonStats.accuracy,
-          points: lessonStats.points,
+          points: calcuateLessonFinalPoints(
+            lessonStats.accuratePoints,
+            lessonState.repeated
+          ),
           duration: totalDuration,
         });
 
         durationsRef.current = {};
       }
     },
-    [lessonState.saved, lessonStats.accuracy, lessonStats.points, onSave]
+    [
+      lessonState.repeated,
+      lessonState.saved,
+      lessonStats.accuracy,
+      lessonStats.accuratePoints,
+      onSave,
+    ]
   );
 
   const handleOnContinue = React.useCallback(
@@ -240,12 +283,14 @@ export default function LessonMain({
             saving: finalQuestion,
           },
           questionState: {
-            ...prev.questionState,
             index: finalQuestion ? prev.questionState.index : nextQuestionIndex, // do not move to next qustion when saving
             status: "unanswered",
             checked: finalQuestion ? true : false,
             answered: false,
             explanation: undefined,
+            accuratePoints: 0,
+            accuracy: 0,
+            answersCount: 0,
           },
         };
       });
@@ -310,6 +355,16 @@ export default function LessonMain({
       },
     }));
   }, [data.totalQuestions, saved]);
+
+  React.useEffect(() => {
+    if (!questionState.checked) return;
+    if (questionState.status === "correct") {
+      playCorrect();
+    }
+    if (questionState.status === "incorrect") {
+      playIncorrect();
+    }
+  }, [questionState.checked, playCorrect, playIncorrect, questionState.status]);
 
   return (
     <NavigationGuardProvider>
@@ -391,7 +446,7 @@ export default function LessonMain({
                   )}
                 >
                   <LessonCompleted
-                    points={lessonStats.points}
+                    points={lessonStats.accuratePoints}
                     accuracy={lessonStats.accuracy}
                     duration={lessonStats.duration}
                     repeated={lessonState.repeated}

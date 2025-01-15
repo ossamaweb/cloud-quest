@@ -10,6 +10,7 @@ export const FillInTheBlank = ({
   data,
   points,
   checked,
+  previousMistake,
   onAnswer,
   onGrade,
 }: LessonQuestionProps<FillInTheBlankQuestion>) => {
@@ -85,12 +86,13 @@ export const FillInTheBlank = ({
         onGrade,
         data,
         trials,
+        previousMistake,
         totalPoints: points,
-        autoCheck: true,
+        autoCheck: false,
         answersCount: data.blanks.length,
       });
     }
-  }, [checked, data, onGrade, points, value]);
+  }, [checked, data, onGrade, points, previousMistake, value]);
 
   const autoFocusOnFirstInput = React.useCallback(() => {
     if (data.blanks.length) {

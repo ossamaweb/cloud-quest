@@ -169,6 +169,7 @@ export const DragAndDrop = ({
   data,
   points,
   checked,
+  previousMistake,
   onGrade,
 }: LessonQuestionProps<DragAndDropQuestion>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -311,9 +312,10 @@ export const DragAndDrop = ({
         totalPoints: points,
         autoCheck: true,
         answersCount: data.correctPairings.length,
+        previousMistake,
       });
     }
-  }, [correctAnswersCount, data, onGrade, points, trials]);
+  }, [correctAnswersCount, data, onGrade, points, previousMistake, trials]);
 
   const { categories, items } = useMemo(() => {
     return {
