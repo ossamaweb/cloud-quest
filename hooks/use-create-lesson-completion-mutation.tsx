@@ -147,6 +147,10 @@ export function useCreateLessonCompletionMutation(courseSlug: string | null) {
     },
     onSuccess: async () => {
       // Invalidate relevant queries when mutation succeeds
+      queryClient.invalidateQueries({
+        queryKey: ["getLeaderboard"],
+        exact: true,
+      });
     },
     retry: (failureCount, error) => {
       if (error instanceof CreateUserLessonCompletionError) {

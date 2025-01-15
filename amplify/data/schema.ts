@@ -13,7 +13,10 @@ export const schema = a.schema({
       lessons: a.hasMany("UserLessonCompletion", "userId"),
       achievements: a.hasMany("UserAchievement", "userId"),
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   UserStats: a
     .model({
@@ -28,7 +31,10 @@ export const schema = a.schema({
       coursesCompleted: a.integer().default(0),
       achievementsUnlocked: a.integer().default(0),
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 
   Achievement: a
     .model({
